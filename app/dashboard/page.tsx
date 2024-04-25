@@ -7,6 +7,7 @@ export default function Home() {
             <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
                 <Logo />
             </div>
+            <h1 className='text-slate-50'>Dashboard</h1>
         </main>
     );
 }
