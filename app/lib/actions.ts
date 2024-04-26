@@ -1,3 +1,5 @@
+'use server';
+
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 
@@ -7,7 +9,7 @@ export async function authenticate(
 ) {
     try {
         await signIn('credentials', formData);
-    } catch (error) {
+    } catch (error: any) {
         if (error instanceof AuthError) {
             switch (error.type) {
                 case 'CredentialsSignin':
