@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Logo from '@/app/ui/logo';
 
 export default function Home() {
