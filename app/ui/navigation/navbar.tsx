@@ -6,6 +6,7 @@ import { auth } from '@/auth';
 
 export default async function Navbar() {
     const session = await auth();
+    const user = session?.user;
 
     return (
         <nav className="w-full h-20 bg-slate-900 sticky top-0" >
@@ -15,7 +16,7 @@ export default async function Navbar() {
                         <Logo />
                     </Link>
                     <ul className='md:flex gap-x-6 text-slate-50'>
-                        {session?.user ?
+                        {user ?
                             <NavLink name='Dashboard' href='/dashboard' icon='HomeIcon' />
                             : null
                         }
