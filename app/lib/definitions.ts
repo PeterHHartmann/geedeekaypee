@@ -4,3 +4,13 @@ export type User = {
     email: string;
     password: string;
 };
+
+export type PlayableRace = {
+    id: number;
+    name: string;
+};
+
+export type PlayableClass = {
+    id: number;
+    name: string;
+};
