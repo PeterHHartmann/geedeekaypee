@@ -1,6 +1,14 @@
+import { Button } from '@/app/ui/button';
 import Logo from '@/app/ui/logo';
+import { PlusCircleIcon } from '@heroicons/react/24/outline';
+import type { Metadata } from 'next';
 // import { getPlayableClasses, getPlayableRaces } from '@/app/lib/actions';
 // import type { PlayableClass } from '@/app/lib/definitions';
+
+export const metadata: Metadata = {
+    title: 'Dashboard',
+    description: 'User dashboard for managing roster and upcoming raids',
+};
 
 export default async function Page() {
     // const playable_classes = await getPlayableClasses();
@@ -55,8 +63,12 @@ export default async function Page() {
                         </div>
                     </div>
                     <div className='p-6 mx-3 rounded-xl bg-primary-800 w-full'>
-                        <div id='create-new-raid'>
-                            <button>new raid</button>
+                        <div className='flex border-b-2 mb-4 pb-2'>
+                            <h2 className='text-2xl mb-2 mx-auto w-min'>Raids</h2>
+                            <Button>
+                                <PlusCircleIcon className='w-6' />
+                                <p>New Raid</p>
+                            </Button>
                         </div>
                         <div id='your raids'>
                             <div>raid 1</div>
