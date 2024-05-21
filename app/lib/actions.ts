@@ -35,9 +35,12 @@ export async function getBnetAccessToken() {
         if (response.ok) {
             const data = await response.json();
             return data.access_token;
+        } else {
+            throw new Error(`Failed to fetch Bnet Access Token: ${response.status}`,);
         }
+
     } catch (error) {
-        console.log(error);
+        throw error;
     }
 }
 
@@ -62,8 +65,8 @@ export async function getPlayableRaces() {
 }
 
 export async function getPlayableClasses() {
+    const token = await getBnetAccessToken();
     try {
-        const token = await getBnetAccessToken();
         const response = await fetch('https://eu.api.blizzard.com/data/wow/playable-class/index?:region=eu&namespace=static-classic-eu&locale=en_US', {
             headers: {
                 Authorization: 'Bearer ' + token
@@ -71,12 +74,27 @@ export async function getPlayableClasses() {
         });
         if (response.ok) {
             const data = await response.json();
+            console.log(data);
+
             return data.classes;
 
         } else {
-            console.log(response.status);
+            throw new Error(`Failed to fetch Playable Classes: ${response.status}`);
         }
 
+    } catch (error) {
+        throw new Error("error");
+    }
+}
+
+export async function getWowIcon() {
+    const token = await getBnetAccessToken();
+    try {
+        const response = await fetch('https://eu.api.blizzard.com/data/wow/playable-class/index?:region=eu&namespace=static-classic-eu&locale=en_US', {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        });
     } catch (error) {
 
     }

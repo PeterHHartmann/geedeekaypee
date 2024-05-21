@@ -9,13 +9,13 @@ export default async function Navbar() {
     const user = session?.user;
 
     return (
-        <nav className="w-full h-20 bg-slate-900 sticky top-0" >
+        <nav className="w-full h-20 bg-primary-900 sticky top-0" >
             <div className="container mx-auto h-full">
                 <div className="flex justify-between items-center h-full">
                     <Link href='/'>
                         <Logo />
                     </Link>
-                    <ul className='md:flex gap-x-6 text-slate-50'>
+                    <ul className='md:flex gap-x-6 text-primary-50'>
                         {user ?
                             <NavLink name='Dashboard' href='/dashboard' icon='HomeIcon' />
                             : null
