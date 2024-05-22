@@ -1,9 +1,7 @@
 import { Button } from '@/app/ui/button';
-import Logo from '@/app/ui/logo';
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import type { Metadata } from 'next';
-// import { getPlayableClasses, getPlayableRaces } from '@/app/lib/actions';
-// import type { PlayableClass } from '@/app/lib/definitions';
+import RosterCharacter from '@/app/ui/roster-character';
 
 export const metadata: Metadata = {
     title: 'Dashboard',
@@ -11,63 +9,66 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-    // const playable_classes = await getPlayableClasses();
-    // const classVariants = {
-    //     "death knight": "text-deathknight",
-    //     druid: "text-druid",
-    //     hunter: "text-hunter",
-    //     mage: "text-mage",
-    //     paladin: "text-paladin",
-    //     priest: "text-priest",
-    //     rogue: "text-rogue",
-    //     shaman: "text-shaman",
-    //     warlock: "text-warlock",
-    //     warrior: "text-warrior"
-    // };
+    const roster_characters = [
+        { id: 1, name: 'Thaldrion', classId: 5, roleList: [{ id: 1, name: 'Dps' }, { id: 2, name: 'Tank' }] },
+        { id: 2, name: 'Zarathor', classId: 1, roleList: [{ id: 2, name: 'Tank' }] },
+        { id: 3, name: 'Elunara', classId: 6, roleList: [{ id: 3, name: 'Heal' }] },
+        { id: 4, name: 'Grommashar', classId: 7, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 5, name: 'Sylverwind', classId: 3, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+        { id: 6, name: 'Danathos', classId: 4, roleList: [{ id: 1, name: 'Dps' }] },
+    ];
 
     return (
-        <main className="flex min-h-screen flex-col items-center px-12 py-1 h-full">
-            <div id='dashboard-container' className='flex flex-col align-center bg-primary-900 w-full h-full rounded-xl px-4 py-6'>
+        <main className="flex min-h-screen flex-col items-center px-2 py-1 h-full md:px-6">
+            <div id='dashboard-container' className='flex flex-col align-center bg-primary-850 w-full h-full rounded-xl md:px-10 py-6'>
                 <h1 className='mx-auto text-3xl mb-4'>Dashboard</h1>
-                <div className='flex'>
-                    <div id='roster-container' className='p-6 mx-3 rounded-xl bg-primary-800 w-96 max-w-96 justify-center'>
-                        <div className='border-b-2 mb-4'>
+                <div className='flex flex-col sm:flex-row gap-1 md:gap-6'>
+                    <div className='p-6 rounded-xl bg-primary-800 md:w-96 md:max-w-96 justify-center gap-6'>
+                        <div className='border-b-2 border-primary-600 mb-4'>
                             <h2 className='text-2xl mb-2 mx-auto w-min'>Roster</h2>
                         </div>
-                        <div>
-                            <div className='opacity-100'>player 1</div>
-                            <div>player 2</div>
-                            <div>player 3</div>
-                            <div>player 4</div>
-                            <div>player 5</div>
-                            <div>player 6</div>
-                            <div>player 7</div>
-                            <div>player 8</div>
-                            <div>player 9</div>
-                            <div>player 10</div>
-                            <div>player 11</div>
-                            <div>player 12</div>
-                            <div>player 13</div>
-                            <div>player 14</div>
-                            <div>player 15</div>
-                            <div>player 16</div>
-                            <div>player 17</div>
-                            <div>player 18</div>
-                            <div>player 19</div>
-                            <div>player 20</div>
-                            <div>player 21</div>
-                            <div>player 22</div>
-                            <div>player 23</div>
-                            <div>player 24</div>
-                            <div>player 25</div>
+                        <div className='bg-primary-750 pt-1 rounded-xl max-h-[400px] md:max-h-[600px] overflow-y-auto'>
+                            {roster_characters.map((player, index) =>
+                                <RosterCharacter key={`roster-character-${index}`} character={player} />
+                            )}
+                        </div>
+                        <div className='pt-1 mt-2 justify-center'>
+                            <Button className='w-full'>
+                                <PlusCircleIcon className='w-6 ml-auto' />
+                                <p className="hidden md:block mr-auto">Add character</p>
+                            </Button>
                         </div>
                     </div>
-                    <div className='p-6 mx-3 rounded-xl bg-primary-800 w-full'>
-                        <div className='flex border-b-2 mb-4 pb-2'>
-                            <h2 className='text-2xl mb-2 mx-auto w-min'>Raids</h2>
+                    <div className='p-6 rounded-xl bg-primary-800 w-full'>
+                        <div className='flex items-center border-b-2 border-primary-600 mb-4 pb-2'>
+                            <h2 className='text-2xl mx-auto w-min'>Raids</h2>
                             <Button>
                                 <PlusCircleIcon className='w-6' />
-                                <p>New Raid</p>
+                                <p className="hidden md:block">New Raid</p>
                             </Button>
                         </div>
                         <div id='your raids'>
@@ -77,14 +78,6 @@ export default async function Page() {
                     </div>
                 </div>
             </div>
-            {/* <form action={getPlayableRaces}>
-                <button>Races</button>
-            </form>
-            <div>
-                {playable_classes.map((playable_class: PlayableClass) =>
-                    <p key={`class-${playable_class.id}`} className={`${classVariants[playable_class.name.toLowerCase()]}`}>{playable_class.name.toLowerCase()}</p>)
-                }
-            </div> */}
         </main>
     );
 }

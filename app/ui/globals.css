@@ -3,33 +3,43 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 250, 250, 250;
-  --background-start-rgb: 24, 24, 27;
-  --background-end-rgb: 9, 9, 11;
-  --class-deathknight: 196, 31, 59;
-  --class-druid: 255, 124, 10;
-  --class-hunter: 171, 212, 115;
-  --class-mage: 105, 204, 240;
-  --class-paladin: 245, 140, 186;
-  --class-priest: 255, 255, 255;
-  --class-rogue: 255, 245, 105;
-  --class-shaman: 0, 112, 222;
-  --class-warlock: 148, 130, 201;
-  --class-warrior: 199, 156, 110;
+    --foreground-color: rgb(250, 250, 250);
+    --background-start-color: rgb(24, 24, 27);
+    --background-end-color: rgb(9, 9, 11);
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent 25%,
-      rgb(var(--background-end-rgb)) 100%
+    color: var(--foreground-color);
+    background: linear-gradient(
+        to bottom,
+        transparent 25%,
+        var(--background-end-color) 100%
     )
-    rgb(var(--background-start-rgb));
+    var(--background-start-color);
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+    .text-balance {
+        text-wrap: balance;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 0.75rem;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #fafafa;
+    border-radius: 0.75rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #e4e4e7;
 }

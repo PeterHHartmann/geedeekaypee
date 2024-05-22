@@ -5,12 +5,24 @@ export type User = {
     password: string;
 };
 
-export type PlayableRace = {
+export type CharacterRace = {
     id: number;
     name: string;
 };
 
-export type PlayableClass = {
+export type CharacterClass = {
     id: number;
     name: string;
+};
+
+export type CharacterRole = {
+    id: number;
+    name: string;
+};
+
+export type RosterCharacter = {
+    id: number;
+    name: string;
+    classId: number;
+    roleList: CharacterRole[];
 };
