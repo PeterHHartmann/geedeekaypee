@@ -5,24 +5,24 @@ export type User = {
     password: string;
 };
 
-export type CharacterRace = {
-    id: number;
-    name: string;
-};
+// export type CharacterRace = {
+//     id: string;
+//     name: string;
+// };
 
 export type CharacterClass = {
-    id: number;
-    name: string;
+    id: string;
+    name: 'Death Knight' | 'Druid' | 'Hunter' | 'Mage' | 'Paladin' | 'Priest' | 'Rogue' | 'Shaman' | 'Warlock' | 'Warrior';
 };
 
 export type CharacterRole = {
-    id: number;
-    name: string;
+    id: string;
+    name: 'Tank' | 'Healer' | 'Dps';
 };
 
 export type RosterCharacter = {
-    id: number;
+    id: string;
     name: string;
-    classId: number;
-    roleList: CharacterRole[];
+    class_name: CharacterClass['name'];
+    role_name: CharacterRole['name'];
 };

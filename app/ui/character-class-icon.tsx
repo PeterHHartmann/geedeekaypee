@@ -9,28 +9,29 @@ import RogueIcon from '@/public/image/player-classes/rogue/rogue-icon.webp';
 import ShamanIcon from '@/public/image/player-classes/shaman/shaman-icon.webp';
 import WarlockIcon from '@/public/image/player-classes/warlock/warlock-icon.webp';
 import WarriorIcon from '@/public/image/player-classes/warrior/warrior-icon.webp';
+import type { CharacterClass } from '@/app/lib/definitions';
 
 
 type Props = {
-    id: number;
+    class_name: CharacterClass['name'];
 };
 
-const iconTable = [
-    DeathKnightIcon,
-    DruidIcon,
-    HunterIcon,
-    MageIcon,
-    PaladinIcon,
-    PriestIcon,
-    RogueIcon,
-    ShamanIcon,
-    WarlockIcon,
-    WarriorIcon,
-];
+const iconTable = {
+    'Death Knight': DeathKnightIcon,
+    'Druid': DruidIcon,
+    'Hunter': HunterIcon,
+    'Mage': MageIcon,
+    'Paladin': PaladinIcon,
+    'Priest': PriestIcon,
+    'Rogue': RogueIcon,
+    'Shaman': ShamanIcon,
+    'Warlock': WarlockIcon,
+    'Warrior': WarriorIcon
+};
 
-export default function PlayableClassIcon(props: Props) {
+export function CharacterClassIcon(props: Props) {
 
-    const icon = iconTable[props.id - 1];
+    const icon = iconTable[props.class_name];
 
     return (
         <Image

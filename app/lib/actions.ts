@@ -1,7 +1,9 @@
 'use server';
 
+import type { RosterCharacter } from '@/app/lib/definitions';
 import { signIn } from '@/auth';
-import { AuthError } from 'next-auth';
+import { sql } from '@vercel/postgres';
+import { AuthError, type User } from 'next-auth';
 
 export async function authenticate(
     prevState: string | undefined,
@@ -99,3 +101,35 @@ export async function getWowIcon() {
 
     }
 }
+
+export async function fetchCharacterRoster(user_email: User['email']) {
+    if (user_email) {
+        try {
+            const data = await sql<RosterCharacter>
+                `SELECT 
+                characters.id, 
+                characters.name,
+                characters.created_at,
+                character_classes.name AS class_name,
+                character_roles.name AS role_name
+                FROM characters
+                INNER JOIN character_classes ON characters.class_id = character_classes.id 
+                INNER JOIN character_roles ON characters.role_id = character_roles.id
+                WHERE characters.user_email = ${user_email};
+                `;
+            // const data = await sql<RosterCharacter>
+            //     `SELECT *
+            //     FROM characters 
+            //     WHERE characters.user_email = ${user_email};
+            // `;
+            console.log('character roster size', data.rowCount);
+            return data.rows;
+        } catch (error) {
+            console.log(error);
+
+            throw new Error('Failed to fetch character roster.');
+        }
+    } else {
+        throw new Error('Cannot fetch character roster, no user email supplied');
+    }
+};

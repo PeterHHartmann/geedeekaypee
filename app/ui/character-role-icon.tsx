@@ -4,25 +4,25 @@ import HealIcon from '@/public/image/player-roles/Heal.webp';
 import Image from 'next/image';
 import type { CharacterRole } from '@/app/lib/definitions';
 
-const icons = [
-    DpsIcon,
-    TankIcon,
-    HealIcon
-];
+const icons = {
+    'Tank': TankIcon,
+    'Healer': HealIcon,
+    'Dps': DpsIcon,
+};
 
 type Props = {
-    role: CharacterRole;
+    role_name: CharacterRole['name'];
     size?: number;
 };
 
-export default function PlayerRoleIcon(props: Props) {
+export function CharacterRoleIcon(props: Props) {
     return (
         <Image
             className='rounded-full outline outline-1 outline-primary-550'
-            src={icons[props.role.id - 1]}
+            src={icons[props.role_name]}
             width={props.size || 25}
             height={props.size || 25}
-            alt={`Player is ${props.role.name} role`}
+            alt={`${props.role_name} character`}
         />
     );
 }
