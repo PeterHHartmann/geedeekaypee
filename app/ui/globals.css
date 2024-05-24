@@ -26,6 +26,8 @@ body {
 
 ::-webkit-scrollbar {
     width: 10px;
+    padding-left: 10px;
+    margin-left: 10px;
 }
 
 /* Track */
