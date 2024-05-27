@@ -8,6 +8,11 @@
     --background-end-color: rgb(9, 9, 11);
 }
 
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #fafafa #18181b;
+}
+
 body {
     color: var(--foreground-color);
     background: linear-gradient(
@@ -32,13 +37,15 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  border-radius: 0.75rem;
+    background: #18181b;
+    border-radius: 0.75rem;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
     background: #fafafa;
     border-radius: 0.75rem;
+    width: 10px;
 }
 
 /* Handle on hover */

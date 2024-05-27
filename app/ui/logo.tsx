@@ -7,7 +7,7 @@ export default function Logo() {
             className={`${lusitana.className} flex flex-row items-center leading-none text-white`}
         >
             <CubeIcon className="h-12 w-12 rotate-[15deg]" />
-            <p className="text-[44px]">GDKP</p>
+            <p className="text-[44px]">geedeekaypee</p>
         </div>
     );
 }

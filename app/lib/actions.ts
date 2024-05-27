@@ -194,7 +194,7 @@ export async function insertCharacter(
             `INSERT INTO characters (name, class_id, role_id, user_email)
             VALUES (${parsed.data.name}, ${parsed.data.class_id}, ${parsed.data.role_id}, ${user.email});
             `;
-        revalidatePath('/dashboard');
+        revalidatePath('/dashboard/@roster');
         return { success: true };
     } catch (error) {
         return { success: false, messages: ['Failed to create character'] };

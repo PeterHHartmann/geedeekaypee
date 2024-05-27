@@ -9,7 +9,7 @@ export default async function Navbar() {
     const user = session?.user;
 
     return (
-        <nav className="w-full h-20 bg-primary-900 sticky top-0" >
+        <nav className="w-full h-20 bg-primary-900 sticky top-0 z-50" >
             <div className="container mx-auto h-full">
                 <div className="flex justify-between items-center h-full">
                     <Link href='/'>

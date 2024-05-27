@@ -9,8 +9,8 @@ type Props = {
 export default function RaidsLayout({ children }: Props) {
     return (
         <>
-            <div className='p-6 rounded-xl bg-primary-800 w-full'>
-                <div className='flex items-center border-b-2 border-primary-600 mb-4 pb-2'>
+            <div className='p-3 md:p-6 rounded-xl bg-primary-800 w-full border-1 border-primary-700'>
+                <div className='flex items-center border-b-[1px] border-primary-600 mb-4 pb-2'>
                     <h2 className='text-2xl mx-auto w-min'>Raids</h2>
                     <Button>
                         <PlusCircleIcon className='w-6' />

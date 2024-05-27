@@ -12,7 +12,8 @@ const config: Config = {
                 "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
                 "gradient-conic":
                     "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-                "death-knight": "url('/public/image/player-classes/deathknight-icon.webp')"
+                "icc": "url('/image/raids/icc/ICC.jpg')",
+                "raid-card": "linear-gradient(0deg, rgba(82,82,91,1) 0%, rgba(255,255,255,0) 100%);"
             },
             colors: {
                 primary: {
@@ -46,7 +47,10 @@ const config: Config = {
                 shaman: "#0070de",
                 warlock: "#9482c9",
                 warrior: "#c79c6e"
-            }
+            },
+            borderWidth: {
+                1: '1px'
+            },
         },
     },
     plugins: [],

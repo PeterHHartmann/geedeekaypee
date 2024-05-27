@@ -27,8 +27,8 @@ export function InsertCharacterForm({ children }: Props) {
                 <p className='mr-auto'>Add character</p>
             </Button>
             {isOpen
-                ? <div className='fixed w-full h-full backdrop-blur-sm inset-0' onClick={() => setIsOpen(false)}>
-                    <div className='bg-primary-800 border-2 border-primary-700 mx-auto mt-[5%] md:w-9/12 xl:w-4/12 rounded-xl px-4 py-4 md:px-8 pb-12' onClick={(e) => e.stopPropagation()}>
+                ? <div className='fixed z-10 w-full h-full backdrop-blur-sm inset-0' onClick={() => setIsOpen(false)}>
+                    <div className='bg-primary-800 border-1 border-primary-700 mx-auto mt-[5%] md:w-9/12 xl:w-4/12 rounded-xl px-4 py-4 md:px-8 pb-12' onClick={(e) => e.stopPropagation()}>
                         <div className='flex justify-between border-b-2 border-primary-600 pb-2 md:h-[3.5rem] items-center'>
                             <h1 className='text-2xl font-medium'>Add a new character to roster</h1>
                             <CloseButton onClick={() => setIsOpen(false)} />
@@ -77,7 +77,7 @@ function Input({ label, name, type, placeholder }: InputProps) {
             </label>
             <div className="relative">
                 <input
-                    className="peer block w-full rounded-md border-2 border-primary-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500 text-primary-950"
+                    className="peer block w-full rounded-md border-1 border-primary-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500 text-primary-950"
                     id={name}
                     type={type}
                     name={name}

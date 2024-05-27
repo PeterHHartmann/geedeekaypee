@@ -6,10 +6,8 @@ type Props = {
 
 export default function RosterListLayout({ children }: Props) {
     return (
-        <>
-            <div className='bg-primary-750 py-1 rounded-xl max-h-[400px] md:max-h-[600px] overflow-y-auto'>
-                {children}
-            </div>
-        </>
+        <div className='bg-primary-800 rounded-md border-1 border-primary-750 overflow-clip'>
+            {children}
+        </div>
     );
 }

@@ -5,8 +5,8 @@ import Navbar from '@/app/ui/navigation/navbar';
 
 export const metadata: Metadata = {
     title: {
-        template: '%s | GDKP',
-        default: 'GDKP',
+        template: '%s | geedeekaypee',
+        default: 'geedeekaypee',
     },
     description: 'The official GDKP website for scheduling, managing raids',
 };

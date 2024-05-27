@@ -26,3 +26,8 @@ export type RosterCharacter = {
     class_name: CharacterClass['name'];
     role_name: CharacterRole['name'];
 };
+
+export type Raid = {
+    id: string;
+    name: 'Icecrown Citadel' | 'Ruby Sanctum';
+};
