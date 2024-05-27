@@ -19,15 +19,17 @@ type Props = {
 
 export function CharacterRoleIcon(props: Props) {
     return (
-        <Image
-            className={clsx(
-                'rounded-full outline outline-1 outline-primary-550',
-                props.className
-            )}
-            src={icons[props.role_name]}
-            width={props.size || 25}
-            height={props.size || 25}
-            alt={`${props.role_name} character`}
-        />
+        <div className='flex justify-center items-center'>
+            <Image
+                className={clsx(
+                    'rounded-full outline outline-1 outline-primary-550',
+                    props.className
+                )}
+                src={icons[props.role_name]}
+                width={props.size || 26}
+                height={props.size || 26}
+                alt={`${props.role_name} character`}
+            />
+        </div>
     );
 }

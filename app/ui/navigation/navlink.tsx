@@ -18,9 +18,9 @@ export default function NavLink(props: NavLinkProps) {
         <Link
             href={props.href}
             className={clsx(
-                "flex h-[48px] grow items-center justify-center gap-2 rounded-md p-3 text-sm font-medium hover:bg-primary-50 hover:text-primary-950 md:flex-none md:justify-start md:p-2 md:px-3",
+                "flex h-[48px] grow items-center justify-center gap-2 rounded-md p-3 text-sm font-medium hover:bg-primary-950 hover:text-primary-50 dark:hover:bg-primary-50 dark:hover:text-primary-950 md:flex-none md:justify-start md:p-2 md:px-3",
                 {
-                    'bg-primary-50 text-primary-950': pathname === props.href,
+                    'bg-primary-950 text-primary-50 dark:bg-primary-50 dark:text-primary-950': pathname === props.href,
                 },
             )}
         >

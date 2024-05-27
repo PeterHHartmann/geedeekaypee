@@ -22,7 +22,7 @@ export default async function AuthLinks() {
                             await signOut();
                         }}
                     >
-                        <button className="flex h-[48px] grow items-center justify-center gap-2 rounded-md p-3 text-sm text-primary-50 font-medium hover:bg-primary-50 hover:text-primary-950 md:flex-none md:justify-start md:p-2 md:px-3">
+                        <button className="flex h-[48px] grow items-center justify-center gap-2 rounded-md p-3 text-sm dark:text-primary-50 font-medium hover:bg-primary-950 dark:hover:bg-primary-50 hover:text-primary-50 dark:hover:text-primary-950 md:flex-none md:justify-start md:p-2 md:px-3">
                             <ArrowRightStartOnRectangleIcon className="w-6" />
                             <p className="hidden md:block">Logout</p>
                         </button>

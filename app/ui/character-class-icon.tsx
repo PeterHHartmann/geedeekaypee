@@ -13,7 +13,9 @@ import type { CharacterClass } from '@/app/lib/definitions';
 
 
 type Props = {
-    class_name: CharacterClass['name'];
+    name: CharacterClass['name'];
+    size?: number;
+    className?: string;
 };
 
 const iconTable = {
@@ -29,16 +31,19 @@ const iconTable = {
     'Warrior': WarriorIcon
 };
 
-export function CharacterClassIcon(props: Props) {
+export function CharacterClassIcon({ name, className, size }: Props) {
 
-    const icon = iconTable[props.class_name];
+    const icon = iconTable[name];
 
     return (
-        <Image
-            src={icon}
-            width={25}
-            height={25}
-            alt='Death Knight class icon'
-        />
+        <div className='flex justify-center items-center'>
+            <Image
+                src={icon}
+                width={size || 26}
+                height={size || 26}
+                className='aspect-square'
+                alt={`${name} class icon`}
+            />
+        </div>
     );
 }
