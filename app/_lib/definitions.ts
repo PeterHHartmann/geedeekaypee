@@ -5,11 +5,6 @@ export type User = {
     password: string;
 };
 
-// export type CharacterRace = {
-//     id: string;
-//     name: string;
-// };
-
 export type CharacterClass = {
     id: string;
     name: 'Death Knight' | 'Druid' | 'Hunter' | 'Mage' | 'Paladin' | 'Priest' | 'Rogue' | 'Shaman' | 'Warlock' | 'Warrior';
@@ -31,3 +26,15 @@ export type Raid = {
     id: string;
     name: 'Icecrown Citadel' | 'Ruby Sanctum';
 };
+
+export type RolesForClasses = {
+    [class_id: CharacterClass['id']]: [{
+        role_id: CharacterRole['id'];
+        role_name: CharacterRole['name'];
+    }];
+};
+
+export type MutationResult = {
+    success: boolean;
+    messages?: string[];
+} | undefined;

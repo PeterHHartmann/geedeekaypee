@@ -1,6 +1,6 @@
 
-import { RAID_IMAGES } from '@/app/lib/constants';
-import type { Raid } from '@/app/lib/definitions';
+import { RAID_IMAGES } from '@/app/_lib/constants';
+import type { Raid } from '@/app/_lib/definitions';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 

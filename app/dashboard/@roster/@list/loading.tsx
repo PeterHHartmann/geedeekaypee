@@ -1,5 +1,9 @@
+import { LoadingSpinner } from '@/app/_ui/loading-spinner';
+
 export default function RosterListLoading() {
     return (
-        <h2 className='mx-auto w-max'>Loading Roster...</h2>
+        <div className='flex w-full justify-center mt-4'>
+            <LoadingSpinner size='lg' />
+        </div>
     );
 }

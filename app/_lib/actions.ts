@@ -1,7 +1,7 @@
 'use server';
-
-import type { CharacterClass, CharacterRole, RosterCharacter } from '@/app/lib/definitions';
-import { capitalize } from '@/app/lib/utils';
+import 'server-only';
+import type { CharacterClass, CharacterRole, MutationResult, RosterCharacter } from '@/app/_lib/definitions';
+import { capitalize } from '@/app/_lib/utils';
 import { auth, signIn } from '@/auth';
 import { sql } from '@vercel/postgres';
 import { AuthError, type User } from 'next-auth';
@@ -156,13 +156,37 @@ export async function fetchCharacterRoles() {
     }
 }
 
-type InsertCharacterResult = {
-    success: boolean;
-    message?: string;
-} | undefined;
+export async function fetchRolesForCharacterClasses() {
+    try {
+        const data = await sql<{ class_id: CharacterClass['id'], class_name: CharacterClass['name'], role_id: CharacterRole['id'], role_name: CharacterRole['name']; }>
+            `SELECT 
+                character_class_roles.class_id,
+                character_classes.name as class_name,
+                character_class_roles.role_id,
+                character_roles.name AS role_name
+            FROM character_class_roles
+            INNER JOIN character_roles ON character_class_roles.role_id = character_roles.id
+            INNER JOIN character_classes ON character_class_roles.class_id = character_classes.id;
+        `;
+        const classesWithAvailableRoles = data.rows.reduce<{ [class_id: CharacterClass['id']]: [{ role_id: CharacterRole['id'], role_name: CharacterRole['name']; }]; }>
+            ((acc, row) => {
+                if (!acc[row.class_id]) {
+                    acc[row.class_id] = [{ role_id: row.role_id, role_name: row.role_name }];
+                } else {
+                    acc[row.class_id].push({ role_id: row.role_id, role_name: row.role_name });
+                }
+                return acc;
+            }, {});
+
+        return classesWithAvailableRoles;
+    } catch (error) {
+        console.log(error);
+        throw new Error('Failed to fetch filtered character roles');
+    }
+}
 
 export async function insertCharacter(
-    prevState: InsertCharacterResult,
+    prevState: MutationResult,
     formData: FormData
 ) {
     const session = await auth();
@@ -197,6 +221,33 @@ export async function insertCharacter(
         revalidatePath('/dashboard/@roster');
         return { success: true };
     } catch (error) {
+        return { success: false, messages: ['Failed to create character'] };
+    }
+}
+
+export async function deleteCharacter(
+    prevState: MutationResult,
+    formData: FormData
+) {
+    const rawData = {
+        id: formData.get('character_id')
+    };
+
+    const schema = z.object({ id: z.string() });
+    const parsed = schema.safeParse(rawData);
+    if (parsed.success) {
+        try {
+            await sql<RosterCharacter>
+                `DELETE FROM characters 
+                WHERE id = ${parsed.data.id}
+                `;
+            revalidatePath('/dashboard/@roster');
+            return { success: true };
+        } catch (error) {
+            console.log(error);
+            return { success: false, messages: ['Failed to create character'] };
+        }
+    } else {
         return { success: false, messages: ['Failed to create character'] };
     }
 }

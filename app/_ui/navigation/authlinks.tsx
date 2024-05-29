@@ -1,6 +1,6 @@
 import { auth, signOut } from '@/auth';
-import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
-import NavLink from '@/app/ui/navigation/navlink';
+import { ArrowRightEndOnRectangleIcon, ArrowRightStartOnRectangleIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { NavLink } from '@/app/_ui/navigation/navlink';
 
 export default async function AuthLinks() {
     const session = await auth();
@@ -10,10 +10,9 @@ export default async function AuthLinks() {
         return (
             <>
                 <li>
-                    <NavLink
-                        name={user.name || 'User'}
-                        href={`/user/${user.name}`}
-                        icon='UserCircleIcon' />
+                    <NavLink name={user.name || 'User'} href={`/user/${user.name}`}>
+                        <UserCircleIcon className='w-6' />
+                    </NavLink>
                 </li>
                 <li>
                     <form
@@ -33,7 +32,9 @@ export default async function AuthLinks() {
     }
     return (
         <li>
-            <NavLink name='Login' href='/login' icon='ArrowRightEndOnRectangleIcon' />
+            <NavLink name='Login' href='/login'>
+                <ArrowRightEndOnRectangleIcon className='w-6' />
+            </NavLink>
         </li>
     );
 }

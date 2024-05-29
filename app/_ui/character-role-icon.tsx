@@ -2,7 +2,7 @@ import DpsIcon from '@/public/image/player-roles/Dps.webp';
 import TankIcon from '@/public/image/player-roles/Tank.webp';
 import HealIcon from '@/public/image/player-roles/Heal.webp';
 import Image from 'next/image';
-import type { CharacterRole } from '@/app/lib/definitions';
+import type { CharacterRole } from '@/app/_lib/definitions';
 import clsx from 'clsx';
 
 const icons = {

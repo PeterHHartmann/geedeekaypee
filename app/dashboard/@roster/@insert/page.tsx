@@ -1,12 +1,10 @@
-import { CharacterClassSelect } from '@/app/ui/roster/class-select';
-import { CharacterRoleSelect } from '@/app/ui/roster/role-select';
-import { InsertCharacterForm } from '@/app/ui/roster/roster-form';
+import { InsertCharacterForm } from '@/app/_ui/roster/insert-character-form';
+import { fetchRolesForCharacterClasses, fetchCharacterClasses } from '@/app/_lib/actions';
 
-export default function NewRosterCharacterPartial() {
+export default async function NewRosterCharacterPartial() {
+    const all_classes = await fetchCharacterClasses();
+    const all_roles_for_classes = await fetchRolesForCharacterClasses();
     return (
-        <InsertCharacterForm>
-            <CharacterClassSelect />
-            <CharacterRoleSelect />
-        </InsertCharacterForm>
+        <InsertCharacterForm all_character_classes={all_classes} all_roles_for_classes={all_roles_for_classes} />
     );
 }

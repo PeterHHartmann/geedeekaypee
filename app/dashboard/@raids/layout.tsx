@@ -1,4 +1,4 @@
-import { Button } from '@/app/ui/button';
+import { Button } from '@/app/_ui/button';
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import type { ReactNode } from 'react';
 

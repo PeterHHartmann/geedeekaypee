@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root {
-    --foreground-color: rgb(250, 250, 250);
+    --foreground-color: #fafafa;
     --background-start-color: rgb(24, 24, 27);
-    --background-end-color: rgb(9, 9, 11);
+    --background-end-color: #09090b;
 }
 
 * {
@@ -14,7 +14,7 @@
 }
 
 body {
-    color: var(--foreground-color);
+    color: #fafafa;
 }
 
 @layer utilities {

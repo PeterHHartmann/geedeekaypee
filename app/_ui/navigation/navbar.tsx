@@ -1,10 +1,10 @@
 import Link from 'next/link';
-import AuthLinks from '@/app/ui/navigation/authlinks';
-import NavLink from '@/app/ui/navigation/navlink';
+import AuthLinks from '@/app/_ui/navigation/authlinks';
+import { NavLink } from '@/app/_ui/navigation/navlink';
 import { auth } from '@/auth';
-import { ThemeSwitch } from '@/app/ui/navigation/theme-switch';
-import { CubeIcon } from '@heroicons/react/24/outline';
-import { lusitana } from '@/app/ui/fonts';
+import { ThemeSwitch } from '@/app/_ui/navigation/theme-switch';
+import { CubeIcon, HomeIcon } from '@heroicons/react/24/outline';
+import { lusitana } from '@/app/_ui/fonts';
 
 export default async function Navbar() {
     const session = await auth();
@@ -23,7 +23,9 @@ export default async function Navbar() {
                     </Link>
                     <ul className='md:flex md:gap-x-1 lg:gap-x-6 md:justify-between md:items-center'>
                         {user ?
-                            <NavLink name='Dashboard' href='/dashboard' icon='HomeIcon' />
+                            <NavLink name='Dashboard' href='/dashboard'>
+                                <HomeIcon className='w-6' />
+                            </NavLink>
                             : null
                         }
                         <AuthLinks />

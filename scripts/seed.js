@@ -3,6 +3,7 @@ const {
   users,
   character_classes,
   character_roles,
+  character_class_roles,
   characters
 } = require('../app/lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
@@ -106,6 +107,35 @@ async function seedCharacterRoles(client) {
         }
     } catch (error) {
         console.error('Error seeding character roles:', error);
+        throw error;
+    }
+}
+
+async function seedCharacterClassRoles(client){
+    try {
+        await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+        const createTable = await client.sql`CREATE TABLE IF NOT EXISTS character_class_roles (
+            id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+            class_id UUID REFERENCES character_classes (id),
+            role_id UUID REFERENCES character_roles (id)
+        )`
+        console.log(`Created "character_class_roles" table`)
+        const insertedCharacterClassRoles = await Promise.all(
+            character_class_roles.map(async (character_class_role) => {
+                return client.sql`
+                    INSERT INTO character_class_roles (id, class_id, role_id)
+                    VALUES (${character_class_role.id}, ${character_class_role.class_id}, ${character_class_role.role_id})
+                    ON CONFLICT (id) DO NOTHING;
+                `;
+            }),
+        );
+
+        return {
+            createTable,
+            class_roles: insertedCharacterClassRoles
+        }
+    } catch (error) {
+                console.error('Error seeding character class roles:', error);
         throw error;
     }
 }
@@ -267,6 +297,7 @@ async function main() {
   await seedUsers(client);
   await seedCharacterClasses(client);
   await seedCharacterRoles(client);
+  await seedCharacterClassRoles(client);
   await seedCharacters(client);
 //   await seedCustomers(client);
 //   await seedInvoices(client);

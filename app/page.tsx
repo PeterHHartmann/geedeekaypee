@@ -1,4 +1,4 @@
-import Logo from '@/app/ui/logo';
+import Logo from '@/app/_ui/logo';
 
 export default function Home() {
     return (

@@ -11,7 +11,6 @@ export function SlidingToolbarLeft({ children }: Props) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     return (
-        // button className='flex justify-center items-center p-1 w-auto h-auto aspect-square rounded-full hover:bg-primary-50 hover:text-primary-950'>
         <div className={clsx(
             'flex justify-center items-center gap-1 bg-transparent py-1 rounded-full ml-auto',
             {
