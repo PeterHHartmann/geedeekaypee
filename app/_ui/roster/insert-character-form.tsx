@@ -3,10 +3,10 @@
 import { insertCharacter } from '@/app/_lib/actions';
 import type { CharacterClass, CharacterRole } from '@/app/_lib/definitions';
 import { Button } from '@/app/_ui/button';
-import { FormErrors } from '@/app/_ui/form-error';
+import { FormErrors } from '@/app/_ui/form/form-error';
 import { Modal } from '@/app/_ui/modal';
-import { Select } from '@/app/_ui/select';
-import { SubmitButton } from '@/app/_ui/submit-button';
+import { SelectInput } from '@/app/_ui/form/select-input';
+import { SubmitButton } from '@/app/_ui/form/submit-button';
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState, type ChangeEvent } from 'react';
 import { useFormState } from 'react-dom';
@@ -62,18 +62,18 @@ export function InsertCharacterForm({ all_character_classes, all_roles_for_class
                         </div>
                     </div>
                     <div className='w-full'>
-                        <Select name='class_id' label='Class' required onChange={handleClassSelectChanged}>
+                        <SelectInput name='class_id' label='Class' required onChange={handleClassSelectChanged}>
                             {all_character_classes.map((character_class, index) => (
                                 <option key={`class-selection-option-${character_class.name}`} value={character_class.id} defaultValue={initialSelect}>{character_class.name}</option>
                             ))}
-                        </Select>
+                        </SelectInput>
                     </div>
                     <div className='w-full'>
-                        <Select name='role_id' label='Role' required>
+                        <SelectInput name='role_id' label='Role' required>
                             {roles.map((role, index) => (
                                 <option key={`role-selection-option-${role.role_id}`} value={role.role_id}>{`${role.role_name}`}</option>
                             ))}
-                        </Select>
+                        </SelectInput>
                     </div>
                     <FormErrors result={state} />
                     <SubmitButton>

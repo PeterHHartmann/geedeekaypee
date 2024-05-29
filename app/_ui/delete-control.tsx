@@ -1,9 +1,9 @@
 'use client';
 import { deleteCharacter } from '@/app/_lib/actions';
 import type { RosterCharacter } from '@/app/_lib/definitions';
-import { FormErrors } from '@/app/_ui/form-error';
+import { FormErrors } from '@/app/_ui/form/form-error';
 import { Modal } from '@/app/_ui/modal';
-import { SubmitButton } from '@/app/_ui/submit-button';
+import { SubmitButton } from '@/app/_ui/form/submit-button';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { useState } from 'react';

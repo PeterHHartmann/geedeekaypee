@@ -5,8 +5,7 @@ type Props = PropsWithChildren & React.SelectHTMLAttributes<HTMLSelectElement> &
     name: string;
 };
 
-export function Select({ children, name, label, ...rest }: Props) {
-
+export function SelectInput({ children, name, label, ...rest }: Props) {
     return (
         <>
             <label className="mb-3 mt-5 block font-semibold" htmlFor={name}>
