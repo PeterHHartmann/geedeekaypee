@@ -27,11 +27,13 @@ export type Raid = {
     name: 'Icecrown Citadel' | 'Ruby Sanctum';
 };
 
-export type RolesForClasses = {
-    [class_id: CharacterClass['id']]: [{
-        role_id: CharacterRole['id'];
-        role_name: CharacterRole['name'];
-    }];
+export type CharacterRoleOption = {
+    role_id: CharacterRole['id'];
+    role_name: CharacterRole['name'];
+};
+
+export type CharacterClassRoleOptions = {
+    [class_id: CharacterClass['id']]: CharacterRoleOption[];
 };
 
 export type MutationResult = {

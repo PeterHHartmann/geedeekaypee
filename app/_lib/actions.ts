@@ -1,6 +1,6 @@
 'use server';
 import 'server-only';
-import type { CharacterClass, CharacterRole, MutationResult, RosterCharacter } from '@/app/_lib/definitions';
+import type { CharacterClass, CharacterClassRoleOptions, CharacterRole, MutationResult, RosterCharacter } from '@/app/_lib/definitions';
 import { capitalize } from '@/app/_lib/utils';
 import { auth, signIn } from '@/auth';
 import { sql } from '@vercel/postgres';
@@ -9,7 +9,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 export async function authenticate(
-    prevState: string | undefined,
+    _prevState: string | undefined,
     formData: FormData,
 ) {
     try {
@@ -27,84 +27,6 @@ export async function authenticate(
     }
 }
 
-export async function getBnetAccessToken() {
-    const client_id = process.env.BNET_CLIENT_ID;
-    const client_secret = process.env.BNET_CLIENT_SECRET;
-    try {
-        const response = await fetch('https://eu.battle.net/oauth/token?grant_type=client_credentials', {
-            method: 'POST',
-            headers: {
-                Authorization: 'Basic ' + btoa(client_id + ':' + client_secret),
-            }
-        });
-        if (response.ok) {
-            const data = await response.json();
-            return data.access_token;
-        } else {
-            throw new Error(`Failed to fetch Bnet Access Token: ${response.status}`,);
-        }
-
-    } catch (error) {
-        throw error;
-    }
-}
-
-export async function getPlayableRaces() {
-    try {
-        const token = await getBnetAccessToken();
-        const response = await fetch('https://eu.api.blizzard.com/data/wow/playable-race/index?:region=eu&namespace=static-classic-eu&locale=en_US', {
-            headers: {
-                Authorization: 'Bearer ' + token
-            }
-        });
-        if (response.ok) {
-            const data = await response.json();
-            return data.races;
-        } else {
-            console.log(response.status);
-        }
-
-    } catch (error) {
-
-    }
-}
-
-export async function getPlayableClasses() {
-    const token = await getBnetAccessToken();
-    try {
-        const response = await fetch('https://eu.api.blizzard.com/data/wow/playable-class/index?:region=eu&namespace=static-classic-eu&locale=en_US', {
-            headers: {
-                Authorization: 'Bearer ' + token
-            }
-        });
-        if (response.ok) {
-            const data = await response.json();
-            console.log(data);
-
-            return data.classes;
-
-        } else {
-            throw new Error(`Failed to fetch Playable Classes: ${response.status}`);
-        }
-
-    } catch (error) {
-        throw new Error("error");
-    }
-}
-
-export async function getWowIcon() {
-    const token = await getBnetAccessToken();
-    try {
-        const response = await fetch('https://eu.api.blizzard.com/data/wow/playable-class/index?:region=eu&namespace=static-classic-eu&locale=en_US', {
-            headers: {
-                Authorization: 'Bearer ' + token
-            }
-        });
-    } catch (error) {
-
-    }
-}
-
 export async function fetchCharacterRoster(user_email: User['email']) {
     if (user_email) {
         try {
@@ -116,7 +38,7 @@ export async function fetchCharacterRoster(user_email: User['email']) {
                 character_classes.name AS class_name,
                 character_roles.name AS role_name
                 FROM characters
-                INNER JOIN character_classes ON characters.class_id = character_classes.id 
+                INNER JOIN character_classes ON characters.class_id = character_classes.id
                 INNER JOIN character_roles ON characters.role_id = character_roles.id
                 WHERE characters.user_email = ${user_email}
                 ORDER BY created_at ASC;
@@ -156,9 +78,14 @@ export async function fetchCharacterRoles() {
     }
 }
 
-export async function fetchRolesForCharacterClasses() {
+export async function fetchRolesForCharacterClasses(): Promise<CharacterClassRoleOptions> {
     try {
-        const data = await sql<{ class_id: CharacterClass['id'], class_name: CharacterClass['name'], role_id: CharacterRole['id'], role_name: CharacterRole['name']; }>
+        const data = await sql<{
+            class_id: CharacterClass['id'],
+            class_name: CharacterClass['name'],
+            role_id: CharacterRole['id'],
+            role_name: CharacterRole['name'];
+        }>
             `SELECT 
                 character_class_roles.class_id,
                 character_classes.name as class_name,
@@ -168,7 +95,7 @@ export async function fetchRolesForCharacterClasses() {
             INNER JOIN character_roles ON character_class_roles.role_id = character_roles.id
             INNER JOIN character_classes ON character_class_roles.class_id = character_classes.id;
         `;
-        const classesWithAvailableRoles = data.rows.reduce<{ [class_id: CharacterClass['id']]: [{ role_id: CharacterRole['id'], role_name: CharacterRole['name']; }]; }>
+        const classesWithAvailableRoles = data.rows.reduce<CharacterClassRoleOptions>
             ((acc, row) => {
                 if (!acc[row.class_id]) {
                     acc[row.class_id] = [{ role_id: row.role_id, role_name: row.role_name }];
@@ -186,7 +113,7 @@ export async function fetchRolesForCharacterClasses() {
 }
 
 export async function insertCharacter(
-    prevState: MutationResult,
+    _prevState: MutationResult,
     formData: FormData
 ) {
     const session = await auth();
@@ -226,7 +153,7 @@ export async function insertCharacter(
 }
 
 export async function deleteCharacter(
-    prevState: MutationResult,
+    _prevState: MutationResult,
     formData: FormData
 ) {
     const rawData = {
@@ -251,3 +178,81 @@ export async function deleteCharacter(
         return { success: false, messages: ['Failed to create character'] };
     }
 }
+
+// export async function getBnetAccessToken() {
+//     const client_id = process.env.BNET_CLIENT_ID;
+//     const client_secret = process.env.BNET_CLIENT_SECRET;
+//     try {
+//         const response = await fetch('https://eu.battle.net/oauth/token?grant_type=client_credentials', {
+//             method: 'POST',
+//             headers: {
+//                 Authorization: 'Basic ' + btoa(client_id + ':' + client_secret),
+//             }
+//         });
+//         if (response.ok) {
+//             const data = await response.json();
+//             return data.access_token;
+//         } else {
+//             throw new Error(`Failed to fetch Bnet Access Token: ${response.status}`,);
+//         }
+
+//     } catch (error) {
+//         throw error;
+//     }
+// }
+
+// export async function getPlayableRaces() {
+//     try {
+//         const token = await getBnetAccessToken();
+//         const response = await fetch('https://eu.api.blizzard.com/data/wow/playable-race/index?:region=eu&namespace=static-classic-eu&locale=en_US', {
+//             headers: {
+//                 Authorization: 'Bearer ' + token
+//             }
+//         });
+//         if (response.ok) {
+//             const data = await response.json();
+//             return data.races;
+//         } else {
+//             console.log(response.status);
+//         }
+
+//     } catch (error) {
+
+//     }
+// }
+
+// export async function getPlayableClasses() {
+//     const token = await getBnetAccessToken();
+//     try {
+//         const response = await fetch('https://eu.api.blizzard.com/data/wow/playable-class/index?:region=eu&namespace=static-classic-eu&locale=en_US', {
+//             headers: {
+//                 Authorization: 'Bearer ' + token
+//             }
+//         });
+//         if (response.ok) {
+//             const data = await response.json();
+//             console.log(data);
+
+//             return data.classes;
+
+//         } else {
+//             throw new Error(`Failed to fetch Playable Classes: ${response.status}`);
+//         }
+
+//     } catch (error) {
+//         throw new Error("error");
+//     }
+// }
+
+// export async function getWowIcon() {
+//     const token = await getBnetAccessToken();
+//     try {
+//         const response = await fetch('https://eu.api.blizzard.com/data/wow/playable-class/index?:region=eu&namespace=static-classic-eu&locale=en_US', {
+//             headers: {
+//                 Authorization: 'Bearer ' + token
+//             }
+//         });
+//     } catch (error) {
+
+//     }
+// }

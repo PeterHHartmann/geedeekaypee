@@ -14,7 +14,7 @@ export function SelectInput({ children, name, label, ...rest }: Props) {
             <select
                 {...rest}
                 name={name}
-                className='block w-full rounded-md border-1 border-primary-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500'
+                className='w-full rounded-md border-1 border-primary-950 dark:border-primary-600 py-[9px] px-5 text-sm outline-2 placeholder:text-gray-500'
             >
                 {children}
             </select>
