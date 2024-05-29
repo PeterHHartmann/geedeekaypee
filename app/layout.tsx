@@ -22,8 +22,8 @@ export default function RootLayout({
             <body className={`${inter.className} antialiased bg-gradient-to-b from-primary-50 to-primary-150 dark:bg-gradient-to-b dark:from-primary-900 dark:to-primary-950 text-primary-950 dark:text-primary-50`}>
                 <Providers>
                     <Navbar />
+                    {children}
                 </Providers>
-                {children}
             </body>
         </html>
     );
