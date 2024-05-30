@@ -5,7 +5,7 @@ import { authConfig } from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import { sql } from '@vercel/postgres';
-import type { User } from '@/app/_lib/definitions';
+import type { User } from '@/lib/definitions';
 import bcrypt from 'bcrypt';
 
 async function getUser(email: string): Promise<User | undefined> {

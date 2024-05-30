@@ -1,5 +1,5 @@
 import { CubeIcon } from '@heroicons/react/24/outline';
-import { lusitana } from '@/app/_ui/fonts';
+import { lusitana } from '@/app/fonts';
 
 export default function Logo() {
     return (

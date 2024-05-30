@@ -1,4 +1,4 @@
-import type { CharacterClass, Raid } from '@/app/_lib/definitions';
+import type { CharacterClass, Raid } from '@/lib/definitions';
 import icc from '@/public/image/raids/icc/icc.jpg';
 import rubysanctum from '@/public/image/raids/rubysanctum/rubysanctum.jpg';
 import type { StaticImageData } from 'next/image';
@@ -20,3 +20,5 @@ export const RAID_IMAGES: { [key in Raid['name']]: StaticImageData; } = {
     'Icecrown Citadel': icc,
     'Ruby Sanctum': rubysanctum
 };
+
+export const SHIMMER = `relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_1.5s_infinite] before:bg-gradient-to-r before:from-transparent before:via-primary-200/10 before:to-transparent`;

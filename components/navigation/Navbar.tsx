@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import AuthLinks from '@/app/_ui/navigation/authlinks';
-import { NavLink } from '@/app/_ui/navigation/navlink';
+import AuthLinks from '@/components/navigation/AuthLinks';
+import { NavLink } from '@/components/navigation/NavLink';
 import { auth } from '@/auth';
-import { ThemeSwitch } from '@/app/_ui/navigation/theme-switch';
+import { ThemeSwitch } from '@/components/navigation/ThemeSwitch';
 import { CubeIcon, HomeIcon } from '@heroicons/react/24/outline';
-import { lusitana } from '@/app/_ui/fonts';
+import { lusitana } from '@/app/fonts';
 
-export default async function Navbar() {
+export async function Navbar() {
     const session = await auth();
     const user = session?.user;
 

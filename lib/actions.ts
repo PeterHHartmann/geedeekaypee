@@ -1,7 +1,7 @@
 'use server';
 import 'server-only';
-import type { CharacterClass, CharacterClassRoleOptions, CharacterRole, MutationResult, RosterCharacter } from '@/app/_lib/definitions';
-import { capitalize } from '@/app/_lib/utils';
+import type { CharacterClass, CharacterClassRoleOptions, CharacterRole, MutationResult, RosterCharacter } from '@/lib/definitions';
+import { capitalize } from '@/lib/utils';
 import { auth, signIn } from '@/auth';
 import { sql } from '@vercel/postgres';
 import { AuthError, type User } from 'next-auth';

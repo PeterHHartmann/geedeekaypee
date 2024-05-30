@@ -1,9 +1,32 @@
-import { LoadingSpinner } from '@/app/_ui/loading-spinner';
+import { RosterCharacterSkeleton } from '@/components/roster/RosterCharacter';
+import { SHIMMER } from '@/lib/constants';
 
 export default function RosterListLoading() {
     return (
-        <div className='flex w-full justify-center mt-4'>
-            <LoadingSpinner size='lg' />
-        </div>
+        <>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+            <div className={`${RosterCharacterSkeleton} ${SHIMMER}`}></div>
+        </>
     );
 }

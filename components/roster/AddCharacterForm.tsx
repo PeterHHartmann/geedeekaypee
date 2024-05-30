@@ -1,12 +1,12 @@
 'use client';
 
-import { insertCharacter } from '@/app/_lib/actions';
-import type { CharacterClass, CharacterClassRoleOptions, CharacterRoleOption } from '@/app/_lib/definitions';
-import { Button } from '@/app/_ui/button';
-import { FormErrors } from '@/app/_ui/form/form-error';
-import { Modal } from '@/app/_ui/modal';
-import { SelectInput } from '@/app/_ui/form/select-input';
-import { SubmitButton } from '@/app/_ui/form/submit-button';
+import { insertCharacter } from '@/lib/actions';
+import type { CharacterClass, CharacterClassRoleOptions, CharacterRoleOption } from '@/lib/definitions';
+import { Button } from '@/components/Button';
+import { FormErrors } from '@/components/form/form-error';
+import { Modal } from '@/components/Modal';
+import { SelectInput } from '@/components/form/select-input';
+import { SubmitButton } from '@/components/form/submit-button';
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState, type ChangeEvent } from 'react';
 import { useFormState } from 'react-dom';

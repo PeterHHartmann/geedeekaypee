@@ -1,4 +1,5 @@
-import { CloseButton } from '@/app/_ui/close-button';
+import { Button } from '@/components/Button';
+import { XCircleIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
 
@@ -18,7 +19,7 @@ export function Modal({ children, isOpen, setIsOpen, className, headerText, subH
     }
 
     return (
-        <div className='flex fixed justify-center z-10 w-full h-full backdrop-blur-sm inset-0' onClick={() => setIsOpen(false)}>
+        <div className='flex fixed justify-center z-40 w-full h-full backdrop-blur-sm inset-0' onClick={() => setIsOpen(false)}>
             <div className={clsx(
                 'bg-primary-150 dark:bg-primary-800 border-1 border-primary-900 dark:border-primary-700 mx-1 md:mx-auto mt-20 sm:mt-40 md:mt-60 mb-auto rounded-xl px-2 md:px-8 pt-2 md:pt-4 pb-8',
                 className)}
@@ -40,4 +41,16 @@ export function Modal({ children, isOpen, setIsOpen, className, headerText, subH
     );
 }
 
-// md: w - 9 / 12 lg: w - 4 / 12;
+export function CloseButton({ className, ...rest }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+    return (
+        <Button
+            {...rest}
+            className={clsx(
+                'p-1 md:p-1 md:px-1 md:flex md:justify-center aspect-square',
+                className
+            )}
+        >
+            <XCircleIcon className='w-8' />
+        </Button>
+    );
+}

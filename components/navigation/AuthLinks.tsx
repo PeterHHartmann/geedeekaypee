@@ -1,6 +1,6 @@
 import { auth, signOut } from '@/auth';
 import { ArrowRightEndOnRectangleIcon, ArrowRightStartOnRectangleIcon, UserCircleIcon } from '@heroicons/react/24/outline';
-import { NavLink } from '@/app/_ui/navigation/navlink';
+import { NavLink } from '@/components/navigation/NavLink';
 
 export default async function AuthLinks() {
     const session = await auth();

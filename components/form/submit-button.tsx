@@ -1,5 +1,5 @@
 'use client';
-import { Button } from '@/app/_ui/button';
+import { Button } from '@/components/Button';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import type { PropsWithChildren } from 'react';

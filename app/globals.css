@@ -11,6 +11,9 @@
 * {
     scrollbar-width: thin;
     scrollbar-color: #fafafa #18181b;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 body {

@@ -1,10 +1,8 @@
-import { Button } from '@/app/_ui/button';
-import { LoadingSpinner } from '@/app/_ui/loading-spinner';
+import { SHIMMER } from '@/lib/constants';
 
 export default function AddCharacterSectionLoading() {
     return (
-        <Button className='w-full'>
-            <LoadingSpinner size='sm' />
-        </Button>
+        <div className={`flex w-full h-[48px] items-center justify-center gap-2 rounded-md ${SHIMMER}`}>
+        </div>
     );
 }
