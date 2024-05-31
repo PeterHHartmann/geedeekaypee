@@ -19,15 +19,15 @@ type Props = {
 
 export function CharacterRoleIcon(props: Props) {
     return (
-        <div className={`w-7 h-7 rounded-full border-2 border-slate-800`}>
+        <div className={`flex justify-center items-center`}>
             <Image
                 className={clsx(
-                    'object-cover',
+                    'object-fit brightness-125 rounded-full border-1 border-slate-700',
                     props.className
                 )}
                 src={icons[props.role_name]}
-                width={props.size || 24}
-                height={props.size || 24}
+                width={props.size || 26}
+                height={props.size || 26}
                 alt={`${props.role_name} character`}
             />
         </div>
