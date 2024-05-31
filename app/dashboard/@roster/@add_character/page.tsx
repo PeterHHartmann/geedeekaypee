@@ -4,7 +4,6 @@ import { fetchRolesForCharacterClasses, fetchCharacterClasses } from '@/lib/acti
 export default async function AddCharacterSection() {
     const allCharacterClasses = await fetchCharacterClasses();
     const characterClassRoleOptions = await fetchRolesForCharacterClasses();
-
     return (
         <AddCharacterForm characterClasses={allCharacterClasses} characterClassRolesOptions={characterClassRoleOptions} />
     );

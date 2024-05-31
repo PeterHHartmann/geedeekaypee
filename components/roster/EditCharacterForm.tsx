@@ -1,9 +1,14 @@
 'use client';
 import { ToolbarButton } from '@/components/SlidingToolbarLeft';
+import type { RosterCharacter } from '@/lib/definitions';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 
-export function EditCharacterForm() {
+type Props = {
+    character: RosterCharacter;
+};
+
+export function EditCharacterForm({ character }: Props) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     return (
         <>
