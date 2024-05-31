@@ -5,7 +5,7 @@ const {
   character_roles,
   character_class_roles,
   characters
-} = require('../app/lib/placeholder-data.js');
+} = require('../lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
 
 async function seedUsers(client) {
