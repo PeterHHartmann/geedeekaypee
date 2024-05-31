@@ -15,7 +15,7 @@ export function SubmitButton({ children, className }: Props) {
     return (
         <Button className={clsx(
             'flex w-full justify-center items-center',
-            { 'hover:bg-primary-950 hover:text-primary-50 dark:hover:bg-primary-50 dark:hover:text-primary-950': pending == true },
+            { 'hover:bg-slate-950 hover:text-white dark:hover:bg-slate-50 dark:hover:text-slate-950': pending == true },
             className
         )}>
             {pending == true

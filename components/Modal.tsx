@@ -21,15 +21,15 @@ export function Modal({ children, isOpen, setIsOpen, className, headerText, subH
     return (
         <div className='flex fixed justify-center z-40 w-full h-full backdrop-blur-sm inset-0' onClick={() => setIsOpen(false)}>
             <div className={clsx(
-                'bg-primary-150 dark:bg-primary-800 border-1 border-primary-900 dark:border-primary-700 mx-1 md:mx-auto mt-20 sm:mt-40 md:mt-60 mb-auto rounded-xl px-2 md:px-8 pt-2 md:pt-4 pb-8',
+                'bg-slate-200 dark:bg-slate-800 border-1 border-slate-900 dark:border-slate-700 mx-1 md:mx-auto mt-20 sm:mt-40 md:mt-60 mb-auto rounded-xl px-2 md:px-8 pt-2 md:pt-4 pb-8',
                 className)}
                 onClick={(e) => e.stopPropagation()}>
-                <div className='flex gap-4 justify-between border-b-1 dark:border-primary-700 pb-2 md:h-[3.5rem] items-center mb-2'>
+                <div className='flex gap-4 justify-between border-b-1 dark:border-slate-700 pb-2 md:h-[3.5rem] items-center mb-2'>
                     <h1 className='text-2xl font-medium'>{headerText}</h1>
                     <CloseButton onClick={() => setIsOpen(false)} />
                 </div>
                 {subHeaderText
-                    && <div className='border-b-1 dark:border-primary-700 pb-2'>
+                    && <div className='border-b-1 dark:border-slate-700 pb-2'>
                         <h2>{subHeaderText}</h2>
                     </div>
                 }

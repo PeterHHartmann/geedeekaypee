@@ -10,16 +10,21 @@ export function RosterCharacter({ character }: {
     character: RosterCharacter;
 }) {
     return (
-        <div className={`flex flex-nowrap items-center gap-1 ${RosterCharacterSkeleton}`}>
-            <CharacterRoleIcon role_name={character.role_name} />
-            <CharacterClassIcon name={character.class_name} />
-            <p className={`${CLASS_TEXT_COLOR[character.class_name]}`}>{character.name}</p>
+        <div className={`
+        flex flex-nowrap items-center gap-1 
+        w-full h-[2.375rem] border-b-1 border-slate-500 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700
+        `}>
+            <div className='flex items-center h-full gap-1 px-2'>
+                <CharacterRoleIcon role_name={character.role_name} />
+                <CharacterClassIcon name={character.class_name} />
+                <p className={`${CLASS_TEXT_COLOR[character.class_name]}`}>{character.name}</p>
+            </div>
             <SlidingToolbarLeft>
-                <EditCharacterForm />
+                <EditCharacterForm character={character} />
                 <DeleteCharacterForm character={character} />
             </SlidingToolbarLeft>
         </div>
     );
 }
 
-export const RosterCharacterSkeleton = 'object-cover w-full h-[2.375rem] px-1 py-1 border-b-[1px] border-primary-700 hover:bg-primary-200 dark:hover:bg-primary-750';
+export const RosterCharacterSkeleton = 'object-cover w-full h-[2.375rem] px-1 py-1 border-b-[1px] border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700';

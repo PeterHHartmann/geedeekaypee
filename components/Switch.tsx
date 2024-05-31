@@ -1,12 +1,17 @@
+
 'use client';
 
 import { LoadingSpinner } from '@/components/LoadingSpinner';
-import { MoonIcon, SunIcon } from '@heroicons/react/24/outline';
-import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, type ReactNode } from 'react';
 
-export function ThemeSwitch() {
-    const { setTheme, resolvedTheme } = useTheme();
+// UNFINISHED COMPONENT
+
+type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    children: ReactNode;
+    isOn: boolean;
+};
+
+export function ThemeSwitch({ children, isOn, ...rest }: Props) {
     const [mounted, setMounted] = useState<boolean>(false);
 
     useEffect(() => {
@@ -28,14 +33,11 @@ export function ThemeSwitch() {
 
     return (
         <button
-            onClick={resolvedTheme == 'light' ? () => setTheme('dark') : () => setTheme('light')}
+            {...rest}
             className={containerStyle}
         >
             <div className={'flex justify-center items-center h-full aspect-square rounded-full bg-slate-50 dark:bg-indigo-700 transition-margin dark:ml-6'}>
-                {resolvedTheme == 'light'
-                    ? <SunIcon className='w-5' />
-                    : <MoonIcon className='w-5' />
-                }
+                {children}
             </div>
         </button>
     );

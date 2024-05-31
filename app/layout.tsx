@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body className={`${inter.className} antialiased bg-gradient-to-b from-primary-50 to-primary-150 dark:bg-gradient-to-b dark:from-primary-900 dark:to-primary-950 text-primary-950 dark:text-primary-50`}>
+            <body className={`${inter.className} antialiased bg-gradient-to-b from-slate-50 to-slate-100 dark:bg-gradient-to-b dark:from-slate-900 dark:to-slate-950 text-slate-950 dark:text-white`}>
                 <Providers>
                     <Navbar />
                     {children}

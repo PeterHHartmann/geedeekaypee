@@ -15,7 +15,7 @@ export function InputField({ label, name, type, placeholder }: InputProps) {
             </label>
             <div className="relative">
                 <input
-                    className="peer block w-full rounded-md border-1 border-primary-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                    className="peer block w-full rounded-md border-1 border-slate-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-slate-500"
                     id={name}
                     type={type}
                     name={name}

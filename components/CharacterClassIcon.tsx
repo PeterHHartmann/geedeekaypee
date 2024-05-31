@@ -35,12 +35,12 @@ export function CharacterClassIcon({ name, className, size }: Props) {
     const icon = iconTable[name];
 
     return (
-        <div className='flex justify-center items-center'>
+        <div className='aspect-square flex justify-center items-center'>
             <Image
                 src={icon}
                 width={size || 26}
                 height={size || 26}
-                className='aspect-square'
+                className='object-fill'
                 alt={`${name} class icon`}
             />
         </div>

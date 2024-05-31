@@ -7,6 +7,6 @@ export const metadata: Metadata = {
 
 export default async function Page() {
     return (
-        <h1 className='mx-auto text-3xl mb-4'>Dashboard</h1>
+        <></>
     );
 }

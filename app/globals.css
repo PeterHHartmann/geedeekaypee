@@ -3,21 +3,17 @@
 @tailwind utilities;
 
 :root {
-    --foreground-color: #fafafa;
+    --foreground-color: #F9FAFB;
     --background-start-color: rgb(24, 24, 27);
-    --background-end-color: #09090b;
+    --background-end-color: #030712;
 }
 
 * {
     scrollbar-width: thin;
-    scrollbar-color: #fafafa #18181b;
+    scrollbar-color: #F9FAFB transparent;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-}
-
-body {
-    color: #fafafa;
 }
 
 @layer utilities {
@@ -34,13 +30,13 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #18181b;
+    background: #111827;
     border-radius: 0.75rem;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #fafafa;
+    background: #F9FAFB;
     border-radius: 0.75rem;
     width: 10px;
 }

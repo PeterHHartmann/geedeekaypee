@@ -19,9 +19,9 @@ export function NavLink({ name, href, children }: Props) {
         <Link
             href={href}
             className={clsx(
-                "flex h-[48px] grow items-center justify-center gap-2 rounded-md p-3 text-sm font-medium hover:bg-primary-950 hover:text-primary-50 dark:hover:bg-primary-50 dark:hover:text-primary-950 md:flex-none md:justify-start md:p-2 md:px-3",
+                "flex h-[48px] items-center justify-center gap-2 rounded-md p-3 text-sm font-medium hover:bg-indigo-600 active:bg-indigo-500 hover:text-white md:flex-none md:justify-start md:p-2 md:px-3",
                 {
-                    'bg-primary-950 text-primary-50 dark:bg-primary-50 dark:text-primary-950': isActive == true,
+                    'bg-indigo-600 text-white': isActive == true,
                 },
             )}
         >

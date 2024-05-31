@@ -12,10 +12,10 @@ export function SlidingToolbarLeft({ children }: Props) {
 
     return (
         <div className={clsx(
-            'flex h-7 justify-center items-center gap-[.25rem] rounded-full ml-auto border-1',
+            'flex h-7 justify-center items-center gap-[.25rem] rounded-full ml-auto border-1 text-white',
             {
                 'border-transparent': isOpen == false,
-                'border-primary-950 dark:border-primary-50': isOpen == true
+                'border-slate-50': isOpen == true
             }
         )}
         >
@@ -25,7 +25,7 @@ export function SlidingToolbarLeft({ children }: Props) {
                     'transition-transform border-1',
                     {
                         'rotate-180': isOpen == true,
-                        'hover:border-primary-950 dark:hover:border-primary-50': isOpen == false
+                        'hover:border-slate-50': isOpen == false
                     }
                 )}
             >
@@ -49,7 +49,7 @@ export function ToolbarButton({ children, className, ...rest }: ToolbarButtonPro
         <button
             {...rest}
             className={clsx(
-                'flex h-full aspect-square justify-center items-center p-1 rounded-full object-fill border-1 border-transparent hover:bg-primary-950 hover:border-primary-950 hover:text-primary-50 dark:hover:bg-primary-50 dark:hover:border-primary-50 dark:hover:text-primary-950',
+                'flex h-full aspect-square justify-center items-center p-1 rounded-full object-fill border-1 border-transparent hover:bg-slate-50 hover:border-slate-50 hover:text-slate-950',
                 className
             )}
         >
