@@ -5,7 +5,7 @@ import { FormErrors } from '@/components/form/form-error';
 import { Modal } from '@/components/Modal';
 import { SubmitButton } from '@/components/form/submit-button';
 import { TrashIcon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormState } from 'react-dom';
 import { ToolbarButton } from '@/components/SlidingToolbarLeft';
 
@@ -16,6 +16,12 @@ type Props = {
 export function DeleteCharacterForm({ character }: Props) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [state, formAction] = useFormState(deleteCharacter, { success: false });
+
+    useEffect(() => {
+        if (state.success) {
+            setIsOpen(false);
+        }
+    }, [state]);
 
     return (
         <>
