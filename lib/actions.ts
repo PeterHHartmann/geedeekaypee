@@ -4,8 +4,8 @@ import type { CharacterClass, CharacterClassRoleOptions, CharacterRole, Mutation
 import { capitalize } from '@/lib/utils';
 import { auth, signIn } from '@/auth';
 import { sql } from '@vercel/postgres';
-import { AuthError, type User } from 'next-auth';
-import { revalidatePath } from 'next/cache';
+import { AuthError } from 'next-auth';
+import { revalidateTag, unstable_cache } from 'next/cache';
 import { z } from 'zod';
 
 export async function authenticate(
@@ -26,32 +26,6 @@ export async function authenticate(
         throw error;
     }
 }
-
-export async function fetchCharacterRoster(user_email: User['email']) {
-    if (user_email) {
-        try {
-            const data = await sql<RosterCharacter>
-                `SELECT 
-                characters.id, 
-                characters.name,
-                characters.created_at,
-                character_classes.name AS class_name,
-                character_roles.name AS role_name
-                FROM characters
-                INNER JOIN character_classes ON characters.class_id = character_classes.id
-                INNER JOIN character_roles ON characters.role_id = character_roles.id
-                WHERE characters.user_email = ${user_email}
-                ORDER BY created_at ASC;
-                `;
-            return data.rows;
-        } catch (error) {
-            console.log(error);
-            throw new Error('Failed to fetch character roster.');
-        }
-    } else {
-        throw new Error('Cannot fetch character roster, no user email supplied');
-    }
-};
 
 export async function fetchCharacterClasses() {
     try {
@@ -112,12 +86,56 @@ export async function fetchRolesForCharacterClasses(): Promise<CharacterClassRol
     }
 }
 
+export async function fetchCharacters() {
+    const session = await auth();
+    const user = session!.user;
+
+    if (!user) throw new Error('Fetch characters: No User found');
+
+    return await unstable_cache(
+        async () => {
+            console.log('not cached:', user);
+
+            try {
+                const data = await sql<RosterCharacter>
+                    `SELECT 
+                characters.id, 
+                characters.name,
+                characters.created_at,
+                characters.class_id,
+                character_classes.name AS class_name,
+                characters.role_id,
+                character_roles.name AS role_name
+                FROM characters
+                INNER JOIN character_classes ON characters.class_id = character_classes.id
+                INNER JOIN character_roles ON characters.role_id = character_roles.id
+                WHERE characters.user_email = ${user.email}
+                ORDER BY created_at ASC;
+                `;
+                return data.rows;
+            } catch (error) {
+                console.log(error);
+                throw new Error('Failed to fetch character roster.');
+            }
+        },
+        [`characters[${user.email}]`],
+        {
+            tags: [`characters[${user.email}]`],
+            revalidate: 3600
+        }
+    )();
+};
+
 export async function insertCharacter(
     _prevState: MutationResult,
     formData: FormData
 ) {
     const session = await auth();
-    const user = session!.user!;
+    const user = session!.user;
+
+    if (!user) {
+        throw new Error('Failed to insert character: No User found');
+    }
 
     const rawData = {
         name: formData.get('name'),
@@ -135,7 +153,6 @@ export async function insertCharacter(
     });
 
     const parsed = schema.safeParse(rawData);
-    const data = parsed.data;
     if (!parsed.success) {
         const errorMessages = parsed.error.issues.map((issue) => issue.message);
         return { success: false, messages: errorMessages };
@@ -145,10 +162,58 @@ export async function insertCharacter(
             `INSERT INTO characters (name, class_id, role_id, user_email)
             VALUES (${parsed.data.name}, ${parsed.data.class_id}, ${parsed.data.role_id}, ${user.email});
             `;
-        revalidatePath('/dashboard/@roster');
+        revalidateTag(`characters[${user.email}]`);
         return { success: true };
     } catch (error) {
         return { success: false, messages: ['Failed to create character'] };
+    }
+}
+
+export async function updateCharacter(
+    _prevState: MutationResult,
+    formData: FormData
+) {
+    const session = await auth();
+    const user = session!.user;
+
+    if (!user) {
+        throw new Error('Failed to update character: No User found');
+    }
+
+    const rawData = {
+        character_id: formData.get('character_id'),
+        name: formData.get('name'),
+        class_id: formData.get('class_id'),
+        role_id: formData.get('role_id'),
+    };
+
+    const schema = z.object({
+        character_id: z.string(),
+        name: z.string()
+            .min(2, 'Name must contain at least 2 characters')
+            .max(12, 'Name must contain at most 24 characters')
+            .transform(capitalize),
+        class_id: z.string(),
+        role_id: z.string()
+    });
+
+    const parsed = schema.safeParse(rawData);
+
+    if (!parsed.success) {
+        const errorMessages = parsed.error.issues.map((issue) => issue.message);
+        return { success: false, messages: errorMessages };
+    }
+
+    try {
+        await sql<RosterCharacter>
+            `UPDATE characters
+            SET name = ${parsed.data.name}, class_id = ${parsed.data.class_id}, role_id = ${parsed.data.role_id}
+            WHERE id = ${parsed.data.character_id} AND user_email = ${user.email};
+            `;
+        revalidateTag(`characters[${user.email}]`);
+        return { success: true };
+    } catch (error) {
+        return { success: false, messages: ['Failed to edit character'] };
     }
 }
 
@@ -156,6 +221,13 @@ export async function deleteCharacter(
     _prevState: MutationResult,
     formData: FormData
 ) {
+    const session = await auth();
+    const user = session!.user!;
+
+    if (!user) {
+        throw new Error('Failed to delete character: No User found');
+    }
+
     const rawData = {
         id: formData.get('character_id')
     };
@@ -168,7 +240,7 @@ export async function deleteCharacter(
                 `DELETE FROM characters 
                 WHERE id = ${parsed.data.id}
                 `;
-            revalidatePath('/dashboard/@roster');
+            revalidateTag(`characters[${user.email}]`);
             return { success: true };
         } catch (error) {
             console.log(error);

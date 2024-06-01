@@ -18,8 +18,11 @@ export type CharacterRole = {
 export type RosterCharacter = {
     id: string;
     name: string;
+    class_id: CharacterClass['id'];
     class_name: CharacterClass['name'];
+    role_id: CharacterRole['id'];
     role_name: CharacterRole['name'];
+    user_email: User['email'];
 };
 
 export type Raid = {

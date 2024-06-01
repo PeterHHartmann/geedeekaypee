@@ -5,26 +5,31 @@ import { DeleteCharacterForm } from '@/components/roster/DeleteCharacterForm';
 import { EditCharacterForm } from '@/components/roster/EditCharacterForm';
 import { CLASS_TEXT_COLOR } from '@/lib/constants';
 import type { RosterCharacter } from '@/lib/definitions';
+import type { ReactNode } from 'react';
 
-export function RosterCharacter({ character }: {
+type Props = {
     character: RosterCharacter;
-}) {
+    children?: ReactNode;
+};
+
+export function RosterCharacter({ children, character }: Props) {
     return (
         <div className={`
         flex flex-nowrap items-center gap-1 
-        w-full h-[2.375rem] border-b-1 border-slate-500 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700
+        ${RosterCharacterSkeleton}
         `}>
             <div className='flex items-center h-full gap-1 px-2'>
                 <CharacterRoleIcon role_name={character.role_name} />
                 <CharacterClassIcon name={character.class_name} />
                 <p className={`${CLASS_TEXT_COLOR[character.class_name]}`}>{character.name}</p>
             </div>
-            <SlidingToolbarLeft>
+            {children}
+            {/* <SlidingToolbarLeft>
                 <EditCharacterForm character={character} />
                 <DeleteCharacterForm character={character} />
-            </SlidingToolbarLeft>
+            </SlidingToolbarLeft> */}
         </div>
     );
 }
 
-export const RosterCharacterSkeleton = 'object-cover w-full h-[2.375rem] px-1 py-1 border-b-[1px] border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700';
+export const RosterCharacterSkeleton = 'w-full h-[2.375rem] border-b-1 border-slate-500 dark:border-slate-700 hover:bg-slate-600 dark:hover:bg-slate-700';
