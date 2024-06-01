@@ -1,5 +1,3 @@
-'use server';
-
 import NextAuth from 'next-auth';
 import { authConfig } from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
@@ -21,10 +19,15 @@ async function getUser(email: string): Promise<User | undefined> {
     }
 }
 
-export const { auth, signIn, signOut } = NextAuth({
+export const { auth, signIn, signOut, handlers } = NextAuth({
     ...authConfig,
     providers: [
         Credentials({
+            name: 'Credentials',
+            credentials: {
+                email: { label: "Username", type: "text", placeholder: "Enter your email address" },
+                password: { label: "Password", type: "password" }
+            },
             async authorize(credentials) {
                 const parsedCredentials = z
                     .object({ email: z.string().email(), password: z.string().min(6) })

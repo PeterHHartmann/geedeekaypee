@@ -1,8 +1,9 @@
 import type { NextAuthConfig } from 'next-auth';
 export const authConfig = {
-    pages: {
-        signIn: '/login',
-    },
+    // pages: {
+    //     signIn: '/login',
+    // },
+    basePath: '/api/auth',
     callbacks: {
         authorized({ auth, request: { nextUrl } }) {
             const isLoggedIn = !!auth?.user;
