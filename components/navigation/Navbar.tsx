@@ -48,7 +48,7 @@ export async function Navbar() {
                             </>
                             : <>
                                 <li>
-                                    <NavLink name='Login' href='/login'>
+                                    <NavLink name='Login' href='/api/auth/signin'>
                                         <ArrowRightEndOnRectangleIcon className='w-6' />
                                     </NavLink>
                                 </li>
