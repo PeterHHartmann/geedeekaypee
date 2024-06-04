@@ -1,10 +1,12 @@
-import { fetchCharacterClasses, fetchCharacters, fetchRolesForCharacterClasses } from '@/lib/actions';
-import { RosterCharacter } from '@/components/roster/RosterCharacter';
-import { SlidingToolbarLeft } from '@/components/SlidingToolbarLeft';
-import { EditCharacterForm } from '@/components/roster/EditCharacterForm';
-import { DeleteCharacterForm } from '@/components/roster/DeleteCharacterForm';
+'use server';
 
-export default async function RosterListPage() {
+import { SlidingToolbarLeft } from '@/components/SlidingToolbarLeft';
+import { DeleteCharacterForm } from '@/components/roster/DeleteCharacterForm';
+import { EditCharacterForm } from '@/components/roster/EditCharacterForm';
+import { RosterCharacter } from '@/components/roster/RosterCharacter';
+import { fetchCharacterClasses, fetchCharacters, fetchRolesForCharacterClasses } from '@/lib/actions';
+
+export async function RosterList() {
     const characterRoster = await fetchCharacters();
     const allCharacterClasses = await fetchCharacterClasses();
     const characterClassRoleOptions = await fetchRolesForCharacterClasses();
@@ -22,4 +24,3 @@ export default async function RosterListPage() {
         </>
     );
 }
-

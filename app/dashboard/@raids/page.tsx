@@ -1,5 +1,9 @@
-export default function RaidsPage() {
+import { RaidsList } from '@/components/raids/RaidsList';
+
+export default async function RaidsPage() {
     return (
-        <h2 className='text-2xl text-center'>Raids</h2>
+        <>
+            <RaidsList />
+        </>
     );
 }

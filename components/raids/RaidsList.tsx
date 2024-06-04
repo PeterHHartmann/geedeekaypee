@@ -1,6 +1,6 @@
 import { RaidCard } from '@/components/raids/RaidCard';
 
-export default async function RaidsListPage() {
+export async function RaidsList() {
     return (
         <>
             <RaidCard title='Weekly ICC 25HC' raidName='Icecrown Citadel' date='2024/6/1' time='18:00' isPublic={true} />

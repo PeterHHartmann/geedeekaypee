@@ -5,7 +5,7 @@ export const metadata: Metadata = {
     description: 'User dashboard for managing roster and upcoming raids',
 };
 
-export default async function DashboardPage() {
+export default async function DashboardDefaultPage() {
     return (
         <></>
     );
