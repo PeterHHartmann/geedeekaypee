@@ -1,10 +1,12 @@
-import { AddRaidForm } from '@/components/raids/AddRaidForm';
+import { AddRaidForm } from '@/components/raids/form/AddRaidForm';
+import { fetchCharacters } from '@/lib/actions';
 
 export default async function NewRaidPage() {
+    const roster = await fetchCharacters();
+
     return (
         <>
-            <AddRaidForm>
-                <h1>yo</h1>
+            <AddRaidForm characters={roster}>
             </AddRaidForm>
         </>
     );

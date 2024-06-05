@@ -17,19 +17,11 @@ export default async function RaidsLayout({ children }: Props) {
                 <header className='w-full sm:w-6/12 ml-auto'>
                     <h2 className='text-2xl text-center'>Raids</h2>
                 </header>
-                {/* <div className='w-full sm:w-3/12 my-2 sm:my-0'>
-                <Link href={'/dashboard/new_raid'} className='w-full'>
-                        <Button className='w-full'>
-                            <PlusCircleIcon className='w-6' />
-                            <p>New Raid</p>
-                        </Button>
-                    </Link>
-                </div> */}
                 <RaidsNav />
             </div>
             <Suspense fallback={
-                <div className={`grid sm:grid-cols-2 lg:grid-cols-3 gap-3 m-3 overflow-y-scroll max-h-[500px] lg:max-h-[780px] lg:min-h-[780px] ${SHIMMER} rounded-md`}></div>}>
-                <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-3 m-3 overflow-y-scroll max-h-[500px] lg:max-h-[780px] lg:min-h-[780px]'>
+                <div className={`w-full overflow-y-scroll max-h-[500px] lg:max-h-[780px] lg:min-h-[780px] p-3 ${SHIMMER} rounded-md`}></div>}>
+                <div className='w-full overflow-y-scroll max-h-[500px] lg:max-h-[780px] lg:min-h-[780px] p-3'>
                     {children}
                 </div>
             </Suspense>

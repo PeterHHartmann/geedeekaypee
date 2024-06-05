@@ -1,8 +1,7 @@
+'use client';
+
 import { CharacterClassIcon } from '@/components/CharacterClassIcon';
 import { CharacterRoleIcon } from '@/components/CharacterRoleIcon';
-import { SlidingToolbarLeft } from '@/components/SlidingToolbarLeft';
-import { DeleteCharacterForm } from '@/components/roster/DeleteCharacterForm';
-import { EditCharacterForm } from '@/components/roster/EditCharacterForm';
 import { CLASS_TEXT_COLOR } from '@/lib/constants';
 import type { RosterCharacter } from '@/lib/definitions';
 import type { ReactNode } from 'react';
@@ -12,10 +11,10 @@ type Props = {
     children?: ReactNode;
 };
 
-export function RosterCharacter({ children, character }: Props) {
+export function CharacterRow({ children, character }: Props) {
     return (
         <li className={`
-        flex flex-nowrap items-center gap-1 
+        flex flex-nowrap w-full items-center gap-1 
         ${RosterCharacterSkeleton}
         `}>
             <div className='flex items-center h-full gap-1 px-2'>
@@ -24,10 +23,6 @@ export function RosterCharacter({ children, character }: Props) {
                 <p className={`${CLASS_TEXT_COLOR[character.class_name]}`}>{character.name}</p>
             </div>
             {children}
-            {/* <SlidingToolbarLeft>
-                <EditCharacterForm character={character} />
-                <DeleteCharacterForm character={character} />
-            </SlidingToolbarLeft> */}
         </li>
     );
 }
