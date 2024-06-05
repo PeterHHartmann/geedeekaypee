@@ -14,7 +14,7 @@ type Props = {
 
 export function RosterCharacter({ children, character }: Props) {
     return (
-        <div className={`
+        <li className={`
         flex flex-nowrap items-center gap-1 
         ${RosterCharacterSkeleton}
         `}>
@@ -28,7 +28,7 @@ export function RosterCharacter({ children, character }: Props) {
                 <EditCharacterForm character={character} />
                 <DeleteCharacterForm character={character} />
             </SlidingToolbarLeft> */}
-        </div>
+        </li>
     );
 }
 

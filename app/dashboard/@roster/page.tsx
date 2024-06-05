@@ -15,7 +15,7 @@ export default async function RosterPage() {
             </div>
             <div className='relative bg-slate-700 dark:bg-slate-800 rounded-md border-1 border-slate-700 overflow-clip'>
                 <Suspense fallback={<div className={`rounded-md h-screen max-h-[500px] xl:max-h-[750px] overflow-y-scroll ${SHIMMER}`}></div>}>
-                    <div className='rounded-md h-fit max-h-[500px] xl:max-h-[750px] overflow-y-scroll'>
+                    <ul className='rounded-md h-fit max-h-[500px] xl:max-h-[750px] overflow-y-scroll'>
                         <RosterList />
                         {/* {characterRoster.map((character) =>
                             <RosterCharacter key={`roster-character-${character.id}`} character={character}>
@@ -25,7 +25,7 @@ export default async function RosterPage() {
                                 </SlidingToolbarLeft>
                             </RosterCharacter>
                         )} */}
-                    </div>
+                    </ul>
                 </Suspense>
             </div>
         </>
