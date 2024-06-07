@@ -1,4 +1,4 @@
-import type { CharacterClass, CharacterSpecialization } from '@/lib/definitions';
+import type { CharClass, CharSpec } from '@/lib/definitions';
 import DK_Blood_icon from '@/public/image/specializations/DK_Blood.jpg';
 import DK_Unholy_icon from '@/public/image/specializations/DK_Blood.jpg';
 import DK_Frost_icon from '@/public/image/specializations/DK_Blood.jpg';
@@ -33,7 +33,7 @@ import WARR_Fury_icon from '@/public/image/specializations/WARR_Fury.jpg';
 import type { StaticImageData } from 'next/image';
 import Image from 'next/image';
 
-const iconTable: { [key in CharacterClass['name']]: { [key: string]: StaticImageData; } } = {
+const iconTable: { [key in CharClass['name']]: { [key: string]: StaticImageData; } } = {
     'Death Knight': {
         'Blood': DK_Blood_icon,
         'Unholy': DK_Unholy_icon,
@@ -88,8 +88,8 @@ const iconTable: { [key in CharacterClass['name']]: { [key: string]: StaticImage
 };
 
 type Props = {
-    class_name: CharacterClass['name'];
-    spec_name: CharacterSpecialization['name'];
+    class_name: CharClass['name'];
+    spec_name: CharSpec['name'];
     size?: number;
 };
 

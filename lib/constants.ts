@@ -1,9 +1,9 @@
-import type { CharacterClass, Raid } from '@/lib/definitions';
+import type { CharClass, Raid } from '@/lib/definitions';
 import icc from '@/public/image/raids/icc/icc.jpg';
 import rubysanctum from '@/public/image/raids/rubysanctum/rubysanctum.jpg';
 import type { StaticImageData } from 'next/image';
 
-export const CLASS_TEXT_COLOR: { [key in CharacterClass['name']]: string; } = {
+export const CLASS_TEXT_COLOR: { [key in CharClass['name']]: string; } = {
     'Death Knight': "text-deathknight",
     'Druid': "text-druid",
     'Hunter': "text-hunter",

@@ -5,18 +5,18 @@ export type User = {
     password: string;
 };
 
-export type CharacterClass = {
+export type CharClass = {
     id: string;
     name: 'Death Knight' | 'Druid' | 'Hunter' | 'Mage' | 'Paladin' | 'Priest' | 'Rogue' | 'Shaman' | 'Warlock' | 'Warrior';
 };
 
-export type CharacterSpecialization = {
+export type CharSpec = {
     id: string;
     name: 'Blood' | 'Unholy' | 'Frost' | 'Feral Bear' | 'Feral Cat' | 'Balance' | 'Restoration' | 'Marksmanship' | 'Beast Mastery' | 'Survival' | 'Frost' | 'Arcane' | 'Fire' | 'Protection' | 'Holy' | 'Retribution' | 'Discipline' | 'Holy' | 'Shadow' | 'Combat' | 'Assassination' | 'Subtlety' | 'Restoration' | 'Elemental' | 'Enhancement' | 'Destruction' | 'Demonology' | 'Affliction' | 'Protection' | 'Arms' | 'Fury';
-    class_id: CharacterClass['id'];
+    class_id: CharClass['id'];
 };
 
-export type CharacterRole = {
+export type CharRole = {
     id: string;
     name: 'Tank' | 'Healer' | 'Dps';
 };
@@ -24,12 +24,12 @@ export type CharacterRole = {
 export type RosterCharacter = {
     id: string;
     name: string;
-    class_id: CharacterClass['id'];
-    class_name: CharacterClass['name'];
-    spec_id: CharacterSpecialization['id'];
-    spec_name: CharacterSpecialization['name'];
-    role_id: CharacterRole['id'];
-    role_name: CharacterRole['name'];
+    class_id: CharClass['id'];
+    class_name: CharClass['name'];
+    spec_id: CharSpec['id'];
+    spec_name: CharSpec['name'];
+    role_id: CharRole['id'];
+    role_name: CharRole['name'];
     user_email: User['email'];
 };
 
@@ -38,13 +38,13 @@ export type Raid = {
     name: 'Icecrown Citadel' | 'Ruby Sanctum';
 };
 
-export type CharacterRoleOption = {
-    role_id: CharacterRole['id'];
-    role_name: CharacterRole['name'];
+export type CharRoleOption = {
+    role_id: CharRole['id'];
+    role_name: CharRole['name'];
 };
 
-export type CharacterClassRoleOptions = {
-    [class_id: CharacterClass['id']]: CharacterRoleOption[];
+export type CharRoleOptionsForClasses = {
+    [class_id: CharClass['id']]: CharRoleOption[];
 };
 
 export type MutationResult = {

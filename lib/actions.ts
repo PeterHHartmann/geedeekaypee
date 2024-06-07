@@ -1,6 +1,6 @@
 'use server';
 import 'server-only';
-import type { CharacterClass, CharacterClassRoleOptions, CharacterRole, CharacterSpecialization, MutationResult, RosterCharacter } from '@/lib/definitions';
+import type { CharClass, CharRoleOptionsForClasses, CharRole, CharSpec, MutationResult, RosterCharacter } from '@/lib/definitions';
 import { capitalize } from '@/lib/utils';
 import { auth, signIn } from '@/auth';
 import { sql } from '@vercel/postgres';
@@ -29,7 +29,7 @@ export async function authenticate(
 
 export async function fetchCharClasses() {
     try {
-        const data = await sql<CharacterClass>
+        const data = await sql<CharClass>
             `SELECT * 
             FROM character_classes`;
         return data.rows;
@@ -41,7 +41,7 @@ export async function fetchCharClasses() {
 
 export async function fetchCharSpecs() {
     try {
-        const data = await sql<CharacterSpecialization>
+        const data = await sql<CharSpec>
             `SELECT * 
             FROM class_specs`;
         return data.rows;
@@ -53,7 +53,7 @@ export async function fetchCharSpecs() {
 
 export async function fetchCharRoles() {
     try {
-        const data = await sql<CharacterRole>
+        const data = await sql<CharRole>
             `SELECT *
             FROM character_roles
             ORDER BY character_roles.name ASC;`;
@@ -64,13 +64,13 @@ export async function fetchCharRoles() {
     }
 }
 
-export async function fetchCharRolesPerClass(): Promise<CharacterClassRoleOptions> {
+export async function fetchCharRolesPerClass(): Promise<CharRoleOptionsForClasses> {
     try {
         const data = await sql<{
-            class_id: CharacterClass['id'],
-            class_name: CharacterClass['name'],
-            role_id: CharacterRole['id'],
-            role_name: CharacterRole['name'];
+            class_id: CharClass['id'],
+            class_name: CharClass['name'],
+            role_id: CharRole['id'],
+            role_name: CharRole['name'];
         }>
             `SELECT 
                 character_class_roles.class_id,
@@ -81,7 +81,7 @@ export async function fetchCharRolesPerClass(): Promise<CharacterClassRoleOption
             INNER JOIN character_roles ON character_class_roles.role_id = character_roles.id
             INNER JOIN character_classes ON character_class_roles.class_id = character_classes.id;
         `;
-        const classesWithAvailableRoles = data.rows.reduce<CharacterClassRoleOptions>
+        const classesWithAvailableRoles = data.rows.reduce<CharRoleOptionsForClasses>
             ((acc, row) => {
                 if (!acc[row.class_id]) {
                     acc[row.class_id] = [{ role_id: row.role_id, role_name: row.role_name }];

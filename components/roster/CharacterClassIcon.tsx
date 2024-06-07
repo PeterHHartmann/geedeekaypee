@@ -9,10 +9,10 @@ import RogueIcon from '@/public/image/player-classes/rogue/rogue-icon.webp';
 import ShamanIcon from '@/public/image/player-classes/shaman/shaman-icon.webp';
 import WarlockIcon from '@/public/image/player-classes/warlock/warlock-icon.webp';
 import WarriorIcon from '@/public/image/player-classes/warrior/warrior-icon.webp';
-import type { CharacterClass } from '@/lib/definitions';
+import type { CharClass } from '@/lib/definitions';
 
 type Props = {
-    name: CharacterClass['name'];
+    name: CharClass['name'];
     size?: number;
 };
 

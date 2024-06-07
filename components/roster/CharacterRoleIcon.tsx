@@ -2,7 +2,7 @@ import DpsIcon from '@/public/image/player-roles/Dps.webp';
 import TankIcon from '@/public/image/player-roles/Tank.webp';
 import HealIcon from '@/public/image/player-roles/Heal.webp';
 import Image from 'next/image';
-import type { CharacterRole } from '@/lib/definitions';
+import type { CharRole } from '@/lib/definitions';
 import clsx from 'clsx';
 
 const icons = {
@@ -12,7 +12,7 @@ const icons = {
 };
 
 type Props = {
-    role_name: CharacterRole['name'];
+    role_name: CharRole['name'];
     size?: number;
     className?: string;
 };
