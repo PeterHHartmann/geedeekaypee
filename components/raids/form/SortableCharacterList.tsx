@@ -34,8 +34,6 @@ export function SortableList({
     const initialItems = useMemo(() => {
         if (initial) {
             const result = initial.map<ListItem>((character, index) => ({ id: `${uid}-${index + 1}`, character: character }));
-            console.log(result);
-
             return result;
         }
     }, [uid, initial]);

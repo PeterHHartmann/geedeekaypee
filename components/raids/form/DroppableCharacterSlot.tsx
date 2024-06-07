@@ -16,7 +16,6 @@ export const DroppableCharacterSlot: FC<DroppableProp> = ({ id, characters, init
     const initialCharacter = useMemo(() => {
         if (initial) {
             const found = characters.find(({ id }) => id == initial.id);
-            console.log(found, initial);
             return found;
         }
     }, [initial, characters]);
@@ -26,9 +25,6 @@ export const DroppableCharacterSlot: FC<DroppableProp> = ({ id, characters, init
     const { isOver, setNodeRef } = useDroppable({
         id: id
     });
-
-    console.log(droppedCharacter);
-
 
     useDndMonitor({
         onDragEnd(event) {

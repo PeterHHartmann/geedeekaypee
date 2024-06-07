@@ -106,7 +106,7 @@ export async function fetchCharacters() {
 
     return await unstable_cache(
         async () => {
-            console.log('not cached:', user);
+            console.log('characters fetch not cached for user:', user);
 
             try {
                 const data = await sql<RosterCharacter>
