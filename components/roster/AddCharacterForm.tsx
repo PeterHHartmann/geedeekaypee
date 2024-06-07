@@ -1,7 +1,7 @@
 'use client';
 
 import { insertCharacter } from '@/lib/actions';
-import type { CharacterClass, CharacterClassRoleOptions, CharacterRoleOption } from '@/lib/definitions';
+import type { CharacterClass, CharacterClassRoleOptions, CharacterRoleOption, CharacterSpecialization } from '@/lib/definitions';
 import { Button } from '@/components/Button';
 import { FormErrors } from '@/components/form/form-error';
 import { Modal } from '@/components/Modal';
@@ -12,21 +12,27 @@ import { useEffect, useState, type ChangeEvent } from 'react';
 import { useFormState } from 'react-dom';
 
 type Props = {
-    characterClasses: CharacterClass[];
-    characterClassRolesOptions: CharacterClassRoleOptions;
+    charClasses: CharacterClass[];
+    charSpecs: CharacterSpecialization[];
+    charRoles: CharacterClassRoleOptions;
 };
 
-export function AddCharacterForm({ characterClasses, characterClassRolesOptions }: Props) {
-    const initialSelect = characterClasses[0].id;
+export function AddCharacterForm({ charClasses, charRoles, charSpecs }: Props) {
+    const defaultClassId = charClasses[0].id;
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [state, formAction] = useFormState(insertCharacter, { success: false });
 
-    const [roles, setRoles] = useState<CharacterRoleOption[]>(characterClassRolesOptions[initialSelect]);
+    const [roleOptions, setRoleOptions] = useState<CharacterRoleOption[]>(charRoles[defaultClassId]);
+    const [specOptions, setSpecOptions] = useState<CharacterSpecialization[]>(charSpecs.filter((spec) => spec.class_id == charClasses[0].id));
 
     function handleClassSelectChanged(e: ChangeEvent<HTMLSelectElement>) {
         const class_id = e.target.value;
-        const newRoles = characterClassRolesOptions[class_id];
-        setRoles(newRoles);
+
+        const newSpecOptions = charSpecs.filter((spec) => spec.class_id == class_id);
+        setSpecOptions(newSpecOptions);
+
+        const newRoleOptions = charRoles[class_id];
+        setRoleOptions(newRoleOptions);
     }
 
     useEffect(() => {
@@ -57,14 +63,21 @@ export function AddCharacterForm({ characterClasses, characterClassRolesOptions 
                     </div>
                     <div className='w-full'>
                         <SelectInput name='class_id' label='Class' required onChange={handleClassSelectChanged}>
-                            {characterClasses.map((character_class, index) => (
-                                <option key={`class-selection-option-${character_class.name}`} value={character_class.id} defaultValue={initialSelect}>{character_class.name}</option>
+                            {charClasses.map((character_class, index) => (
+                                <option key={`class-selection-option-${character_class.name}`} value={character_class.id} defaultValue={defaultClassId}>{character_class.name}</option>
+                            ))}
+                        </SelectInput>
+                    </div>
+                    <div className='w-full'>
+                        <SelectInput name='spec_id' label='Talent Specialization' required>
+                            {specOptions.map((specOption, index) => (
+                                <option key={`spec-selection-option-${specOption.id}`} value={specOption.id}>{`${specOption.name}`}</option>
                             ))}
                         </SelectInput>
                     </div>
                     <div className='w-full'>
                         <SelectInput name='role_id' label='Role' required>
-                            {roles.map((role, index) => (
+                            {roleOptions.map((role, index) => (
                                 <option key={`role-selection-option-${role.role_id}`} value={role.role_id}>{`${role.role_name}`}</option>
                             ))}
                         </SelectInput>

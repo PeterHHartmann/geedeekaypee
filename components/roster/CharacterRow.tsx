@@ -1,7 +1,7 @@
 'use client';
 
-import { CharacterClassIcon } from '@/components/CharacterClassIcon';
-import { CharacterRoleIcon } from '@/components/CharacterRoleIcon';
+import { CharacterRoleIcon } from '@/components/roster/CharacterRoleIcon';
+import { CharacterSpecIcon } from '@/components/roster/CharacterSpecIcon';
 import { CLASS_TEXT_COLOR } from '@/lib/constants';
 import type { RosterCharacter } from '@/lib/definitions';
 import type { ReactNode } from 'react';
@@ -19,7 +19,7 @@ export function CharacterRow({ children, character }: Props) {
         `}>
             <div className='flex items-center h-full gap-1 px-2'>
                 <CharacterRoleIcon role_name={character.role_name} />
-                <CharacterClassIcon name={character.class_name} />
+                <CharacterSpecIcon class_name={character.class_name} spec_name={character.spec_name} />
                 <p className={`${CLASS_TEXT_COLOR[character.class_name]}`}>{character.name}</p>
             </div>
             {children}

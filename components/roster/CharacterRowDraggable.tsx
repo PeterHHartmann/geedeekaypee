@@ -1,7 +1,7 @@
 'use client';
 
-import { CharacterClassIcon } from '@/components/CharacterClassIcon';
-import { CharacterRoleIcon } from '@/components/CharacterRoleIcon';
+import { CharacterRoleIcon } from '@/components/roster/CharacterRoleIcon';
+import { CharacterSpecIcon } from '@/components/roster/CharacterSpecIcon';
 import { CLASS_TEXT_COLOR } from '@/lib/constants';
 import type { RosterCharacter } from '@/lib/definitions';
 import { useDraggable } from '@dnd-kit/core';
@@ -13,15 +13,13 @@ type Props = {
     id: string,
     index: number;
 };
-// `draggableRosterCharacter-${character.id}`;
-export function CharacterRowDraggable({ children, character, id, index }: Props) {
+
+export function CharacterRowDraggable({ children, character, id }: Props) {
 
     const {
         setNodeRef,
         listeners,
-        attributes,
-        transform,
-        isDragging,
+        attributes
     } = useDraggable({
         id: id,
         data: {
@@ -41,7 +39,7 @@ export function CharacterRowDraggable({ children, character, id, index }: Props)
                 className='flex items-center h-full gap-1 px-2'
             >
                 <CharacterRoleIcon role_name={character.role_name} />
-                <CharacterClassIcon name={character.class_name} />
+                <CharacterSpecIcon class_name={character.class_name} spec_name={character.spec_name} />
                 <p className={`${CLASS_TEXT_COLOR[character.class_name]}`}>{character.name}</p>
             </div>
             {children}

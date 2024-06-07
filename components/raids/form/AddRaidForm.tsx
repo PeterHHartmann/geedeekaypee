@@ -72,7 +72,6 @@ export function AddRaidForm({ children, characters }: Props) {
                     <div className='mb-4'>
                         <SortableList size={2} uid='two-row' characters={characters} initial={[characters[0], characters[2]]} />
                     </div>
-
                     <div>
                         <SortableList size={5} uid='five-row' characters={characters} />
                     </div>

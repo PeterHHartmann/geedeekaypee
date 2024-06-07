@@ -14,7 +14,6 @@ import type { CharacterClass } from '@/lib/definitions';
 type Props = {
     name: CharacterClass['name'];
     size?: number;
-    className?: string;
 };
 
 const iconTable = {
@@ -30,7 +29,7 @@ const iconTable = {
     'Warrior': WarriorIcon
 };
 
-export function CharacterClassIcon({ name, className, size }: Props) {
+export function CharacterClassIcon({ name, size }: Props) {
 
     const icon = iconTable[name];
 

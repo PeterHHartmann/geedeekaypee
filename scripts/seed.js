@@ -2,6 +2,7 @@ const { db } = require('@vercel/postgres');
 const {
   users,
   character_classes,
+  class_specs,
   character_roles,
   character_class_roles,
   characters
@@ -79,6 +80,39 @@ async function seedCharacterClasses(client) {
     }
 }
 
+async function seedClassSpecs(client){
+    try {
+        await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+        const createTable = await client.sql`
+            CREATE TABLE IF NOT EXISTS class_specs (
+                id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                class_id UUID REFERENCES character_classes (id)
+            );`;
+        
+        console.log(`Created "class_specs" table`)
+
+        const insertedClassSpecs = await Promise.all(
+            class_specs.map(async (spec) => {
+                return client.sql`
+                INSERT INTO class_specs (id, name, class_id)
+                VALUES (${spec.id}, ${spec.name}, ${spec.class_id})
+                ON CONFLICT (id) DO NOTHING;
+                `;
+            }),
+        );
+
+        console.log(`Seeded ${insertedClassSpecs.length} class specs`);
+        return {
+            createTable,
+            classes: insertedClassSpecs
+        }
+    } catch (error) {
+        console.error('Error seeding class specs:', error);
+        throw error;
+    }
+}
+
 async function seedCharacterRoles(client) {
     try {
         await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
@@ -149,6 +183,7 @@ async function seedCharacters(client) {
                 name VARCHAR(255) NOT NULL,
                 user_email VARCHAR(255) REFERENCES users (email),
                 class_id UUID REFERENCES character_classes (id),
+                spec_id UUID REFERENCES class_specs (id),
                 role_id UUID REFERENCES character_roles (id),
                 created_at TIMESTAMP DEFAULT current_timestamp
             );
@@ -158,8 +193,8 @@ async function seedCharacters(client) {
         const insertedCharacters = await Promise.all(
             characters.map(async (character) => {
                 return client.sql`
-                INSERT INTO characters (id, name, user_email, class_id, role_id)
-                VALUES (${character.id}, ${character.name}, ${character.user_email}, ${character.class_id}, ${character.role_id})
+                INSERT INTO characters (id, name, user_email, class_id, spec_id, role_id)
+                VALUES (${character.id}, ${character.name}, ${character.user_email}, ${character.class_id}, ${character.spec_id}, ${character.role_id})
                 ON CONFLICT (id) DO NOTHING;
                 `
             })
@@ -182,6 +217,7 @@ async function main() {
 
   await seedUsers(client);
   await seedCharacterClasses(client);
+  await seedClassSpecs(client);
   await seedCharacterRoles(client);
   await seedCharacterClassRoles(client);
   await seedCharacters(client);

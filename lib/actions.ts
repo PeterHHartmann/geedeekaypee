@@ -1,6 +1,6 @@
 'use server';
 import 'server-only';
-import type { CharacterClass, CharacterClassRoleOptions, CharacterRole, MutationResult, RosterCharacter } from '@/lib/definitions';
+import type { CharacterClass, CharacterClassRoleOptions, CharacterRole, CharacterSpecialization, MutationResult, RosterCharacter } from '@/lib/definitions';
 import { capitalize } from '@/lib/utils';
 import { auth, signIn } from '@/auth';
 import { sql } from '@vercel/postgres';
@@ -27,7 +27,7 @@ export async function authenticate(
     }
 }
 
-export async function fetchCharacterClasses() {
+export async function fetchCharClasses() {
     try {
         const data = await sql<CharacterClass>
             `SELECT * 
@@ -39,7 +39,19 @@ export async function fetchCharacterClasses() {
     }
 }
 
-export async function fetchCharacterRoles() {
+export async function fetchCharSpecs() {
+    try {
+        const data = await sql<CharacterSpecialization>
+            `SELECT * 
+            FROM class_specs`;
+        return data.rows;
+    } catch (error) {
+        console.log(error);
+        throw new Error('Failed to fetch character specializations.');
+    }
+}
+
+export async function fetchCharRoles() {
     try {
         const data = await sql<CharacterRole>
             `SELECT *
@@ -52,7 +64,7 @@ export async function fetchCharacterRoles() {
     }
 }
 
-export async function fetchRolesForCharacterClasses(): Promise<CharacterClassRoleOptions> {
+export async function fetchCharRolesPerClass(): Promise<CharacterClassRoleOptions> {
     try {
         const data = await sql<{
             class_id: CharacterClass['id'],
@@ -104,10 +116,13 @@ export async function fetchCharacters() {
                 characters.created_at,
                 characters.class_id,
                 character_classes.name AS class_name,
+                characters.spec_id,
+                class_specs.name as spec_name,
                 characters.role_id,
                 character_roles.name AS role_name
                 FROM characters
                 INNER JOIN character_classes ON characters.class_id = character_classes.id
+                INNER JOIN class_specs ON characters.spec_id = class_specs.id
                 INNER JOIN character_roles ON characters.role_id = character_roles.id
                 WHERE characters.user_email = ${user.email}
                 ORDER BY created_at ASC;
@@ -140,6 +155,7 @@ export async function insertCharacter(
     const rawData = {
         name: formData.get('name'),
         class_id: formData.get('class_id'),
+        spec_id: formData.get('spec_id'),
         role_id: formData.get('role_id'),
     };
 
@@ -149,6 +165,7 @@ export async function insertCharacter(
             .max(12, 'Name must contain at most 24 characters')
             .transform(capitalize),
         class_id: z.string(),
+        spec_id: z.string(),
         role_id: z.string()
     });
 
@@ -159,8 +176,8 @@ export async function insertCharacter(
     }
     try {
         await sql<RosterCharacter>
-            `INSERT INTO characters (name, class_id, role_id, user_email)
-            VALUES (${parsed.data.name}, ${parsed.data.class_id}, ${parsed.data.role_id}, ${user.email});
+            `INSERT INTO characters (name, class_id, spec_id, role_id, user_email)
+            VALUES (${parsed.data.name}, ${parsed.data.class_id}, ${parsed.data.spec_id},${parsed.data.role_id}, ${user.email});
             `;
         revalidateTag(`characters[${user.email}]`);
         return { success: true };
@@ -184,6 +201,7 @@ export async function updateCharacter(
         character_id: formData.get('character_id'),
         name: formData.get('name'),
         class_id: formData.get('class_id'),
+        spec_id: formData.get('spec_id'),
         role_id: formData.get('role_id'),
     };
 
@@ -194,6 +212,7 @@ export async function updateCharacter(
             .max(12, 'Name must contain at most 24 characters')
             .transform(capitalize),
         class_id: z.string(),
+        spec_id: z.string(),
         role_id: z.string()
     });
 
@@ -207,7 +226,7 @@ export async function updateCharacter(
     try {
         await sql<RosterCharacter>
             `UPDATE characters
-            SET name = ${parsed.data.name}, class_id = ${parsed.data.class_id}, role_id = ${parsed.data.role_id}
+            SET name = ${parsed.data.name}, class_id = ${parsed.data.class_id}, spec_id = ${parsed.data.spec_id}, role_id = ${parsed.data.role_id}
             WHERE id = ${parsed.data.character_id} AND user_email = ${user.email};
             `;
         revalidateTag(`characters[${user.email}]`);
