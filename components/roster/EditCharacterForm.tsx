@@ -22,7 +22,7 @@ export function EditCharacterForm({ character, charClasses, charRoles, charSpecs
     const [state, formAction] = useFormState(updateCharacter, { success: false });
 
     const [roleOptions, setRoleOptions] = useState<CharRoleOption[]>(charRoles[character.class_id]);
-    const [specOptions, setSpecOptions] = useState<CharSpec[]>(charSpecs.filter((spec) => spec.class_id == charClasses[0].id));
+    const [specOptions, setSpecOptions] = useState<CharSpec[]>(charSpecs.filter((spec) => spec.class_id == character.class_id));
 
     function handleClassSelectChanged(e: ChangeEvent<HTMLSelectElement>) {
         const class_id = e.target.value;
