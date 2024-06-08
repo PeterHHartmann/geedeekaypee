@@ -111,21 +111,21 @@ export async function fetchCharacters() {
             try {
                 const data = await sql<RosterCharacter>
                     `SELECT 
-                characters.id, 
-                characters.name,
-                characters.created_at,
-                characters.class_id,
-                character_classes.name AS class_name,
-                characters.spec_id,
-                class_specs.name as spec_name,
-                characters.role_id,
-                character_roles.name AS role_name
-                FROM characters
-                INNER JOIN character_classes ON characters.class_id = character_classes.id
-                INNER JOIN class_specs ON characters.spec_id = class_specs.id
-                INNER JOIN character_roles ON characters.role_id = character_roles.id
-                WHERE characters.user_email = ${user.email}
-                ORDER BY character_roles.created_at ASC;
+                        characters.id, 
+                        characters.name,
+                        characters.created_at,
+                        characters.class_id,
+                        character_classes.name AS class_name,
+                        characters.spec_id,
+                        class_specs.name as spec_name,
+                        characters.role_id,
+                        character_roles.name AS role_name
+                    FROM characters
+                    INNER JOIN character_classes ON characters.class_id = character_classes.id
+                    INNER JOIN class_specs ON characters.spec_id = class_specs.id
+                    INNER JOIN character_roles ON characters.role_id = character_roles.id
+                    WHERE characters.user_email = ${user.email}
+                    ORDER BY character_roles.created_at ASC, character_classes.created_at, class_specs.created_at ASC;
                 `;
                 return data.rows;
             } catch (error) {
