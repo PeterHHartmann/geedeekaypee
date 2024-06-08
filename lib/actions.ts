@@ -296,12 +296,11 @@ export async function fetchRaidTemplates() {
     }
 }
 
-export async function fetchRaidTemplatePositions(template_id: RaidTemplate['id']) {
+export async function fetchRaidTemplatePositions() {
     try {
         const data = await sql<RaidTemplatePosition>
             `SELECT * 
             FROM raid_template_positions
-            WHERE template_id = ${template_id}
             ORDER BY position ASC
             ;`;
         return data.rows;
