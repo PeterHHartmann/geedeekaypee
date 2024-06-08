@@ -1,6 +1,6 @@
 'use server';
 import 'server-only';
-import type { CharClass, CharRoleOptionsForClasses, CharRole, CharSpec, MutationResult, RosterCharacter, Raid } from '@/lib/definitions';
+import type { CharClass, CharRoleOptionsForClasses, CharRole, CharSpec, MutationResult, RosterCharacter, Raid, RaidTemplate, RaidTemplatePosition } from '@/lib/definitions';
 import { capitalize } from '@/lib/utils';
 import { auth, signIn } from '@/auth';
 import { sql } from '@vercel/postgres';
@@ -275,16 +275,38 @@ export async function deleteMainRosterChar(
     }
 }
 
-export async function fetchRaids() {
+export async function fetchRaidTemplates() {
     try {
-        const data = await sql<Raid>
-            `SELECT *
-            FROM raids
-            ORDER BY created_at DESC
+        const data = await sql<RaidTemplate>
+            `SELECT
+                raid_templates.id,
+                raid_templates.raid_id,
+                raid_templates.name,
+                raid_templates.size,
+                raid_templates.difficulty,
+                raids.name AS raid_name
+            FROM raid_templates
+            INNER JOIN raids ON raids.id = raid_templates.raid_id
+            ORDER BY raid_templates.created_at DESC
             ;`;
         return data.rows;
     } catch (error) {
         console.log(error);
         throw new Error('Failed to fetch raids.');
+    }
+}
+
+export async function fetchRaidTemplatePositions(template_id: RaidTemplate['id']) {
+    try {
+        const data = await sql<RaidTemplatePosition>
+            `SELECT * 
+            FROM raid_template_positions
+            WHERE template_id = ${template_id}
+            ORDER BY position ASC
+            ;`;
+        return data.rows;
+    } catch (error) {
+        console.log(error);
+        throw new Error('Failed to fetch raid template positions.');
     }
 }

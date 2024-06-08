@@ -3,19 +3,19 @@
 import { Button } from '@/components/Button';
 import { SelectInput } from '@/components/form/select-input';
 import { SortableList } from '@/components/raids/form/SortableCharacterList';
-import type { Raid, RosterCharacter } from '@/lib/definitions';
+import type { Raid, RaidTemplate, RosterCharacter } from '@/lib/definitions';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
 
 type Props = {
     children?: ReactNode;
     characters: RosterCharacter[];
-    raids: Raid[];
+    raid_templates: RaidTemplate[];
 };
 
-export function AddRaidForm({ children, characters, raids }: Props) {
+export function AddRaidForm({ children, characters, raid_templates, }: Props) {
 
-    const [currentRaid, setCurrentRaid] = useState<Raid>(raids[0]);
+    const [currentRaid, setCurrentRaid] = useState<RaidTemplate>(raid_templates[0]);
     const [currentGroup, setGroup] = useState<RosterCharacter[]>();
 
     function getDefaultDate() {
@@ -26,10 +26,10 @@ export function AddRaidForm({ children, characters, raids }: Props) {
     };
 
     function handleSelectRaid(e: ChangeEvent<HTMLSelectElement>) {
-        const raidId = e.target.value;
-        const found = raids.find((raid) => raid.id == raidId);
-        if (found) {
-            setCurrentRaid(found);
+        const newTemplateId = e.target.value;
+        const foundTemplate = raid_templates.find((template) => template.id == newTemplateId);
+        if (foundTemplate) {
+            setCurrentRaid(foundTemplate);
         }
     }
 
@@ -60,12 +60,12 @@ export function AddRaidForm({ children, characters, raids }: Props) {
                         value={currentRaid.id}
                         onChange={handleSelectRaid}
                     >
-                        {raids.map((raid) => (
+                        {raid_templates.map((template) => (
                             <option
-                                key={`raid-option-${raid.id}`}
-                                value={raid.id}
+                                key={`raid-option-${template.id}`}
+                                value={template.id}
                             >
-                                {`${raid.name} ${raid.size}${raid.difficulty}`}
+                                {`${template.name}`}
                             </option>
                         ))}
                     </SelectInput>

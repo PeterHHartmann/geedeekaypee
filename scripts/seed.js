@@ -6,14 +6,15 @@ const {
   char_roles,
   class_roles,
   main_roster,
-  raids
+  raids,
+  raid_templates,
+  raids_template_positions
 } = require('../lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
 
 async function seedUsers(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-    // Create the "users" table if it doesn't exist
     const createTable = await client.sql`
       CREATE TABLE IF NOT EXISTS users (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -62,8 +63,9 @@ async function seedCharacterClasses(client) {
         `;
         console.log(`Created "char_classes" table`)
 
+        const allCharClasses = Array.from(Object.values(char_classes))
         const insertedCharacterClasses = await Promise.all(
-            char_classes.map(async (character_class) => {
+            allCharClasses.map(async (character_class) => {
                 return client.sql`
                 INSERT INTO char_classes (id, name)
                 VALUES (${character_class.id}, ${character_class.name})
@@ -96,8 +98,9 @@ async function seedClassTalentSpecs(client){
         
         console.log(`Created "class_talent_specs" table`)
 
+        const allClassTalentSpecs = Object.values(class_talent_specs).flatMap(classTalentSpec => Object.values(classTalentSpec));
         const insertedClassTalentSpecs = await Promise.all(
-            class_talent_specs.map(async (spec) => {
+            allClassTalentSpecs.map(async (spec) => {
                 return client.sql`
                 INSERT INTO class_talent_specs (id, name, class_id)
                 VALUES (${spec.id}, ${spec.name}, ${spec.class_id})
@@ -127,10 +130,13 @@ async function seedCharRoles(client) {
                 created_at TIMESTAMP DEFAULT current_timestamp
             );
         `;
-        console.log(`Created "char_roles" table`)
 
+        
+        console.log(`Created "char_roles" table`)
+        
+        const allCharRoles = Array.from(Object.values(char_roles))
         const insertedCharacterRoles = await Promise.all(
-            char_roles.map(async (character_role) => {
+            allCharRoles.map(async (character_role) => {
                 return client.sql`
                 INSERT INTO char_roles (id, name)
                 VALUES (${character_role.id}, ${character_role.name})
@@ -161,14 +167,8 @@ async function seedCharClassRoles(client){
             created_at TIMESTAMP DEFAULT current_timestamp
         );`
         console.log(`Created "char_class_roles" table`)
-        
-        let allClassRoles = []
-        for (const charClass of Object.values(class_roles)){
-            for (const role of Object.values(charClass)){
-                allClassRoles.push(role)
-            }
-        }
 
+        const allClassRoles = Object.values(class_roles).flatMap(charClass => Object.values(charClass));
         const insertedClassRoles = await Promise.all(
             allClassRoles.map(async (character_class_role) => {
                 return client.sql`
@@ -201,8 +201,8 @@ async function seedMainRoster(client) {
                 spec_id UUID REFERENCES class_talent_specs (id),
                 role_id UUID REFERENCES char_roles (id),
                 created_at TIMESTAMP DEFAULT current_timestamp
-            );
-        `
+            )
+        ;`
         console.log(`Created "main_roster" table`)
 
         const insertedCharacters = await Promise.all(
@@ -210,8 +210,8 @@ async function seedMainRoster(client) {
                 return client.sql`
                 INSERT INTO main_roster (id, name, user_email, class_id, spec_id, role_id)
                 VALUES (${character.id}, ${character.name}, ${character.user_email}, ${character.class_id}, ${character.spec_id}, ${character.role_id})
-                ON CONFLICT (id) DO NOTHING;
-                `
+                ON CONFLICT (id) DO NOTHING
+                ;`
             })
         )
 
@@ -234,20 +234,19 @@ async function seedRaids(client) {
             CREATE TABLE IF NOT EXISTS raids (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
-                size SMALLINT DEFAULT NULL,
-                difficulty VARCHAR(255) NOT NULL,
                 created_at TIMESTAMP DEFAULT current_timestamp
             );
         `;
         console.log(`Created "raids" table`)
 
+        const allRaids = Array.from(Object.values(raids))
         const insertedRaids = await Promise.all(
-            raids.map(async (raid) => {
+            allRaids.map(async (raid) => {
                 return client.sql`
-                INSERT INTO raids (id, name, size, difficulty)
-                VALUES (${raid.id}, ${raid.name}, ${raid.size}, ${raid.difficulty})
-                ON CONFLICT (id) DO NOTHING;
-                `;
+                INSERT INTO raids (id, name)
+                VALUES (${raid.id}, ${raid.name})
+                ON CONFLICT (id) DO NOTHING
+                ;`;
             }),
         );
 
@@ -262,6 +261,93 @@ async function seedRaids(client) {
     }
 }
 
+async function seedRaidTemplates(client) {
+    try {
+        await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+        const createTable = await client.sql`
+            CREATE TABLE IF NOT EXISTS raid_templates (
+                id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+                raid_id UUID REFERENCES raids (id),
+                name VARCHAR(255) NOT NULL,
+                size SMALLINT DEFAULT NULL,
+                difficulty VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT current_timestamp
+            );
+        `;
+        console.log(`Created "raid_templates" table`)
+
+        const allRaidTemplates = Array.from(Object.values(raid_templates))
+
+        const insertedRaidTemplates = await Promise.all(
+            allRaidTemplates.map(async (template) => {
+                return client.sql`
+                INSERT INTO raid_templates (id, raid_id, name, size, difficulty)
+                VALUES (${template.id}, ${template.raid_id}, ${template.name}, ${template.size}, ${template.difficulty})
+                ON CONFLICT (id) DO NOTHING;
+                `;
+            }),
+        );
+
+        console.log(`Seeded ${insertedRaidTemplates.length} raid templates`);
+        return {
+            createTable,
+            raids: insertedRaidTemplates
+        }
+    } catch (error) {
+        console.error('Error seeding raid templates:', error);
+        throw error;
+    }
+}
+
+async function seedRaidTemplateRosterPositions(client) {
+    try {
+        await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+        const createTable = await client.sql`
+            CREATE TABLE IF NOT EXISTS raid_template_positions (
+                id UUID DEFAULT uuid_generate_v4(),
+                template_id UUID REFERENCES raid_templates (id),
+                position SMALLINT NOT NULL,
+                priority_list TEXT[] DEFAULT NULL,
+                created_at TIMESTAMP DEFAULT current_timestamp,
+                CONSTRAINT pk_template_position PRIMARY KEY (template_id, position)
+            )
+        ;`;
+        console.log(`Created "raid_template_positions" table`)
+
+        const allRaidTemplatePositions = Object.values(raids_template_positions)
+            .flatMap((template) => Object.entries(template.positions)
+                .map(([key, value]) => (
+                    {
+                        id: value.id, 
+                        template_id: template.template_id, 
+                        position: parseInt(key, 10), 
+                        priority_list: value.priority_list
+                    }
+                ))
+            )
+
+        const insertedRaidTemplatePositions = await Promise.all(
+            allRaidTemplatePositions.map(async (template_position) => {
+                return client.sql`
+                INSERT INTO raid_template_positions (id, template_id, position, priority_list)
+                VALUES (${template_position.id}, ${template_position.template_id}, ${template_position.position}, ${template_position.priority_list})
+                ON CONFLICT (template_id, position) DO NOTHING
+                ;`;
+            }),
+        );
+
+        console.log(`Seeded ${insertedRaidTemplatePositions.length} raid template positions`);
+
+        return {
+            createTable,
+            raids: insertedRaidTemplatePositions
+        }
+    } catch (error) {
+        console.error('Error seeding template positions:', error);
+        throw error;
+    }
+}
+
 async function main() {
   const client = await db.connect();
 
@@ -272,6 +358,8 @@ async function main() {
   await seedCharClassRoles(client);
   await seedMainRoster(client);
   await seedRaids(client);
+  await seedRaidTemplates(client);
+  await seedRaidTemplateRosterPositions(client)
 
   await client.end();
 }
