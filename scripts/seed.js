@@ -304,34 +304,39 @@ async function seedRaidTemplateRosterPositions(client) {
         await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
         const createTable = await client.sql`
             CREATE TABLE IF NOT EXISTS raid_template_positions (
-                id UUID DEFAULT uuid_generate_v4(),
+                id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
                 template_id UUID REFERENCES raid_templates (id),
                 position SMALLINT NOT NULL,
-                priority_list TEXT[] DEFAULT NULL,
-                created_at TIMESTAMP DEFAULT current_timestamp,
-                CONSTRAINT pk_template_position PRIMARY KEY (template_id, position)
+                priority SMALLINT NOT NULL,
+                class_id UUID REFERENCES char_classes (id),
+                role_id UUID REFERENCES char_roles (id),
+                spec_id UUID REFERENCES class_talent_specs (id),
+                created_at TIMESTAMP DEFAULT current_timestamp
             )
         ;`;
         console.log(`Created "raid_template_positions" table`)
 
         const allRaidTemplatePositions = Object.values(raids_template_positions)
             .flatMap((template) => Object.entries(template.positions)
-                .map(([key, value]) => (
-                    {
-                        id: value.id, 
+                .flatMap(([key, value]) => value
+                    .map((prio, index) => ({
+                        id: prio.id,
                         template_id: template.template_id, 
-                        position: parseInt(key, 10), 
-                        priority_list: value.priority_list
-                    }
-                ))
+                        position: parseInt(key, 10),
+                        priority: index + 1,
+                        class_id: prio.class_role.class_id,
+                        role_id: prio.class_role.role_id,
+                        spec_id: prio.spec_id
+                    }))
+                )
             )
 
         const insertedRaidTemplatePositions = await Promise.all(
             allRaidTemplatePositions.map(async (template_position) => {
                 return client.sql`
-                INSERT INTO raid_template_positions (id, template_id, position, priority_list)
-                VALUES (${template_position.id}, ${template_position.template_id}, ${template_position.position}, ${template_position.priority_list})
-                ON CONFLICT (template_id, position) DO NOTHING
+                INSERT INTO raid_template_positions (id, template_id, position, priority, class_id, role_id, spec_id)
+                VALUES (${template_position.id}, ${template_position.template_id}, ${template_position.position}, ${template_position.priority}, ${template_position.class_id}, ${template_position.role_id}, ${template_position.spec_id})
+                ON CONFLICT (id) DO NOTHING
                 ;`;
             }),
         );

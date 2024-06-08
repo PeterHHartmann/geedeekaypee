@@ -5,49 +5,51 @@ import type { RosterCharacter } from '@/lib/definitions';
 import { useDndMonitor } from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import clsx from 'clsx';
-import React, { useMemo, useState, type ReactNode } from 'react';
+import React, { useEffect, useId, useState, type ReactNode } from 'react';
+import { randomBytes } from 'crypto';
 
 type Props = {
     size: number;
-    uid: string;
-    initial?: RosterCharacter[];
-    characters: RosterCharacter[];
+    initial: RosterCharacter[] | undefined;
+    allCharacters: RosterCharacter[];
 };
 
-type ListItem = {
+type Row = {
     id: string,
     character: RosterCharacter | undefined;
 };
 
-export function SortableList({
+export function SortableRosterList({
     size,
-    uid,
     initial,
-    characters,
+    allCharacters,
 }: Props) {
+    const context_id = useId();
+    const identifier = 'sortable-character';
+    const [rows, setRows] = useState<Row[]>(createEmptyItems(size));
 
-    function createEmptyItems(uid: string, length: number) {
-        return Array.from(({ length }), (_, index) => ({ id: `${uid}-${index + 1}`, character: undefined }));
+    function createEmptyItems(length: number): Row[] {
+        return Array.from(({ length }), (_, index) => ({ id: `${identifier}-${randomBytes(16).toString('hex')}-${index}`, character: undefined }));
     }
 
-    const initialItems = useMemo(() => {
+    useEffect(() => {
         if (initial) {
-            const result = initial.map<ListItem>((character, index) => ({ id: `${uid}-${index + 1}`, character: character }));
-            return result;
+            const newRows: Row[] = createEmptyItems(size);
+            initial.forEach((character, index) => {
+                newRows[index].character = character;
+            });
+            setRows(newRows);
         }
-    }, [uid, initial]);
-
-    const [items, setItems] = useState(initialItems || createEmptyItems(uid, size));
+    }, [initial, size]);
 
     useDndMonitor({
         onDragEnd(event) {
             const { active, over } = event;
             const activeId = active.id;
 
-            if (activeId.toString().includes(uid) && over) {
+            if (activeId.toString().includes(identifier) && over) {
                 if (activeId !== over.id) {
-                    setItems((items) => {
+                    setRows((items) => {
                         const oldIndex = items.findIndex(({ id }) => id == activeId);
                         const newIndex = items.findIndex(({ id }) => id == over.id);
                         return arrayMove(items, oldIndex, newIndex);
@@ -58,14 +60,15 @@ export function SortableList({
     });
 
     return (
-        <div className='rounded-md overflow-clip'>
+        <div className='grid grid-flow-col grid-rows-5 grid-cols-5 gap-1 rounded-md overflow-clip'>
             <SortableContext
-                items={items}
+                id={context_id}
+                items={rows}
             >
-                {items.map(({ id, character }) => (
-                    <SortableItem key={id} id={id}>
-                        <DroppableCharacterSlot id={id} characters={characters} initial={character} />
-                    </SortableItem>
+                {rows.map(({ id, character }) => (
+                    <SortableRosterRow key={id} id={id}>
+                        <DroppableCharacterSlot id={id} characters={allCharacters} initial={character} />
+                    </SortableRosterRow>
                 ))}
             </SortableContext>
         </div>
@@ -77,7 +80,7 @@ type ItemProps = {
     children: ReactNode;
 };
 
-export function SortableItem({ id, children }: ItemProps) {
+export function SortableRosterRow({ id, children }: ItemProps) {
 
     const {
         attributes,
@@ -98,9 +101,6 @@ export function SortableItem({ id, children }: ItemProps) {
             style={style}
             {...attributes}
             {...listeners}
-            className={clsx(
-                'w-[250px] min-h-[38px] overflow-x-auto'
-            )}
         >
             {children}
         </div>

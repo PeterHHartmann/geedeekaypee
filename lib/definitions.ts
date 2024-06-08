@@ -53,7 +53,24 @@ export type RaidTemplatePosition = {
     id: string;
     template_id: RaidTemplate['id'],
     position: number;
-    priority_list: string[];
+    priority: number;
+    class_id: CharClass['id'];
+    role_id: CharRole['id'];
+    spec_id: CharSpec['id'];
+};
+
+export type RaidTemplatePositions = {
+    [template_id: RaidTemplate['id']]: RaidTemplatePosition[];
+};
+
+export type RaidTemplateFull = {
+    id: string;
+    name: string;
+    size: number;
+    difficulty: string;
+    raid_id: string;
+    raid_name: string;
+    positions: RaidTemplatePosition[];
 };
 
 export type CharRoleOption = {

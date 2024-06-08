@@ -3,14 +3,15 @@ import { fetchMainRoster, fetchRaidTemplates, fetchRaidTemplatePositions } from 
 
 export default async function NewRaidPage() {
     const roster = await fetchMainRoster();
-    const raids = await fetchRaidTemplates();
-    const raidTemplatePositions = await fetchRaidTemplatePositions('348c5108-ab12-4c29-bc0e-9780d3a4bffd');
-    console.log(raidTemplatePositions);
-    // console.log(JSON.parse(raidTemplatePositions[0].priority_list));
+    const raidTemplates = await fetchRaidTemplates();
+    const raidTemplatePositions = await fetchRaidTemplatePositions();
+    // console.log(raidTemplatePositions);
+    console.log(raidTemplates);
+
 
     return (
         <>
-            <AddRaidForm characters={roster} raid_templates={raids}>
+            <AddRaidForm main_roster={roster} raid_templates={raidTemplates} template_positions={raidTemplatePositions}>
             </AddRaidForm>
         </>
     );

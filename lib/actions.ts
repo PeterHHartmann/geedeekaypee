@@ -1,6 +1,6 @@
 'use server';
 import 'server-only';
-import type { CharClass, CharRoleOptionsForClasses, CharRole, CharSpec, MutationResult, RosterCharacter, Raid, RaidTemplate, RaidTemplatePosition } from '@/lib/definitions';
+import type { CharClass, CharRoleOptionsForClasses, CharRole, CharSpec, MutationResult, RosterCharacter, Raid, RaidTemplate, RaidTemplatePosition, RaidTemplatePositions } from '@/lib/definitions';
 import { capitalize } from '@/lib/utils';
 import { auth, signIn } from '@/auth';
 import { sql } from '@vercel/postgres';
@@ -287,7 +287,7 @@ export async function fetchRaidTemplates() {
                 raids.name AS raid_name
             FROM raid_templates
             INNER JOIN raids ON raids.id = raid_templates.raid_id
-            ORDER BY raid_templates.created_at DESC
+            ORDER BY raid_templates.created_at ASC
             ;`;
         return data.rows;
     } catch (error) {
@@ -303,7 +303,18 @@ export async function fetchRaidTemplatePositions() {
             FROM raid_template_positions
             ORDER BY position ASC
             ;`;
-        return data.rows;
+
+        const positions = data.rows;
+        const result = positions.reduce<RaidTemplatePositions>((acc, position) => {
+            if (!acc[position.template_id]) {
+                acc[position.template_id] = [position];
+            } else {
+                acc[position.template_id].push(position);
+            }
+            return acc;
+        }, {});
+        return result;
+
     } catch (error) {
         console.log(error);
         throw new Error('Failed to fetch raid template positions.');

@@ -2,21 +2,22 @@
 
 import { Button } from '@/components/Button';
 import { SelectInput } from '@/components/form/select-input';
-import { SortableList } from '@/components/raids/form/SortableCharacterList';
-import type { Raid, RaidTemplate, RosterCharacter } from '@/lib/definitions';
+import { SortableRosterList } from '@/components/raids/form/SortableRosterList';
+import type { Raid, RaidTemplate, RaidTemplatePositions, RosterCharacter } from '@/lib/definitions';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
 
 type Props = {
     children?: ReactNode;
-    characters: RosterCharacter[];
+    main_roster: RosterCharacter[];
     raid_templates: RaidTemplate[];
+    template_positions: RaidTemplatePositions;
 };
 
-export function AddRaidForm({ children, characters, raid_templates, }: Props) {
+export function AddRaidForm({ children, main_roster, raid_templates, template_positions }: Props) {
 
-    const [currentRaid, setCurrentRaid] = useState<RaidTemplate>(raid_templates[0]);
-    const [currentGroup, setGroup] = useState<RosterCharacter[]>();
+    const [currentTemplate, setCurrentTemplate] = useState<RaidTemplate>(raid_templates[0]);
+    const [roster, setRoster] = useState<RosterCharacter[]>();
 
     function getDefaultDate() {
         const currentTime = new Date();
@@ -29,19 +30,37 @@ export function AddRaidForm({ children, characters, raid_templates, }: Props) {
         const newTemplateId = e.target.value;
         const foundTemplate = raid_templates.find((template) => template.id == newTemplateId);
         if (foundTemplate) {
-            setCurrentRaid(foundTemplate);
+            setCurrentTemplate(foundTemplate);
         }
     }
 
     useEffect(() => {
+        const roster_copy = main_roster.slice();
+        const newRoster: RosterCharacter[] = [];
+        template_positions[currentTemplate.id].forEach((prio) => {
+            const found = roster_copy.find((char) => (
+                prio.class_id == char.class_id
+                && prio.role_id == char.role_id
+                && prio.spec_id == char.spec_id
+            ));
+            if (!newRoster[prio.position - 1]) {
+                if (found) {
+                    const index = roster_copy.indexOf(found);
+                    roster_copy.splice(index, 1);
+                    newRoster.push(found);
+                }
+            }
+        });
 
-
-    }, [currentRaid]);
+        // console.log('roster copy length end:', roster_copy.length);
+        // console.log('new roster', newRoster);
+        setRoster(newRoster);
+    }, [currentTemplate, template_positions, main_roster]);
 
     return (
         <form className='w-full'>
-            <div className='flex justify-between w-full'>
-                <fieldset className='bg-indigo-300'>
+            <div className='flex flex-wrap gap-4 pb-4 justify-between w-full'>
+                <fieldset className='bg-indigo-300 w-full'>
                     <div className='w-full'>
                         <label className="my-3 block font-semibold" htmlFor='title'>Title</label>
                         <div className="relative">
@@ -57,7 +76,7 @@ export function AddRaidForm({ children, characters, raid_templates, }: Props) {
                     <SelectInput
                         name='raid'
                         label='Raid'
-                        value={currentRaid.id}
+                        value={currentTemplate.id}
                         onChange={handleSelectRaid}
                     >
                         {raid_templates.map((template) => (
@@ -96,13 +115,8 @@ export function AddRaidForm({ children, characters, raid_templates, }: Props) {
                         </div>
                     </div>
                 </fieldset>
-                <div>
-                    <div className='mb-4'>
-                        <SortableList size={2} uid='two-row' characters={characters} initial={[characters[0], characters[2]]} />
-                    </div>
-                    <div>
-                        <SortableList size={5} uid='five-row' characters={characters} />
-                    </div>
+                <div className='w-full' suppressHydrationWarning>
+                    <SortableRosterList size={currentTemplate.size} allCharacters={main_roster} initial={roster} />
                 </div>
             </div>
             <div className='flex justify-between gap-2'>
@@ -117,4 +131,4 @@ export function AddRaidForm({ children, characters, raid_templates, }: Props) {
             </div>
         </form>
     );
-}
+};

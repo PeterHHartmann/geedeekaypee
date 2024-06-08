@@ -3,9 +3,11 @@
 import { CharacterRow } from '@/components/roster/CharacterRow';
 import type { RosterCharacter } from '@/lib/definitions';
 import { DndContext, DragOverlay, type DragStartEvent } from '@dnd-kit/core';
-import { useState, type ReactNode } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 
 export function Providers({ children }: { children: ReactNode; }) {
+    const dnd_id = useId();
+
     const [draggedCharacter, setDraggedCharacter] = useState<RosterCharacter | undefined>(undefined);
 
     function handleDragStart(event: DragStartEvent) {
@@ -24,7 +26,7 @@ export function Providers({ children }: { children: ReactNode; }) {
     }
 
     return (
-        <DndContext onDragStart={handleDragStart}>
+        <DndContext onDragStart={handleDragStart} id={dnd_id}>
             {children}
             <DragOverlay className='rounded-md overflow-clip cursor-grabbing'>
                 {draggedCharacter
