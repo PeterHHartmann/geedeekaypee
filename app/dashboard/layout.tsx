@@ -9,7 +9,7 @@ type Props = {
 
 export default function DashboardLayout({ children, roster, raids }: Props) {
     return (
-        <main className='flex flex-col min-h-screen w-full py-2 px-2 md:px-4 lg:px-6' suppressHydrationWarning>
+        <main className='flex flex-col min-h-screen w-full py-2 px-2 md:px-4 lg:px-6'>
             <Providers>
                 {children}
                 <div className='flex flex-col-reverse xl:flex-row gap-3 md:gap-4 pb-3'>

@@ -4,7 +4,7 @@ import { CharacterRow } from '@/components/roster/CharacterRow';
 import type { RosterCharacter } from '@/lib/definitions';
 import { DndContext, useDndMonitor, useDroppable } from "@dnd-kit/core";
 import clsx from 'clsx';
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 type DroppableProp = {
     id: string;
@@ -43,7 +43,6 @@ export const DroppableCharacterSlot: FC<DroppableProp> = ({ id, characters, init
                     }
                 }
             }
-            return;
         }
     });
 
@@ -52,7 +51,7 @@ export const DroppableCharacterSlot: FC<DroppableProp> = ({ id, characters, init
             <div
                 ref={setNodeRef}
                 className={clsx(
-                    'min-h-[38px] overflow-x-auto border-1 rounded-md',
+                    'h-[40px] overflow-x-auto border-1 rounded-md overflow-clip',
                     {
                         'bg-slate-700': isOver == false,
                         'bg-slate-600': isOver == true

@@ -49,11 +49,11 @@ export function SortableRosterList({
 
             if (activeId.toString().includes(identifier) && over) {
                 if (activeId !== over.id) {
-                    setRows((items) => {
-                        const oldIndex = items.findIndex(({ id }) => id == activeId);
-                        const newIndex = items.findIndex(({ id }) => id == over.id);
-                        return arrayMove(items, oldIndex, newIndex);
-                    });
+                    const current = rows.slice();
+                    const oldIndex = current.findIndex(({ id }) => id == activeId);
+                    const newIndex = current.findIndex(({ id }) => id == over.id);
+                    const newRows = arrayMove(current, oldIndex, newIndex);
+                    setRows(newRows);
                 }
             }
         },
@@ -65,8 +65,9 @@ export function SortableRosterList({
                 id={context_id}
                 items={rows}
             >
-                {rows.map(({ id, character }) => (
+                {rows.map(({ id, character }, index) => (
                     <SortableRosterRow key={id} id={id}>
+                        <input type='hidden' value={character?.id || ''} name={`raid-roster-${index}`} />
                         <DroppableCharacterSlot id={id} characters={allCharacters} initial={character} />
                     </SortableRosterRow>
                 ))}

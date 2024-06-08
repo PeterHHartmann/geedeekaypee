@@ -35,8 +35,10 @@ export function AddRaidForm({ children, main_roster, raid_templates, template_po
     }
 
     useEffect(() => {
-        const roster_copy = main_roster.slice();
+        const roster_copy = main_roster.slice(0);
         const newRoster: RosterCharacter[] = [];
+
+        //fill newRoster with characters that matches the requirements for each numeric position in the roster
         template_positions[currentTemplate.id].forEach((prio) => {
             const found = roster_copy.find((char) => (
                 prio.class_id == char.class_id
@@ -52,8 +54,16 @@ export function AddRaidForm({ children, main_roster, raid_templates, template_po
             }
         });
 
-        // console.log('roster copy length end:', roster_copy.length);
-        // console.log('new roster', newRoster);
+        //fill newRoster with remaining characters if not full
+        if (newRoster.length < currentTemplate.size) {
+            const temp = newRoster.slice();
+            for (let i = 0;i < currentTemplate.size - temp.length;i++) {
+                if (roster_copy[i]) {
+                    newRoster.push(roster_copy[i]);
+                }
+            }
+        }
+
         setRoster(newRoster);
     }, [currentTemplate, template_positions, main_roster]);
 
@@ -115,7 +125,7 @@ export function AddRaidForm({ children, main_roster, raid_templates, template_po
                         </div>
                     </div>
                 </fieldset>
-                <div className='w-full' suppressHydrationWarning>
+                <div className='w-full'>
                     <SortableRosterList size={currentTemplate.size} allCharacters={main_roster} initial={roster} />
                 </div>
             </div>
