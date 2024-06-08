@@ -18,7 +18,8 @@ async function seedUsers(client) {
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email TEXT NOT NULL UNIQUE,
-        password TEXT NOT NULL
+        password TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT current_timestamp
       );
     `;
 
@@ -54,7 +55,8 @@ async function seedCharacterClasses(client) {
         const createTable = await client.sql`
             CREATE TABLE IF NOT EXISTS character_classes (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-                name VARCHAR(255) NOT NULL UNIQUE
+                name VARCHAR(255) NOT NULL UNIQUE,
+                created_at TIMESTAMP DEFAULT current_timestamp
             );
         `;
         console.log(`Created "character_classes" table`)
@@ -87,7 +89,8 @@ async function seedClassSpecs(client){
             CREATE TABLE IF NOT EXISTS class_specs (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
-                class_id UUID REFERENCES character_classes (id)
+                class_id UUID REFERENCES character_classes (id),
+                created_at TIMESTAMP DEFAULT current_timestamp
             );`;
         
         console.log(`Created "class_specs" table`)
@@ -119,7 +122,8 @@ async function seedCharacterRoles(client) {
         const createTable = await client.sql`
             CREATE TABLE IF NOT EXISTS character_roles (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-                name VARCHAR(255) NOT NULL UNIQUE
+                name VARCHAR(255) NOT NULL UNIQUE,
+                created_at TIMESTAMP DEFAULT current_timestamp
             );
         `;
         console.log(`Created "character_roles" table`)
@@ -151,7 +155,8 @@ async function seedCharacterClassRoles(client){
         const createTable = await client.sql`CREATE TABLE IF NOT EXISTS character_class_roles (
             id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
             class_id UUID REFERENCES character_classes (id),
-            role_id UUID REFERENCES character_roles (id)
+            role_id UUID REFERENCES character_roles (id),
+            created_at TIMESTAMP DEFAULT current_timestamp
         )`
         console.log(`Created "character_class_roles" table`)
         const insertedCharacterClassRoles = await Promise.all(

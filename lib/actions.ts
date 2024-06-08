@@ -125,7 +125,7 @@ export async function fetchCharacters() {
                 INNER JOIN class_specs ON characters.spec_id = class_specs.id
                 INNER JOIN character_roles ON characters.role_id = character_roles.id
                 WHERE characters.user_email = ${user.email}
-                ORDER BY created_at ASC;
+                ORDER BY character_roles.created_at ASC;
                 `;
                 return data.rows;
             } catch (error) {

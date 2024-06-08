@@ -18,7 +18,7 @@ export type CharSpec = {
 
 export type CharRole = {
     id: string;
-    name: 'Tank' | 'Healer' | 'Dps';
+    name: 'Tank' | 'Healer' | 'Melee DPS' | 'Ranged DPS';
 };
 
 export type RosterCharacter = {

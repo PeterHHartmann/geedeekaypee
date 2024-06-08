@@ -1,14 +1,14 @@
 import Image from 'next/image';
-import DeathKnightIcon from '@/public/image/player-classes/deathknight/deathknight-icon.webp';
-import DruidIcon from '@/public/image/player-classes/druid/druid-icon.webp';
-import HunterIcon from '@/public/image/player-classes/hunter/hunter-icon.webp';
-import MageIcon from '@/public/image/player-classes/mage/mage-icon.webp';
-import PaladinIcon from '@/public/image/player-classes/paladin/paladin-icon.webp';
-import PriestIcon from '@/public/image/player-classes/priest/priest-icon.webp';
-import RogueIcon from '@/public/image/player-classes/rogue/rogue-icon.webp';
-import ShamanIcon from '@/public/image/player-classes/shaman/shaman-icon.webp';
-import WarlockIcon from '@/public/image/player-classes/warlock/warlock-icon.webp';
-import WarriorIcon from '@/public/image/player-classes/warrior/warrior-icon.webp';
+import DeathKnightIcon from '@/public/image/character/class/deathknight/class-icon.webp';
+import DruidIcon from '@/public/image/character/class/druid/class-icon.webp';
+import HunterIcon from '@/public/image/character/class/hunter/class-icon.webp';
+import MageIcon from '@/public/image/character/class/mage/class-icon.webp';
+import PaladinIcon from '@/public/image/character/class/paladin/class-icon.webp';
+import PriestIcon from '@/public/image/character/class/priest/class-icon.webp';
+import RogueIcon from '@/public/image/character/class/rogue/class-icon.webp';
+import ShamanIcon from '@/public/image/character/class/shaman/class-icon.webp';
+import WarlockIcon from '@/public/image/character/class/warlock/class-icon.webp';
+import WarriorIcon from '@/public/image/character/class/warrior/class-icon.webp';
 import type { CharClass } from '@/lib/definitions';
 
 type Props = {

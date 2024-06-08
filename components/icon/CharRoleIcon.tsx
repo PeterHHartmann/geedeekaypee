@@ -1,14 +1,16 @@
-import DpsIcon from '@/public/image/player-roles/Dps.webp';
-import TankIcon from '@/public/image/player-roles/Tank.webp';
-import HealIcon from '@/public/image/player-roles/Heal.webp';
-import Image from 'next/image';
+import TankIcon from '@/public/image/character/role/Tank.webp';
+import HealIcon from '@/public/image/character/role/Heal.webp';
+import MeleeDPSIcon from '@/public/image/character/role/MeleeDPS.webp';
+import RangedDPSIcon from '@/public/image/character/role/RangedDPS.webp';
+import Image, { type StaticImageData } from 'next/image';
 import type { CharRole } from '@/lib/definitions';
 import clsx from 'clsx';
 
-const icons = {
+const icons: { [key in CharRole['name']]: StaticImageData } = {
     'Tank': TankIcon,
     'Healer': HealIcon,
-    'Dps': DpsIcon,
+    'Melee DPS': MeleeDPSIcon,
+    'Ranged DPS': RangedDPSIcon
 };
 
 type Props = {
@@ -17,7 +19,7 @@ type Props = {
     className?: string;
 };
 
-export function CharacterRoleIcon(props: Props) {
+export function CharRoleIcon(props: Props) {
     return (
         <div className={`flex justify-center items-center`}>
             <Image
