@@ -4,7 +4,7 @@ import { ToolbarButton } from '@/components/SlidingToolbarLeft';
 import { FormErrors } from '@/components/form/form-error';
 import { SelectInput } from '@/components/form/select-input';
 import { SubmitButton } from '@/components/form/submit-button';
-import { updateCharacter } from '@/lib/actions';
+import { updateMainRosterChar } from '@/lib/actions';
 import type { CharClass, CharRoleOptionsForClasses, CharRoleOption, CharSpec, RosterCharacter } from '@/lib/definitions';
 import { PencilSquareIcon, PlusCircleIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState, type ChangeEvent } from 'react';
@@ -19,7 +19,7 @@ type Props = {
 
 export function EditCharacterForm({ character, charClasses, charRoles, charSpecs }: Props) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [state, formAction] = useFormState(updateCharacter, { success: false });
+    const [state, formAction] = useFormState(updateMainRosterChar, { success: false });
 
     const [roleOptions, setRoleOptions] = useState<CharRoleOption[]>(charRoles[character.class_id]);
     const [specOptions, setSpecOptions] = useState<CharSpec[]>(charSpecs.filter((spec) => spec.class_id == character.class_id));

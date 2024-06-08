@@ -1,5 +1,5 @@
 'use client';
-import { deleteCharacter } from '@/lib/actions';
+import { deleteMainRosterChar } from '@/lib/actions';
 import type { RosterCharacter } from '@/lib/definitions';
 import { FormErrors } from '@/components/form/form-error';
 import { Modal } from '@/components/Modal';
@@ -15,7 +15,7 @@ type Props = {
 
 export function DeleteCharacterForm({ character }: Props) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [state, formAction] = useFormState(deleteCharacter, { success: false });
+    const [state, formAction] = useFormState(deleteMainRosterChar, { success: false });
 
     useEffect(() => {
         if (state.success) {

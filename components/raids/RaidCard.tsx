@@ -1,4 +1,4 @@
-import { RAID_IMAGES } from '@/lib/constants';
+import { RAID_COVER_IMAGES } from '@/lib/constants';
 import type { Raid } from '@/lib/definitions';
 import { CalendarIcon, ClockIcon, EyeIcon, EyeSlashIcon, GlobeAsiaAustraliaIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
@@ -63,7 +63,7 @@ type RaidCoverImageProps = {
 function RaidCoverImage({ raidName }: RaidCoverImageProps) {
     return (
         <Image
-            src={RAID_IMAGES[raidName]}
+            src={RAID_COVER_IMAGES[raidName]}
             fill
             alt='Raid cover'
             className='absolute w-full h-full object-cover object-center -z-10 rounded-xl mix-blend-hard-light'

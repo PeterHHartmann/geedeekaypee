@@ -3,16 +3,20 @@
 import { Button } from '@/components/Button';
 import { SelectInput } from '@/components/form/select-input';
 import { SortableList } from '@/components/raids/form/SortableCharacterList';
-import type { RosterCharacter } from '@/lib/definitions';
+import type { Raid, RosterCharacter } from '@/lib/definitions';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import type { ReactNode } from 'react';
+import { useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
 
 type Props = {
     children?: ReactNode;
     characters: RosterCharacter[];
+    raids: Raid[];
 };
 
-export function AddRaidForm({ children, characters }: Props) {
+export function AddRaidForm({ children, characters, raids }: Props) {
+
+    const [currentRaid, setCurrentRaid] = useState<Raid>(raids[0]);
+    const [currentGroup, setGroup] = useState<RosterCharacter[]>();
 
     function getDefaultDate() {
         const currentTime = new Date();
@@ -20,6 +24,19 @@ export function AddRaidForm({ children, characters }: Props) {
         const date = currentTime.toISOString().substring(0, 10);
         return date;
     };
+
+    function handleSelectRaid(e: ChangeEvent<HTMLSelectElement>) {
+        const raidId = e.target.value;
+        const found = raids.find((raid) => raid.id == raidId);
+        if (found) {
+            setCurrentRaid(found);
+        }
+    }
+
+    useEffect(() => {
+
+
+    }, [currentRaid]);
 
     return (
         <form className='w-full'>
@@ -37,9 +54,20 @@ export function AddRaidForm({ children, characters }: Props) {
                             />
                         </div>
                     </div>
-                    <SelectInput name='raid' label='Raid'>
-                        <option>ICC</option>
-                        <option>RS</option>
+                    <SelectInput
+                        name='raid'
+                        label='Raid'
+                        value={currentRaid.id}
+                        onChange={handleSelectRaid}
+                    >
+                        {raids.map((raid) => (
+                            <option
+                                key={`raid-option-${raid.id}`}
+                                value={raid.id}
+                            >
+                                {`${raid.name} ${raid.size}${raid.difficulty}`}
+                            </option>
+                        ))}
                     </SelectInput>
                     <div className='w-full'>
                         <label className="my-3 block font-semibold" htmlFor='date'>Date</label>

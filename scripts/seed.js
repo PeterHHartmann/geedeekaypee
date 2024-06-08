@@ -1,11 +1,12 @@
 const { db } = require('@vercel/postgres');
 const {
   users,
-  character_classes,
-  class_specs,
-  character_roles,
-  character_class_roles,
-  characters
+  char_classes,
+  class_talent_specs,
+  char_roles,
+  class_roles,
+  main_roster,
+  raids
 } = require('../lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
 
@@ -53,18 +54,18 @@ async function seedCharacterClasses(client) {
     try {
         await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
         const createTable = await client.sql`
-            CREATE TABLE IF NOT EXISTS character_classes (
+            CREATE TABLE IF NOT EXISTS char_classes (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
                 name VARCHAR(255) NOT NULL UNIQUE,
                 created_at TIMESTAMP DEFAULT current_timestamp
             );
         `;
-        console.log(`Created "character_classes" table`)
+        console.log(`Created "char_classes" table`)
 
         const insertedCharacterClasses = await Promise.all(
-            character_classes.map(async (character_class) => {
+            char_classes.map(async (character_class) => {
                 return client.sql`
-                INSERT INTO character_classes (id, name)
+                INSERT INTO char_classes (id, name)
                 VALUES (${character_class.id}, ${character_class.name})
                 ON CONFLICT (id) DO NOTHING;
                 `;
@@ -82,33 +83,33 @@ async function seedCharacterClasses(client) {
     }
 }
 
-async function seedClassSpecs(client){
+async function seedClassTalentSpecs(client){
     try {
         await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
         const createTable = await client.sql`
-            CREATE TABLE IF NOT EXISTS class_specs (
+            CREATE TABLE IF NOT EXISTS class_talent_specs (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
-                class_id UUID REFERENCES character_classes (id),
+                class_id UUID REFERENCES char_classes (id),
                 created_at TIMESTAMP DEFAULT current_timestamp
             );`;
         
-        console.log(`Created "class_specs" table`)
+        console.log(`Created "class_talent_specs" table`)
 
-        const insertedClassSpecs = await Promise.all(
-            class_specs.map(async (spec) => {
+        const insertedClassTalentSpecs = await Promise.all(
+            class_talent_specs.map(async (spec) => {
                 return client.sql`
-                INSERT INTO class_specs (id, name, class_id)
+                INSERT INTO class_talent_specs (id, name, class_id)
                 VALUES (${spec.id}, ${spec.name}, ${spec.class_id})
                 ON CONFLICT (id) DO NOTHING;
                 `;
             }),
         );
 
-        console.log(`Seeded ${insertedClassSpecs.length} class specs`);
+        console.log(`Seeded ${insertedClassTalentSpecs.length} class talent specs`);
         return {
             createTable,
-            classes: insertedClassSpecs
+            specs: insertedClassTalentSpecs
         }
     } catch (error) {
         console.error('Error seeding class specs:', error);
@@ -116,22 +117,22 @@ async function seedClassSpecs(client){
     }
 }
 
-async function seedCharacterRoles(client) {
+async function seedCharRoles(client) {
     try {
         await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
         const createTable = await client.sql`
-            CREATE TABLE IF NOT EXISTS character_roles (
+            CREATE TABLE IF NOT EXISTS char_roles (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
                 name VARCHAR(255) NOT NULL UNIQUE,
                 created_at TIMESTAMP DEFAULT current_timestamp
             );
         `;
-        console.log(`Created "character_roles" table`)
+        console.log(`Created "char_roles" table`)
 
         const insertedCharacterRoles = await Promise.all(
-            character_roles.map(async (character_role) => {
+            char_roles.map(async (character_role) => {
                 return client.sql`
-                INSERT INTO character_roles (id, name)
+                INSERT INTO char_roles (id, name)
                 VALUES (${character_role.id}, ${character_role.name})
                 ON CONFLICT (id) DO NOTHING;
                 `;
@@ -149,20 +150,29 @@ async function seedCharacterRoles(client) {
     }
 }
 
-async function seedCharacterClassRoles(client){
+async function seedCharClassRoles(client){
     try {
         await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-        const createTable = await client.sql`CREATE TABLE IF NOT EXISTS character_class_roles (
+        const createTable = await client.sql
+        `CREATE TABLE IF NOT EXISTS char_class_roles (
             id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-            class_id UUID REFERENCES character_classes (id),
-            role_id UUID REFERENCES character_roles (id),
+            class_id UUID REFERENCES char_classes (id),
+            role_id UUID REFERENCES char_roles (id),
             created_at TIMESTAMP DEFAULT current_timestamp
-        )`
-        console.log(`Created "character_class_roles" table`)
-        const insertedCharacterClassRoles = await Promise.all(
-            character_class_roles.map(async (character_class_role) => {
+        );`
+        console.log(`Created "char_class_roles" table`)
+        
+        let allClassRoles = []
+        for (const charClass of Object.values(class_roles)){
+            for (const role of Object.values(charClass)){
+                allClassRoles.push(role)
+            }
+        }
+
+        const insertedClassRoles = await Promise.all(
+            allClassRoles.map(async (character_class_role) => {
                 return client.sql`
-                    INSERT INTO character_class_roles (id, class_id, role_id)
+                    INSERT INTO char_class_roles (id, class_id, role_id)
                     VALUES (${character_class_role.id}, ${character_class_role.class_id}, ${character_class_role.role_id})
                     ON CONFLICT (id) DO NOTHING;
                 `;
@@ -171,7 +181,7 @@ async function seedCharacterClassRoles(client){
 
         return {
             createTable,
-            class_roles: insertedCharacterClassRoles
+            class_roles: insertedClassRoles
         }
     } catch (error) {
                 console.error('Error seeding character class roles:', error);
@@ -179,40 +189,75 @@ async function seedCharacterClassRoles(client){
     }
 }
 
-async function seedCharacters(client) {
+async function seedMainRoster(client) {
     try {
         await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
         const createTable = await client.sql`
-            CREATE TABLE IF NOT EXISTS characters (
+            CREATE TABLE IF NOT EXISTS main_roster (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
                 user_email VARCHAR(255) REFERENCES users (email),
-                class_id UUID REFERENCES character_classes (id),
-                spec_id UUID REFERENCES class_specs (id),
-                role_id UUID REFERENCES character_roles (id),
+                class_id UUID REFERENCES char_classes (id),
+                spec_id UUID REFERENCES class_talent_specs (id),
+                role_id UUID REFERENCES char_roles (id),
                 created_at TIMESTAMP DEFAULT current_timestamp
             );
         `
-        console.log(`Created "characters" table`)
+        console.log(`Created "main_roster" table`)
 
         const insertedCharacters = await Promise.all(
-            characters.map(async (character) => {
+            main_roster.map(async (character) => {
                 return client.sql`
-                INSERT INTO characters (id, name, user_email, class_id, spec_id, role_id)
+                INSERT INTO main_roster (id, name, user_email, class_id, spec_id, role_id)
                 VALUES (${character.id}, ${character.name}, ${character.user_email}, ${character.class_id}, ${character.spec_id}, ${character.role_id})
                 ON CONFLICT (id) DO NOTHING;
                 `
             })
         )
 
-        console.log(`Seeded ${insertedCharacters.length} characters`);
+        console.log(`Seeded ${insertedCharacters.length} main_roster`);
 
         return {
             createTable,
-            characters: insertedCharacters
+            main_roster: insertedCharacters
         }
     } catch (error) {
-        console.error('Error seeding roster characters:', error);
+        console.error('Error seeding roster main_roster:', error);
+        throw error;
+    }
+}
+
+async function seedRaids(client) {
+    try {
+        await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+        const createTable = await client.sql`
+            CREATE TABLE IF NOT EXISTS raids (
+                id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                size SMALLINT DEFAULT NULL,
+                difficulty VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT current_timestamp
+            );
+        `;
+        console.log(`Created "raids" table`)
+
+        const insertedRaids = await Promise.all(
+            raids.map(async (raid) => {
+                return client.sql`
+                INSERT INTO raids (id, name, size, difficulty)
+                VALUES (${raid.id}, ${raid.name}, ${raid.size}, ${raid.difficulty})
+                ON CONFLICT (id) DO NOTHING;
+                `;
+            }),
+        );
+
+        console.log(`Seeded ${insertedRaids.length} raids`);
+        return {
+            createTable,
+            raids: insertedRaids
+        }
+    } catch (error) {
+        console.error('Error seeding raids:', error);
         throw error;
     }
 }
@@ -222,10 +267,11 @@ async function main() {
 
   await seedUsers(client);
   await seedCharacterClasses(client);
-  await seedClassSpecs(client);
-  await seedCharacterRoles(client);
-  await seedCharacterClassRoles(client);
-  await seedCharacters(client);
+  await seedClassTalentSpecs(client);
+  await seedCharRoles(client);
+  await seedCharClassRoles(client);
+  await seedMainRoster(client);
+  await seedRaids(client);
 
   await client.end();
 }

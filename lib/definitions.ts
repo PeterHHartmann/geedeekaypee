@@ -35,7 +35,9 @@ export type RosterCharacter = {
 
 export type Raid = {
     id: string;
-    name: 'Icecrown Citadel' | 'Ruby Sanctum';
+    name: string;
+    size: number;
+    difficulty: string;
 };
 
 export type CharRoleOption = {

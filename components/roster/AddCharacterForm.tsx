@@ -1,6 +1,6 @@
 'use client';
 
-import { insertCharacter } from '@/lib/actions';
+import { insertMainRosterChar } from '@/lib/actions';
 import type { CharClass, CharRoleOptionsForClasses, CharRoleOption, CharSpec } from '@/lib/definitions';
 import { Button } from '@/components/Button';
 import { FormErrors } from '@/components/form/form-error';
@@ -20,7 +20,7 @@ type Props = {
 export function AddCharacterForm({ charClasses, charRoles, charSpecs }: Props) {
     const defaultClassId = charClasses[0].id;
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [state, formAction] = useFormState(insertCharacter, { success: false });
+    const [state, formAction] = useFormState(insertMainRosterChar, { success: false });
 
     const [roleOptions, setRoleOptions] = useState<CharRoleOption[]>(charRoles[defaultClassId]);
     const [specOptions, setSpecOptions] = useState<CharSpec[]>(charSpecs.filter((spec) => spec.class_id == charClasses[0].id));
