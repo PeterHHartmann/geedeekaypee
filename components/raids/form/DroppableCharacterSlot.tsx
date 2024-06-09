@@ -27,7 +27,7 @@ export const DroppableCharacterSlot: FC<DroppableProp> = ({ id, initial, index }
         <div
             ref={setNodeRef}
             className={clsx(
-                'h-[40px] overflow-clip',
+                'h-[40px] overflow-clip border-b-1 border-slate-600',
                 {
                     'bg-transparent': isOver == false,
                     'bg-slate-600': isOver == true
@@ -36,7 +36,7 @@ export const DroppableCharacterSlot: FC<DroppableProp> = ({ id, initial, index }
         >
             {initial
                 ? <DraggableCharacterSlot character={initial} id={`${id}-draggable`} index={index}>
-                    <CharacterRow character={initial} />
+                    <CharacterRow character={initial} className='border-transparent' />
                 </DraggableCharacterSlot>
                 : null
             }

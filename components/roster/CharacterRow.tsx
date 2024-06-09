@@ -4,19 +4,23 @@ import { CharRoleIcon } from '@/components/icon/CharRoleIcon';
 import { CharTalentSpecIcon } from '@/components/icon/CharTalentSpecIcon';
 import { CLASS_TEXT_COLOR } from '@/lib/constants';
 import type { RosterCharacter } from '@/lib/definitions';
+import clsx from 'clsx';
 import type { ReactNode } from 'react';
 
 type Props = {
     character: RosterCharacter;
     children?: ReactNode;
+    className?: string;
 };
 
-export function CharacterRow({ children, character }: Props) {
+export function CharacterRow({ children, character, className }: Props) {
     return (
-        <li className={`
-        flex flex-nowrap w-full items-center gap-1 
-        ${RosterCharacterSkeleton}
-        `}>
+        <li className={
+            clsx(
+                `flex flex-nowrap w-full items-center gap-1 ${RosterCharacterSkeleton}`,
+                className
+            )}
+        >
             <div className='flex items-center h-full gap-1 px-2'>
                 <CharRoleIcon role_name={character.role_name} />
                 <CharTalentSpecIcon class_name={character.class_name} spec_name={character.spec_name} />

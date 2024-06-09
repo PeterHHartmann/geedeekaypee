@@ -301,7 +301,7 @@ export async function fetchRaidTemplatePositions() {
         const data = await sql<RaidTemplatePosition>
             `SELECT * 
             FROM raid_template_positions
-            ORDER BY position ASC
+            ORDER BY priority ASC, position ASC
             ;`;
 
         const positions = data.rows;
