@@ -5,9 +5,6 @@ export default async function NewRaidPage() {
     const roster = await fetchMainRoster();
     const raidTemplates = await fetchRaidTemplates();
     const raidTemplatePositions = await fetchRaidTemplatePositions();
-    // console.log(raidTemplatePositions);
-    console.log(raidTemplates);
-
 
     return (
         <>

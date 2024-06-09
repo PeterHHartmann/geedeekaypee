@@ -61,8 +61,6 @@ export function AddRaidForm({ children, mainRoster, raidTemplates, templatePosit
             //fill newRoster with remaining characters if not full
             const containsNull = newRoster.includes(null);
             if (containsNull) {
-                console.log('array contains nulls');
-
                 newRoster.forEach((item, index) => {
                     if (!item) {
                         newRoster[index] = roster_copy.splice(0, 1)[0];

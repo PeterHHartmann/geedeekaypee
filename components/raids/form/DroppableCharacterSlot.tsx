@@ -14,7 +14,7 @@ type DroppableProp = {
     index: number;
 };
 
-export const DroppableCharacterSlot: FC<DroppableProp> = ({ id, mainRoster, initial, index }) => {
+export const DroppableCharacterSlot: FC<DroppableProp> = ({ id, initial, index }) => {
 
     const { isOver, setNodeRef } = useDroppable({
         id: `${id}-droppable`,

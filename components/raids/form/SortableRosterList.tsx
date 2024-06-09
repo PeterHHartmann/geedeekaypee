@@ -3,7 +3,7 @@
 import { DroppableCharacterSlot } from '@/components/raids/form/DroppableCharacterSlot';
 import type { RosterCharacter } from '@/lib/definitions';
 import { useDndMonitor } from '@dnd-kit/core';
-import React, { useCallback, useId, type Dispatch, type SetStateAction } from 'react';
+import React, { useCallback, type Dispatch, type SetStateAction } from 'react';
 
 type Props = {
     mainRoster: RosterCharacter[];
@@ -32,10 +32,7 @@ export function SortableRosterList({
             if (!over) {
                 return;
             }
-
             const newRoster = roster.slice(0);
-            console.log(newRoster);
-
             const isFromMainRoster = active.id.toString().includes('draggableRosterCharacter');
             const isFromForm = active.id.toString().includes('roster-row-draggable');
             const activeData = active.data.current;
