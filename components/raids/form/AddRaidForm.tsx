@@ -3,21 +3,25 @@
 import { Button } from '@/components/Button';
 import { SelectInput } from '@/components/form/select-input';
 import { SortableRosterList } from '@/components/raids/form/SortableRosterList';
-import type { Raid, RaidTemplate, RaidTemplatePositions, RosterCharacter } from '@/lib/definitions';
+import type { RaidTemplate, RaidTemplatePositions, RosterCharacter } from '@/lib/definitions';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
 
 type Props = {
     children?: ReactNode;
-    main_roster: RosterCharacter[];
-    raid_templates: RaidTemplate[];
-    template_positions: RaidTemplatePositions;
+    mainRoster: RosterCharacter[];
+    raidTemplates: RaidTemplate[];
+    templatePositions: RaidTemplatePositions;
 };
 
-export function AddRaidForm({ children, main_roster, raid_templates, template_positions }: Props) {
+export function AddRaidForm({ children, mainRoster, raidTemplates, templatePositions }: Props) {
 
-    const [currentTemplate, setCurrentTemplate] = useState<RaidTemplate>(raid_templates[0]);
-    const [roster, setRoster] = useState<RosterCharacter[]>();
+    const [currentTemplate, setCurrentTemplate] = useState<RaidTemplate>(raidTemplates[0]);
+    const createEmptyRoster = useCallback((): (RosterCharacter | null)[] => {
+        return Array.from(Array(currentTemplate.size), () => null);
+    }, [currentTemplate]);
+
+    const [roster, setRoster] = useState<(RosterCharacter | null)[]>(createEmptyRoster());
 
     function getDefaultDate() {
         const currentTime = new Date();
@@ -28,44 +32,47 @@ export function AddRaidForm({ children, main_roster, raid_templates, template_po
 
     function handleSelectRaid(e: ChangeEvent<HTMLSelectElement>) {
         const newTemplateId = e.target.value;
-        const foundTemplate = raid_templates.find((template) => template.id == newTemplateId);
+        const foundTemplate = raidTemplates.find((template) => template.id == newTemplateId);
         if (foundTemplate) {
             setCurrentTemplate(foundTemplate);
         }
     }
 
     useEffect(() => {
-        const roster_copy = main_roster.slice(0);
-        const newRoster: RosterCharacter[] = [];
-
-        //fill newRoster with characters that matches the requirements for each numeric position in the roster
-        template_positions[currentTemplate.id].forEach((prio) => {
-            const found = roster_copy.find((char) => (
-                prio.class_id == char.class_id
-                && prio.role_id == char.role_id
-                && prio.spec_id == char.spec_id
-            ));
-            if (!newRoster[prio.position - 1]) {
-                if (found) {
-                    const index = roster_copy.indexOf(found);
-                    roster_copy.splice(index, 1);
-                    newRoster.push(found);
+        if (mainRoster.length) {
+            const roster_copy = mainRoster.slice(0);
+            const newRoster = createEmptyRoster();
+            //fill newRoster with characters that matches the requirements for each numeric position in the roster
+            templatePositions[currentTemplate.id].forEach((prio) => {
+                const found = roster_copy.find((char) => (
+                    prio.class_id == char.class_id
+                    && prio.role_id == char.role_id
+                    && prio.spec_id == char.spec_id
+                ));
+                if (!newRoster[prio.position - 1]) {
+                    if (found) {
+                        const index = roster_copy.indexOf(found);
+                        roster_copy.splice(index, 1);
+                        newRoster[prio.position - 1] = found;
+                    }
                 }
-            }
-        });
+            });
 
-        //fill newRoster with remaining characters if not full
-        if (newRoster.length < currentTemplate.size) {
-            const temp = newRoster.slice();
-            for (let i = 0;i < currentTemplate.size - temp.length;i++) {
-                if (roster_copy[i]) {
-                    newRoster.push(roster_copy[i]);
-                }
+            //fill newRoster with remaining characters if not full
+            const containsNull = newRoster.includes(null);
+            if (containsNull) {
+                console.log('array contains nulls');
+
+                newRoster.forEach((item, index) => {
+                    if (!item) {
+                        newRoster[index] = roster_copy.splice(0, 1)[0];
+                        return;
+                    }
+                });
             }
+            return setRoster(newRoster);
         }
-
-        setRoster(newRoster);
-    }, [currentTemplate, template_positions, main_roster]);
+    }, [currentTemplate, templatePositions, mainRoster, createEmptyRoster]);
 
     return (
         <form className='w-full'>
@@ -89,7 +96,7 @@ export function AddRaidForm({ children, main_roster, raid_templates, template_po
                         value={currentTemplate.id}
                         onChange={handleSelectRaid}
                     >
-                        {raid_templates.map((template) => (
+                        {raidTemplates.map((template) => (
                             <option
                                 key={`raid-option-${template.id}`}
                                 value={template.id}
@@ -126,7 +133,7 @@ export function AddRaidForm({ children, main_roster, raid_templates, template_po
                     </div>
                 </fieldset>
                 <div className='w-full'>
-                    <SortableRosterList size={currentTemplate.size} allCharacters={main_roster} initial={roster} />
+                    <SortableRosterList mainRoster={mainRoster} roster={roster} setRoster={setRoster} />
                 </div>
             </div>
             <div className='flex justify-between gap-2'>

@@ -10,8 +10,7 @@ import type { ReactNode } from 'react';
 type Props = {
     character: RosterCharacter;
     children?: ReactNode;
-    id: string,
-    index: number;
+    id: string;
 };
 
 export function CharacterRowDraggable({ children, character, id }: Props) {

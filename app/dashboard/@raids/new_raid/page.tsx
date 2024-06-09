@@ -11,7 +11,7 @@ export default async function NewRaidPage() {
 
     return (
         <>
-            <AddRaidForm main_roster={roster} raid_templates={raidTemplates} template_positions={raidTemplatePositions}>
+            <AddRaidForm mainRoster={roster} raidTemplates={raidTemplates} templatePositions={raidTemplatePositions}>
             </AddRaidForm>
         </>
     );

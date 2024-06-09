@@ -1,68 +1,45 @@
 'use client';
 
+import { DraggableCharacterSlot } from '@/components/raids/form/DraggableCharacterSlot';
 import { CharacterRow } from '@/components/roster/CharacterRow';
 import type { RosterCharacter } from '@/lib/definitions';
-import { DndContext, useDndMonitor, useDroppable } from "@dnd-kit/core";
+import { useDroppable } from "@dnd-kit/core";
 import clsx from 'clsx';
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 
 type DroppableProp = {
     id: string;
-    characters: RosterCharacter[];
-    initial: RosterCharacter | undefined;
+    mainRoster: RosterCharacter[];
+    initial: RosterCharacter | null;
+    index: number;
 };
 
-export const DroppableCharacterSlot: FC<DroppableProp> = ({ id, characters, initial }) => {
-
-    const [droppedCharacter, setDroppedCharacter] = useState<RosterCharacter>();
-
-    useEffect(() => {
-        if (initial) {
-            const found = characters.find(({ id }) => id == initial.id);
-            if (found) {
-                setDroppedCharacter(found);
-            }
-        }
-    }, [initial, characters]);
+export const DroppableCharacterSlot: FC<DroppableProp> = ({ id, mainRoster, initial, index }) => {
 
     const { isOver, setNodeRef } = useDroppable({
-        id: id
-    });
-
-    useDndMonitor({
-        onDragEnd(event) {
-            if (isOver == true) {
-                const active = event.active;
-                if (active.id.toString().includes('draggableRosterCharacter')) {
-                    const current = active.data.current;
-                    if (current) {
-                        const found = characters.find(({ id }) => id == current.character.id);
-                        if (found) {
-                            setDroppedCharacter(found);
-                        }
-                    }
-                }
-            }
+        id: `${id}-droppable`,
+        data: {
+            index: index
         }
     });
 
     return (
-        <DndContext>
-            <div
-                ref={setNodeRef}
-                className={clsx(
-                    'h-[40px] overflow-x-auto border-1 rounded-md overflow-clip',
-                    {
-                        'bg-slate-700': isOver == false,
-                        'bg-slate-600': isOver == true
-                    }
-                )}
-            >
-                {droppedCharacter
-                    ? <CharacterRow character={droppedCharacter} />
-                    : null
+        <div
+            ref={setNodeRef}
+            className={clsx(
+                'h-[40px] overflow-clip',
+                {
+                    'bg-transparent': isOver == false,
+                    'bg-slate-600': isOver == true
                 }
-            </div>
-        </DndContext>
+            )}
+        >
+            {initial
+                ? <DraggableCharacterSlot character={initial} id={`${id}-draggable`} index={index}>
+                    <CharacterRow character={initial} />
+                </DraggableCharacterSlot>
+                : null
+            }
+        </div>
     );
 };

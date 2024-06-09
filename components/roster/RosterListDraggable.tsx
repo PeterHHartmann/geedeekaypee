@@ -15,7 +15,7 @@ export async function RosterListDraggable() {
     return (
         <>
             {characterRoster.map((character, index) =>
-                <CharacterRowDraggable key={`roster-character-${character.id}`} character={character} id={`draggableRosterCharacter-${character.id}`} index={index}>
+                <CharacterRowDraggable key={`roster-character-${character.id}`} character={character} id={`draggableRosterCharacter-${character.id}`}>
                     <SlidingToolbarLeft>
                         <EditCharacterForm character={character} charClasses={allCharClasses} charSpecs={allCharSpecs} charRoles={allCharRoles} />
                         <DeleteCharacterForm character={character} />
