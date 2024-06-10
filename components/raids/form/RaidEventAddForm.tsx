@@ -6,6 +6,7 @@ import { SortableRosterList } from '@/components/raids/form/SortableRosterList';
 import { insertRaidEvent } from '@/lib/actions';
 import type { RaidTemplate, RaidTemplatePositions, RosterCharacter } from '@/lib/definitions';
 import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, TagIcon, UserIcon } from '@heroicons/react/24/outline';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
 import { useFormState } from 'react-dom';
 
@@ -19,6 +20,7 @@ type Props = {
 export function RaidEventAddForm({ children, mainRoster, raidTemplates, templatePositions }: Props) {
 
     const [state, formAction] = useFormState(insertRaidEvent, { success: false });
+    const router = useRouter();
 
     const [currentTemplate, setCurrentTemplate] = useState<RaidTemplate>(raidTemplates[0]);
     const createEmptyRoster = useCallback((): (RosterCharacter | null)[] => {
@@ -76,6 +78,12 @@ export function RaidEventAddForm({ children, mainRoster, raidTemplates, template
             return setRoster(newRoster);
         }
     }, [currentTemplate, templatePositions, mainRoster, createEmptyRoster]);
+
+    useEffect(() => {
+        if (state?.success) {
+            router.push('/dashboard');
+        }
+    }, [state, router]);
 
     return (
         <form className='w-full' action={formAction}>
@@ -142,7 +150,7 @@ export function RaidEventAddForm({ children, mainRoster, raidTemplates, template
                                 className="w-full rounded-md border-1 border-slate-950 py-[9px] pl-5 text-sm outline-2 placeholder:text-slate-500"
                                 type='time'
                                 name='time'
-                                defaultValue={'00:00:00'}
+                                defaultValue={'19:00:00'}
                                 required
                             />
                         </div>
