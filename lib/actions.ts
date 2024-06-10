@@ -359,6 +359,62 @@ export async function fetchRaidEvents() {
     )();
 }
 
+export async function fetchRaidTemplateSingle(template_id: RaidTemplate['id']) {
+    try {
+        const data = await sql<RaidTemplate>
+            `SELECT
+                raid_templates.id,
+                raid_templates.raid_id,
+                raid_templates.name,
+                raid_templates.size,
+                raid_templates.difficulty,
+                raids.name AS raid_name
+            FROM raid_templates
+            INNER JOIN raids ON raids.id = raid_templates.raid_id
+            WHERE raid_templates.id = ${template_id}
+            ;`;
+        return data.rows[0];
+    } catch (error) {
+        console.log(error);
+        throw new Error('Failed to fetch raids.');
+    }
+}
+
+export async function fetchRaidEvent(eventId: RaidEvent['id']) {
+    try {
+        const data = await sql<RaidEvent>
+            `SELECT 
+                raid_events.id,
+                raid_events.template_id,
+                raid_events.title,
+                raid_events.date,
+                raid_events.time,
+                raid_events.is_public,
+                raid_templates.raid_id AS raid_id
+            FROM raid_events
+            INNER JOIN raid_templates ON raid_events.template_id = raid_templates.id
+            WHERE raid_events.id = ${eventId}
+            ;`;
+        return data.rows[0];
+    } catch (error) {
+        console.log(error);
+        throw new Error('Failed to fetch raid event.');
+    }
+}
+
+export async function fetchRaidEventRoster(eventId: RaidEvent['id']) {
+    try {
+        const data = await sql<RaidEventRosterPosition>
+            `SELECT * FROM raid_event_rosters
+            WHERE raid_event_id = ${eventId}
+            ;`;
+        return data.rows;
+    } catch (error) {
+        console.log(error);
+        throw new Error('Failed to fetch raid event roster.');
+    }
+}
+
 export async function insertRaidEvent(
     prevState: MutationResult,
     formData: FormData
@@ -423,67 +479,48 @@ export async function insertRaidEvent(
             VALUES (${insertedRaidEvent.id}, ${roster_position.position}, ${roster_position.character_id})
             ;`;
         }));
-        console.log(insertedEventRosterCharacters.length);
         revalidateTag(`raidevents[${user.email}]`);
         return { success: true };
     } catch (error) {
         console.log(error);
-        return { success: false, messages: ['Failed to insert new character to main roster'] };
+        return { success: false, messages: ['Failed to save raid event. Please try again later'] };
     }
 }
 
-export async function fetchRaidTemplateSingle(template_id: RaidTemplate['id']) {
-    try {
-        const data = await sql<RaidTemplate>
-            `SELECT
-                raid_templates.id,
-                raid_templates.raid_id,
-                raid_templates.name,
-                raid_templates.size,
-                raid_templates.difficulty,
-                raids.name AS raid_name
-            FROM raid_templates
-            INNER JOIN raids ON raids.id = raid_templates.raid_id
-            WHERE raid_templates.id = ${template_id}
-            ;`;
-        return data.rows[0];
-    } catch (error) {
-        console.log(error);
-        throw new Error('Failed to fetch raids.');
-    }
-}
+export async function deleteRaidEvent(
+    prevState: MutationResult,
+    formData: FormData
+) {
+    const session = await auth();
+    const user = session!.user;
+    if (!user) throw new Error('Cannot delete raid event: User is not logged in');
 
-export async function fetchRaidEvent(eventId: RaidEvent['id']) {
-    try {
-        const data = await sql<RaidEvent>
-            `SELECT 
-                raid_events.id,
-                raid_events.template_id,
-                raid_events.title,
-                raid_events.date,
-                raid_events.time,
-                raid_events.is_public,
-                raid_templates.raid_id AS raid_id
-            FROM raid_events
-            INNER JOIN raid_templates ON raid_events.template_id = raid_templates.id
-            WHERE raid_events.id = ${eventId}
-            ;`;
-        return data.rows[0];
-    } catch (error) {
-        console.log(error);
-        throw new Error('Failed to fetch raid event.');
-    }
-}
+    const rawData = {
+        event_id: formData.get('event_id')
+    };
 
-export async function fetchRaidEventRoster(eventId: RaidEvent['id']) {
+    const schema = z.object({
+        event_id: z.string().uuid()
+    });
+
+    const validations = schema.safeParse(rawData);
+
+    if (!validations.success) {
+        const errorMessages = validations.error.issues.map((issue) => issue.message);
+        return { success: false, messages: errorMessages };
+    }
+    const data = validations.data;
     try {
-        const data = await sql<RaidEventRosterPosition>
-            `SELECT * FROM raid_event_rosters
-            WHERE raid_event_id = ${eventId}
-            ;`;
-        return data.rows;
+        await sql<RaidEvent>
+            `DELETE FROM raid_events
+            WHERE id = ${data.event_id}
+            AND user_email = ${user.email}
+        ;`;
+        revalidateTag(`raidevents[${user.email}]`);
+        return { success: true };
     } catch (error) {
         console.log(error);
-        throw new Error('Failed to fetch raid event roster.');
+        return { success: false, messages: ['Failed to delete raid event. Please try again later'] };
     }
+
 }

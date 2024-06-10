@@ -1,7 +1,9 @@
+import { SlidingToolbarLeft } from '@/components/SlidingToolbarLeft';
+import { RaidEventDeleteForm } from '@/components/raids/form/RaidEventDeleteForm';
 import { fetchRaidTemplateSingle } from '@/lib/actions';
 import { RAID_COVER_IMAGES } from '@/lib/constants';
 import type { Raid, RaidEvent } from '@/lib/definitions';
-import { CalendarIcon, ClockIcon, EyeIcon, EyeSlashIcon, LinkIcon, MapPinIcon, WrenchIcon } from '@heroicons/react/24/outline';
+import { CalendarIcon, ClockIcon, EyeIcon, EyeSlashIcon, LinkIcon, MapPinIcon, TrashIcon, WrenchIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
@@ -31,18 +33,6 @@ export async function RaidCard({ raidEvent }: Props) {
                     <div className='w-full px-4 pt-4 pb-2 border-b-1 border-slate-700'>
                         <header className='flex justify-between items-center gap-2'>
                             <p className='flex font-semibold'>{raidEvent.title}</p>
-                            <div className='flex gap-1 text-sm'>
-                                {raidEvent.is_public
-                                    ? <>
-                                        <EyeIcon className='w-4' />
-                                        <p>Public</p>
-                                    </>
-                                    : <>
-                                        <EyeSlashIcon className='w-4' />
-                                        <p>Draft</p>
-                                    </>
-                                }
-                            </div>
                             <div className='flex gap-2 items-center'>
                                 {raidEvent.is_public
                                     ? <Link href={`/dashboard`} className='flex gap-2 hover:underline'>
@@ -50,9 +40,17 @@ export async function RaidCard({ raidEvent }: Props) {
                                     </Link>
                                     : null
                                 }
-                                <Link href={`/dashboard/raid/${raidEvent.id}`} className='text-white ml-auto rounded-full hover:bg-white hover:text-slate-950 p-2'>
-                                    <WrenchIcon className='w-4' />
-                                </Link>
+                                <SlidingToolbarLeft>
+                                    <RaidEventDeleteForm raidEvent={raidEvent}>
+                                        <div className='rounded-full hover:bg-white hover:text-slate-950 p-1'>
+                                            <TrashIcon className='w-5' />
+                                        </div>
+                                    </RaidEventDeleteForm>
+
+                                    <Link href={`/dashboard/raid/${raidEvent.id}`} className='text-white ml-auto rounded-full hover:bg-white hover:text-slate-950 p-1'>
+                                        <WrenchIcon className='w-5' />
+                                    </Link>
+                                </SlidingToolbarLeft>
                             </div>
                         </header>
                     </div>
@@ -69,6 +67,18 @@ export async function RaidCard({ raidEvent }: Props) {
                             <ClockIcon className='w-4' />
                             <p>{formatTimeStr(raidEvent.time)}</p>
                             <span className='text-sm'> Server Time</span>
+                        </CardRow>
+                        <CardRow>
+                            {raidEvent.is_public
+                                ? <>
+                                    <EyeIcon className='w-5' />
+                                    <p>Public</p>
+                                </>
+                                : <>
+                                    <EyeSlashIcon className='w-5' />
+                                    <p>Draft</p>
+                                </>
+                            }
                         </CardRow>
                     </div>
                 </div>

@@ -12,7 +12,7 @@ export function SlidingToolbarLeft({ children }: Props) {
 
     return (
         <div className={clsx(
-            'flex h-full justify-center items-center gap-[.25rem] rounded-full ml-auto border-1 text-white',
+            'flex h-auto justify-center items-center gap-[.25rem] rounded-full ml-auto border-1 text-white',
             {
                 'border-transparent': isOpen == false,
                 'border-slate-50': isOpen == true
