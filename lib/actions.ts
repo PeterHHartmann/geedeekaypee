@@ -343,7 +343,7 @@ export async function fetchRaidEvents() {
                     FROM raid_events
                     INNER JOIN raid_templates ON raid_events.template_id = raid_templates.id
                     WHERE user_email = ${user.email}
-                    ORDER BY raid_events.created_at ASC
+                    ORDER BY raid_events.created_at DESC
                     ;`;
                 return data.rows;
             } catch (error) {
@@ -383,7 +383,7 @@ export async function insertRaidEvent(
         title: formData.get('title'),
         date: formData.get('date'),
         time: formData.get('time'),
-        is_public: formData.get('is_public') ? true : false,
+        visibility: formData.get('visibility') ? true : false,
         roster_positions: roster_positions
     };
     const rosterPositionsSchema = z.object({
@@ -399,7 +399,7 @@ export async function insertRaidEvent(
             .transform(capitalize),
         date: z.string().date(),
         time: z.string().time(),
-        is_public: z.boolean(),
+        visibility: z.boolean(),
         roster_positions: z.array(rosterPositionsSchema)
     });
 
@@ -413,7 +413,7 @@ export async function insertRaidEvent(
         const data = validations.data;
         const result = await sql<RaidEvent>
             `INSERT INTO raid_events (user_email, template_id, title, date, time, is_public)
-            VALUES (${user.email}, ${data.raid_template_id}, ${data.title}, ${data.date}, ${data.time}, ${data.is_public})
+            VALUES (${user.email}, ${data.raid_template_id}, ${data.title}, ${data.date}, ${data.time}, ${data.visibility})
             RETURNING id
             ;`;
         const insertedRaidEvent = result.rows[0];
@@ -450,5 +450,27 @@ export async function fetchRaidTemplateSingle(template_id: RaidTemplate['id']) {
     } catch (error) {
         console.log(error);
         throw new Error('Failed to fetch raids.');
+    }
+}
+
+export async function fetchRaidEvent(eventId: RaidEvent['id']) {
+    try {
+        const data = await sql<RaidEvent>
+            `SELECT 
+                raid_events.id,
+                raid_events.template_id,
+                raid_events.title,
+                raid_events.date,
+                raid_events.time,
+                raid_events.is_public,
+                raid_templates.raid_id AS raid_id
+            FROM raid_events
+            INNER JOIN raid_templates ON raid_events.template_id = raid_templates.id
+            WHERE raid_events.id = ${eventId}
+            ;`;
+        return data.rows[0];
+    } catch (error) {
+        console.log(error);
+        throw new Error('Failed to fetch raidEvent.');
     }
 }

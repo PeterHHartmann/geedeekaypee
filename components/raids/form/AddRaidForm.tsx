@@ -2,12 +2,11 @@
 
 import { Button } from '@/components/Button';
 import { FormErrors } from '@/components/form/form-error';
-import { SelectInput } from '@/components/form/select-input';
 import { SortableRosterList } from '@/components/raids/form/SortableRosterList';
 import { insertRaidEvent } from '@/lib/actions';
 import type { RaidTemplate, RaidTemplatePositions, RosterCharacter } from '@/lib/definitions';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { useCallback, useEffect, useRef, useState, type ChangeEvent, type MouseEvent, type ReactNode } from 'react';
+import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, TagIcon, UserIcon } from '@heroicons/react/24/outline';
+import { useCallback, useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
 import { useFormState } from 'react-dom';
 
 type Props = {
@@ -43,14 +42,11 @@ export function AddRaidForm({ children, mainRoster, raidTemplates, templatePosit
         }
     }
 
-    // function handleSaveDraftClicked(event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) {
-    //     setIsDraft(1);
-    // }
-
     useEffect(() => {
         if (mainRoster.length) {
             const roster_copy = mainRoster.slice(0);
             const newRoster = createEmptyRoster();
+
             //fill newRoster with characters that matches the requirements for each numeric position in the roster
             templatePositions[currentTemplate.id].forEach((prio) => {
                 const found = roster_copy.find((char) => (
@@ -84,74 +80,98 @@ export function AddRaidForm({ children, mainRoster, raidTemplates, templatePosit
     return (
         <form className='w-full' action={formAction}>
             <div className='flex flex-wrap gap-4 pb-4 justify-between w-full'>
-                <fieldset className='bg-indigo-300 w-full'>
+                <fieldset className='w-full p-4 rounded-md dark:bg-slate-700'>
                     <div className='w-full'>
-                        <label className="my-3 block font-semibold" htmlFor='title'>Title</label>
+                        <label className="flex gap-1 mb-1 font-semibold" htmlFor='title'>
+                            <TagIcon className='w-5' />
+                            <p>Title</p>
+                        </label>
                         <div className="relative">
                             <input
-                                className="w-full rounded-md border-1 border-slate-500 py-[9px] pl-5 text-sm outline-2 placeholder:text-slate-500"
+                                className="w-full rounded-md border-1 border-slate-950 py-[9px] pl-5 text-sm outline-2 placeholder:text-slate-500"
                                 type='text'
                                 name='title'
                                 placeholder='Enter the title of the event'
-                                defaultValue={'Test Title'}
                                 required
                             />
                         </div>
                     </div>
-                    <SelectInput
-                        name='raid_template_id'
-                        label='Raid Template'
-                        value={currentTemplate.id}
-                        onChange={handleSelectRaid}
-                    >
-                        {raidTemplates.map((template) => (
-                            <option
-                                key={`raid-option-${template.id}`}
-                                value={template.id}
-                            >
-                                {`${template.name}`}
-                            </option>
-                        ))}
-                    </SelectInput>
                     <div className='w-full'>
-                        <label className="my-3 block font-semibold" htmlFor='date'>Date</label>
+                        <label className="flex gap-1 mb-1 mt-2 font-semibold" htmlFor={'raid_template_id'}>
+                            <MapPinIcon className='w-5' />
+                            <p>Raid Template</p>
+                        </label>
+                        <select
+                            name={'raid_template_id'}
+                            className='w-full rounded-md border-1 border-slate-950 dark:border-slate-600 py-[9px] px-5 text-sm outline-2 placeholder:text-slate-500'
+                            value={currentTemplate.id}
+                            onChange={handleSelectRaid}
+                        >
+                            {raidTemplates.map((template) => (
+                                <option
+                                    key={`raid-option-${template.id}`}
+                                    value={template.id}
+                                >
+                                    {`${template.name}`}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className='w-full'>
+                        <label className="flex gap-1 mb-1 mt-2 font-semibold" htmlFor='date'>
+                            <CalendarIcon className='w-5' />
+                            <p>Date</p>
+                        </label>
                         <div className="relative">
                             <input
-                                className="w-full rounded-md border-1 border-slate-500 py-[9px] pl-5 text-sm outline-2 placeholder:text-slate-500"
+                                className="w-full rounded-md border-1 border-slate-950 py-[9px] pl-5 text-sm outline-2 placeholder:text-slate-500"
                                 type='date'
                                 name='date'
                                 defaultValue={getDefaultDate()}
-                                placeholder='Enter the title of the event'
                                 required
                             />
                         </div>
                     </div>
                     <div className='w-full'>
-                        <label className="my-3 block font-semibold" htmlFor='time'>Time</label>
+                        <label className="flex gap-1 mb-1 mt-2 font-semibold" htmlFor='time'>
+                            <ClockIcon className='w-5' />
+                            <p>Time</p>
+                        </label>
                         <div className="relative">
                             <input
-                                className="w-full rounded-md border-1 border-slate-500 py-[9px] pl-5 text-sm outline-2 placeholder:text-slate-500"
+                                className="w-full rounded-md border-1 border-slate-950 py-[9px] pl-5 text-sm outline-2 placeholder:text-slate-500"
                                 type='time'
                                 name='time'
                                 defaultValue={'00:00:00'}
-                                placeholder='Enter the title of the event'
                                 required
                             />
                         </div>
                     </div>
-                    <div className='flex items-center gap-4 w-full'>
-                        <label className="my-3 block font-semibold" htmlFor='is_public'>This event is public</label>
-                        <div className="relative">
-                            <input
-                                type='checkbox'
-                                name='is_public'
-                            />
-                        </div>
+                    <div className='w-full'>
+                        <label className="flex gap-1 mb-1 mt-2 font-semibold" htmlFor='visibility'>
+                            <EyeIcon className='w-5' />
+                            <p>Visibility</p>
+                        </label>
+                        <select
+                            name={'visibility'}
+                            className='w-full rounded-md border-1 border-slate-950 dark:border-slate-600 py-[9px] px-5 text-sm outline-2 placeholder:text-slate-500'
+                            onChange={handleSelectRaid}
+                        >
+                            <option value={''}>Draft</option>
+                            <option value={'public'}>Public</option>
+                        </select>
                     </div>
                 </fieldset>
-                <div className='w-full'>
-                    <input type='hidden' name='roster_length' value={roster.length} />
-                    <SortableRosterList mainRoster={mainRoster} roster={roster} setRoster={setRoster} />
+                <div className='w-full h-auto rounded-md dark:bg-slate-700 p-4'>
+                    <header className='flex justify-center gap-1 mb-4'>
+                        <UserIcon className='w-5' />
+                        <h2 className='font-semibold text-lg text-center'>
+                            Raid Roster
+                        </h2>
+                    </header>
+                    <div>
+                        <SortableRosterList mainRoster={mainRoster} roster={roster} setRoster={setRoster} />
+                    </div>
                 </div>
             </div>
             <FormErrors result={state} />

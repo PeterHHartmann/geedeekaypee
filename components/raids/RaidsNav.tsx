@@ -11,7 +11,7 @@ export function RaidsNav() {
     return (
         <div className='w-full sm:w-3/12 my-2 sm:my-0'>
             {pathname == '/dashboard'
-                ? <Link href={'/dashboard/new_raid'} className='w-full'>
+                ? <Link href={'/dashboard/raid-event'} className='w-full'>
                     <Button className='w-full'>
                         <PlusCircleIcon className='w-6' />
                         <p>New Raid</p>
@@ -19,7 +19,7 @@ export function RaidsNav() {
                 </Link>
                 : null
             }
-            {pathname == '/dashboard/new_raid'
+            {pathname != '/dashboard'
                 ? <Link href='/dashboard'>
                     <Button className='w-6/12 ml-auto'>
                         <ChevronLeftIcon className='w-6' />
