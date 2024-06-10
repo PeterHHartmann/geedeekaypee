@@ -1,6 +1,7 @@
 import { Button } from '@/components/Button';
 import { RaidsHeader } from '@/components/raids/RaidsHeader';
-import { fetchRaidEvent } from '@/lib/actions';
+import { RaidEventEditForm } from '@/components/raids/form/RaidEventEditForm';
+import { fetchMainRoster, fetchRaidEvent, fetchRaidEventRoster, fetchRaidTemplateSingle } from '@/lib/actions';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
@@ -9,12 +10,16 @@ type Props = {
 };
 
 export default async function RaidEventEditPage({ params }: Props) {
-
+    const mainRoster = await fetchMainRoster();
     const raidEvent = await fetchRaidEvent(params.eventId);
+    const raidTemplate = await fetchRaidTemplateSingle(raidEvent.template_id);
+    const raidEventRoster = await fetchRaidEventRoster(raidEvent.id);
+    console.log(raidEventRoster);
+
 
     return (
         <>
-            <RaidsHeader title='New Raid'>
+            <RaidsHeader title={`Edit Raid: ${raidEvent.title}`}>
                 <div className='w-full sm:w-3/12 my-2 sm:my-0'>
                     <Link href='/dashboard'>
                         <Button className='w-6/12 ml-auto'>
@@ -24,7 +29,7 @@ export default async function RaidEventEditPage({ params }: Props) {
                     </Link>
                 </div>
             </RaidsHeader>
-            <div><h1>YO {}</h1></div>
+            <RaidEventEditForm raidEvent={raidEvent} raidTemplate={raidTemplate} mainRoster={mainRoster} eventRoster={raidEventRoster} />
         </>
     );
 }

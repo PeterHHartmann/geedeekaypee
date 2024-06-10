@@ -12,10 +12,22 @@ type Props = {
 export default async function RaidsLayout({ children }: Props) {
 
     return (
-        <section className='rounded-md w-full bg-slate-100 dark:bg-slate-800 border-1 border-slate-300 dark:border-slate-700 shadow-md shadow-slate-200 dark:shadow-slate-800'>
+        <section
+            className='
+                rounded-md w-full 
+                bg-slate-100 
+                dark:bg-slate-800 
+                border-1 
+                border-slate-300
+                dark:border-slate-700 
+                shadow-md 
+                shadow-slate-200 
+                dark:shadow-slate-800 
+            '
+        >
             <Suspense fallback={
-                <div className={`w-full overflow-y-scroll max-h-[500px] lg:max-h-[780px] lg:min-h-[780px] p-3 ${SHIMMER} rounded-md`}></div>}>
-                <div className='w-full overflow-y-scroll max-h-[500px] lg:max-h-[780px] lg:min-h-[780px] p-3'>
+                <div className={`w-full overflow-y-auto h-auto p-3 min-h-[500px] lg:min-h-[900px] rounded-md ${SHIMMER}`}></div>}>
+                <div className='w-full overflow-y-auto h-auto p-3 min-h-[500px] lg:min-h-[900px] rounded-md'>
                     {children}
                 </div>
             </Suspense>

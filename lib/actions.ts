@@ -1,6 +1,6 @@
 'use server';
 import 'server-only';
-import type { CharClass, CharRoleOptionsForClasses, CharRole, CharSpec, MutationResult, RosterCharacter, Raid, RaidTemplate, RaidTemplatePosition, RaidTemplatePositions, RaidEvent } from '@/lib/definitions';
+import type { CharClass, CharRoleOptionsForClasses, CharRole, CharSpec, MutationResult, RosterCharacter, Raid, RaidTemplate, RaidTemplatePosition, RaidTemplatePositions, RaidEvent, RaidEventRosterPosition } from '@/lib/definitions';
 import { capitalize } from '@/lib/utils';
 import { auth, signIn } from '@/auth';
 import { sql } from '@vercel/postgres';
@@ -418,7 +418,7 @@ export async function insertRaidEvent(
             ;`;
         const insertedRaidEvent = result.rows[0];
         const insertedEventRosterCharacters = await Promise.all(data.roster_positions.map(async (roster_position) => {
-            await sql
+            await sql<RaidEventRosterPosition>
                 `INSERT INTO raid_event_rosters (raid_event_id, position, main_roster_id)
             VALUES (${insertedRaidEvent.id}, ${roster_position.position}, ${roster_position.character_id})
             ;`;
@@ -471,6 +471,19 @@ export async function fetchRaidEvent(eventId: RaidEvent['id']) {
         return data.rows[0];
     } catch (error) {
         console.log(error);
-        throw new Error('Failed to fetch raidEvent.');
+        throw new Error('Failed to fetch raid event.');
+    }
+}
+
+export async function fetchRaidEventRoster(eventId: RaidEvent['id']) {
+    try {
+        const data = await sql<RaidEventRosterPosition>
+            `SELECT * FROM raid_event_rosters
+            WHERE raid_event_id = ${eventId}
+            ;`;
+        return data.rows;
+    } catch (error) {
+        console.log(error);
+        throw new Error('Failed to fetch raid event roster.');
     }
 }

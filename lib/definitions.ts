@@ -95,3 +95,10 @@ export type RaidEvent = {
     time: string;
     is_public: boolean;
 };
+
+export type RaidEventRosterPosition = {
+    id: string;
+    raid_event_id: RaidEvent['id'];
+    position: number;
+    main_roster_id: RosterCharacter['id'];
+};

@@ -16,7 +16,7 @@ type Props = {
     templatePositions: RaidTemplatePositions;
 };
 
-export function AddRaidForm({ children, mainRoster, raidTemplates, templatePositions }: Props) {
+export function RaidEventAddForm({ children, mainRoster, raidTemplates, templatePositions }: Props) {
 
     const [state, formAction] = useFormState(insertRaidEvent, { success: false });
 
@@ -155,7 +155,6 @@ export function AddRaidForm({ children, mainRoster, raidTemplates, templatePosit
                         <select
                             name={'visibility'}
                             className='w-full rounded-md border-1 border-slate-950 dark:border-slate-600 py-[9px] px-5 text-sm outline-2 placeholder:text-slate-500'
-                            onChange={handleSelectRaid}
                         >
                             <option value={''}>Draft</option>
                             <option value={'public'}>Public</option>
