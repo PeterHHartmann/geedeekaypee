@@ -14,8 +14,6 @@ export default async function RaidEventEditPage({ params }: Props) {
     const raidEvent = await fetchRaidEvent(params.eventId);
     const raidTemplate = await fetchRaidTemplateSingle(raidEvent.template_id);
     const raidEventRoster = await fetchRaidEventRoster(raidEvent.id);
-    console.log(raidEventRoster);
-
 
     return (
         <>
