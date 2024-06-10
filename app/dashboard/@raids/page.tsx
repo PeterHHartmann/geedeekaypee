@@ -19,7 +19,7 @@ export default async function RaidsPage() {
                     </Link>
                 </div>
             </RaidsHeader>
-            <Suspense fallback={<div className={`w-full h-[500px] lg:h-[780px] rounded-md ${SHIMMER}`}></div>}>
+            <Suspense fallback={<div className={`w-full h-auto rounded-md ${SHIMMER}`}></div>}>
                 <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-3'>
                     <RaidEventsList />
                 </div>
