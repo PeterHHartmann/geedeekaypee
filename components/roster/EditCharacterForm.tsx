@@ -6,7 +6,7 @@ import { SelectInput } from '@/components/form/select-input';
 import { SubmitButton } from '@/components/form/submit-button';
 import { updateMainRosterChar } from '@/lib/actions';
 import type { CharClass, CharRoleOptionsForClasses, CharRoleOption, CharSpec, RosterCharacter } from '@/lib/definitions';
-import { PencilSquareIcon, PlusCircleIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon, PlusCircleIcon, WrenchIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState, type ChangeEvent } from 'react';
 import { useFormState } from 'react-dom';
 
@@ -91,7 +91,7 @@ export function EditCharacterForm({ character, charClasses, charRoles, charSpecs
                 </form>
             </Modal>
             <ToolbarButton onClick={() => setIsOpen(!isOpen)}>
-                <PencilSquareIcon className='w-6 ' />
+                <WrenchIcon className='w-5 ' />
             </ToolbarButton>
         </>
     );

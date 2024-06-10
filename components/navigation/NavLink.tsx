@@ -13,7 +13,7 @@ type Props = {
 
 export function NavLink({ name, href, children }: Props) {
     const pathname = usePathname();
-    const isActive = pathname === href;
+    const isActive = pathname.includes(href);
 
     return (
         <Link

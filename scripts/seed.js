@@ -353,6 +353,56 @@ async function seedRaidTemplateRosterPositions(client) {
     }
 }
 
+async function seedRaidEvents(client){
+    try {
+        await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+        const createTable = await client.sql`
+            CREATE TABLE IF NOT EXISTS raid_events (
+                id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+                user_email VARCHAR(255) REFERENCES users (email),
+                template_id UUID REFERENCES raid_templates (id),
+                title VARCHAR(255) NOT NULL,
+                date DATE NOT NULL,
+                time TIME NOT NULL,
+                is_public BOOLEAN,
+                created_at TIMESTAMP DEFAULT current_timestamp
+            )
+        ;`;
+
+        console.log(`Created "raid_events" table`)
+
+        return {
+            createTable
+        }
+    } catch (error) {
+        console.error('Error seeding raid_events:', error);
+        throw error;
+    }
+}
+
+async function seedRaidEventRoster(client){
+    try {
+        await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+        const createTable = await client.sql`
+            CREATE TABLE IF NOT EXISTS raid_event_rosters (
+                id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+                raid_event_id UUID REFERENCES raid_events (id) ON DELETE CASCADE,
+                position SMALLINT NOT NULL,
+                main_roster_id UUID REFERENCES main_roster (id),
+                created_at TIMESTAMP DEFAULT current_timestamp
+            )
+        ;`;
+        console.log(`Created "raid_event_roster" table`)
+
+        return {
+            createTable
+        }
+    } catch (error) {
+        console.error('Error seeding raid_event_rosters:', error);
+        throw error;
+    }
+}
+
 async function main() {
   const client = await db.connect();
 
@@ -365,6 +415,8 @@ async function main() {
   await seedRaids(client);
   await seedRaidTemplates(client);
   await seedRaidTemplateRosterPositions(client)
+  await seedRaidEvents(client)
+  await seedRaidEventRoster(client)
 
   await client.end();
 }

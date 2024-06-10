@@ -1,6 +1,6 @@
 'use server';
 import 'server-only';
-import type { CharClass, CharRoleOptionsForClasses, CharRole, CharSpec, MutationResult, RosterCharacter, Raid, RaidTemplate, RaidTemplatePosition, RaidTemplatePositions } from '@/lib/definitions';
+import type { CharClass, CharRoleOptionsForClasses, CharRole, CharSpec, MutationResult, RosterCharacter, Raid, RaidTemplate, RaidTemplatePosition, RaidTemplatePositions, RaidEvent } from '@/lib/definitions';
 import { capitalize } from '@/lib/utils';
 import { auth, signIn } from '@/auth';
 import { sql } from '@vercel/postgres';
@@ -109,7 +109,7 @@ export async function fetchMainRoster() {
 
     return await unstable_cache(
         async () => {
-            console.log('characters fetch not cached for user:', user);
+            console.log('main_roster fetch not cached for user:', user);
 
             try {
                 const data = await sql<RosterCharacter>
@@ -318,5 +318,137 @@ export async function fetchRaidTemplatePositions() {
     } catch (error) {
         console.log(error);
         throw new Error('Failed to fetch raid template positions.');
+    }
+}
+
+export async function fetchRaidEvents() {
+    const session = await auth();
+    const user = session!.user;
+
+    if (!user) throw new Error('Cannot fetch main roster: User is not logged in');
+
+    return await unstable_cache(
+        async () => {
+            console.log('raid_events fetch not cached for user:', user);
+            try {
+                const data = await sql<RaidEvent>
+                    `SELECT 
+                        raid_events.id,
+                        raid_events.template_id,
+                        raid_events.title,
+                        raid_events.date,
+                        raid_events.time,
+                        raid_events.is_public,
+                        raid_templates.raid_id AS raid_id
+                    FROM raid_events
+                    INNER JOIN raid_templates ON raid_events.template_id = raid_templates.id
+                    WHERE user_email = ${user.email}
+                    ORDER BY raid_events.created_at ASC
+                    ;`;
+                return data.rows;
+            } catch (error) {
+                console.log(error);
+                throw new Error('Failed to fetch raid_events.');
+            }
+        },
+        [`raidevents[${user.email}]`],
+        {
+            tags: [`raidevents[${user.email}]`],
+            revalidate: 3600
+        }
+    )();
+}
+
+export async function insertRaidEvent(
+    prevState: MutationResult,
+    formData: FormData
+): Promise<MutationResult> {
+    const session = await auth();
+    const user = session!.user;
+
+    if (!user) {
+        throw new Error('Failed to update character: No User found');
+    }
+
+    let roster_positions: { character_id: FormDataEntryValue, position: number; }[] = [];
+    formData.forEach((value, key) => {
+        if (key.includes('roster_position') && value) {
+            const index = parseInt(key.split('_')[2]);
+            roster_positions.push({ character_id: value, position: index });
+        }
+    });
+
+    const rawData = {
+        raid_template_id: formData.get('raid_template_id'),
+        title: formData.get('title'),
+        date: formData.get('date'),
+        time: formData.get('time'),
+        is_public: formData.get('is_public') ? true : false,
+        roster_positions: roster_positions
+    };
+    const rosterPositionsSchema = z.object({
+        character_id: z.string().uuid(),
+        position: z.number()
+    });
+
+    const fullSchema = z.object({
+        raid_template_id: z.string().uuid(),
+        title: z.string()
+            .min(2, 'Title must contain at least 2 characters')
+            .max(24, 'Title must contain at most 24 characters')
+            .transform(capitalize),
+        date: z.string().date(),
+        time: z.string().time(),
+        is_public: z.boolean(),
+        roster_positions: z.array(rosterPositionsSchema)
+    });
+
+    const validations = fullSchema.safeParse(rawData);
+
+    if (!validations.success) {
+        const errorMessages = validations.error.issues.map((issue) => issue.message);
+        return { success: false, messages: errorMessages };
+    }
+    try {
+        const data = validations.data;
+        const result = await sql<RaidEvent>
+            `INSERT INTO raid_events (user_email, template_id, title, date, time, is_public)
+            VALUES (${user.email}, ${data.raid_template_id}, ${data.title}, ${data.date}, ${data.time}, ${data.is_public})
+            RETURNING id
+            ;`;
+        const insertedRaidEvent = result.rows[0];
+        const insertedEventRosterCharacters = await Promise.all(data.roster_positions.map(async (roster_position) => {
+            await sql
+                `INSERT INTO raid_event_rosters (raid_event_id, position, main_roster_id)
+            VALUES (${insertedRaidEvent.id}, ${roster_position.position}, ${roster_position.character_id})
+            ;`;
+        }));
+        console.log(insertedEventRosterCharacters.length);
+        revalidateTag(`raidevents[${user.email}]`);
+        return { success: true };
+    } catch (error) {
+        console.log(error);
+        return { success: false, messages: ['Failed to insert new character to main roster'] };
+    }
+}
+
+export async function fetchRaidTemplateSingle(template_id: RaidTemplate['id']) {
+    try {
+        const data = await sql<RaidTemplate>
+            `SELECT
+                raid_templates.id,
+                raid_templates.raid_id,
+                raid_templates.name,
+                raid_templates.size,
+                raid_templates.difficulty,
+                raids.name AS raid_name
+            FROM raid_templates
+            INNER JOIN raids ON raids.id = raid_templates.raid_id
+            WHERE raid_templates.id = ${template_id}
+            ;`;
+        return data.rows[0];
+    } catch (error) {
+        console.log(error);
+        throw new Error('Failed to fetch raids.');
     }
 }

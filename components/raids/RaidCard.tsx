@@ -1,42 +1,54 @@
+import { fetchRaidTemplateSingle } from '@/lib/actions';
 import { RAID_COVER_IMAGES } from '@/lib/constants';
-import type { Raid } from '@/lib/definitions';
-import { CalendarIcon, ClockIcon, EyeIcon, EyeSlashIcon, GlobeAsiaAustraliaIcon } from '@heroicons/react/24/outline';
+import type { Raid, RaidEvent } from '@/lib/definitions';
+import { CalendarIcon, ClockIcon, EyeIcon, EyeSlashIcon, LinkIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import type { ReactNode } from 'react';
 
 type Props = {
-    title: string;
-    raidName: Raid['name'];
-    date: string;
-    time: string;
-    isPublic: boolean;
+    raidEvent: RaidEvent;
 };
 
-export function RaidCard({ title, raidName, date, time, isPublic }: Props) {
+export async function RaidCard({ raidEvent }: Props) {
+    const raidTemplate = await fetchRaidTemplateSingle(raidEvent.template_id);
+
+    function formatTimeStr(timeStr: string) {
+        const parts = timeStr.split(':');
+        const newTimeString = parts[0] + ':' + parts[1];
+        return newTimeString;
+    }
+
+    function formatDate(date: string) {
+        return new Date(date).toDateString();
+    }
+
     return (
         <article className={`${RaidCardSkeleton} text-white`}>
-            <RaidCoverImage raidName={raidName} />
+            <RaidCoverImage raidName={raidTemplate.raid_name} />
             <div className='w-full h-full rounded-xl shadow-inner shadow-slate-700/50 bg-slate-900/60'>
                 <div className='flex flex-wrap w-full rounded-t-xl'>
                     <div className='w-full px-4 pt-4 pb-2 border-b-1 border-slate-700'>
-                        <header className='font-semibold'>{title}</header>
+                        <header className='flex w-fit gap-2'>
+                            <p className='font-semibold'>{raidEvent.title}</p>
+                            <LinkIcon className='w-4' />
+                        </header>
                     </div>
                     <div className='grid grid-flow-row gap-1 py-1'>
                         <CardRow>
-                            <GlobeAsiaAustraliaIcon className='w-4' />
-                            <p>{raidName}</p>
+                            <MapPinIcon className='w-4' />
+                            <p>{raidTemplate.name}</p>
                         </CardRow>
                         <CardRow>
                             <CalendarIcon className='w-4' />
-                            <p>{date}</p>
+                            <p>{formatDate(raidEvent.date)}</p>
                         </CardRow>
                         <CardRow>
                             <ClockIcon className='w-4' />
-                            <p>{time}</p>
+                            <p>{formatTimeStr(raidEvent.time)}</p>
                             <span className='text-sm'> Server Time</span>
                         </CardRow>
                         <CardRow>
-                            {isPublic
+                            {raidEvent.is_public
                                 ? <>
                                     <EyeIcon className='w-4' />
                                     <p>Public</p>

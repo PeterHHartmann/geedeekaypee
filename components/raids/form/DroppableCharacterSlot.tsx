@@ -35,9 +35,17 @@ export const DroppableCharacterSlot: FC<DroppableProp> = ({ id, initial, index }
             )}
         >
             {initial
-                ? <DraggableCharacterSlot character={initial} id={`${id}-draggable`} index={index}>
-                    <CharacterRow character={initial} className='border-transparent' />
-                </DraggableCharacterSlot>
+                ?
+                <>
+                    <input
+                        type='hidden'
+                        name={`roster_position_${index}`}
+                        value={initial?.id || undefined}
+                    />
+                    <DraggableCharacterSlot character={initial} id={`${id}-draggable`} index={index}>
+                        <CharacterRow character={initial} className='border-transparent' />
+                    </DraggableCharacterSlot>
+                </>
                 : null
             }
         </div>

@@ -1,9 +1,13 @@
-import { RaidsList } from '@/components/raids/RaidsList';
+import { RaidEventsList } from '@/components/raids/RaidEventsList';
+import { SHIMMER } from '@/lib/constants';
+import { Suspense } from 'react';
 
 export default async function RaidsPage() {
     return (
-        <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-3'>
-            <RaidsList />
-        </div>
+        <Suspense fallback={<div className={`w-full h-[500px] lg:h-[780px] rounded-md ${SHIMMER}`}></div>}>
+            <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-3'>
+                <RaidEventsList />
+            </div>
+        </Suspense>
     );
 }

@@ -86,3 +86,12 @@ export type MutationResult = {
     success: boolean;
     messages?: string[];
 } | undefined;
+
+export type RaidEvent = {
+    id: string;
+    template_id: RaidTemplate['id'],
+    title: string;
+    date: string;
+    time: string;
+    is_public: boolean;
+};

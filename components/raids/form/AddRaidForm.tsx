@@ -1,11 +1,14 @@
 'use client';
 
 import { Button } from '@/components/Button';
+import { FormErrors } from '@/components/form/form-error';
 import { SelectInput } from '@/components/form/select-input';
 import { SortableRosterList } from '@/components/raids/form/SortableRosterList';
+import { insertRaidEvent } from '@/lib/actions';
 import type { RaidTemplate, RaidTemplatePositions, RosterCharacter } from '@/lib/definitions';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { useCallback, useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ChangeEvent, type MouseEvent, type ReactNode } from 'react';
+import { useFormState } from 'react-dom';
 
 type Props = {
     children?: ReactNode;
@@ -15,6 +18,8 @@ type Props = {
 };
 
 export function AddRaidForm({ children, mainRoster, raidTemplates, templatePositions }: Props) {
+
+    const [state, formAction] = useFormState(insertRaidEvent, { success: false });
 
     const [currentTemplate, setCurrentTemplate] = useState<RaidTemplate>(raidTemplates[0]);
     const createEmptyRoster = useCallback((): (RosterCharacter | null)[] => {
@@ -30,13 +35,17 @@ export function AddRaidForm({ children, mainRoster, raidTemplates, templatePosit
         return date;
     };
 
-    function handleSelectRaid(e: ChangeEvent<HTMLSelectElement>) {
-        const newTemplateId = e.target.value;
+    function handleSelectRaid(event: ChangeEvent<HTMLSelectElement>) {
+        const newTemplateId = event.target.value;
         const foundTemplate = raidTemplates.find((template) => template.id == newTemplateId);
         if (foundTemplate) {
             setCurrentTemplate(foundTemplate);
         }
     }
+
+    // function handleSaveDraftClicked(event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) {
+    //     setIsDraft(1);
+    // }
 
     useEffect(() => {
         if (mainRoster.length) {
@@ -73,7 +82,7 @@ export function AddRaidForm({ children, mainRoster, raidTemplates, templatePosit
     }, [currentTemplate, templatePositions, mainRoster, createEmptyRoster]);
 
     return (
-        <form className='w-full'>
+        <form className='w-full' action={formAction}>
             <div className='flex flex-wrap gap-4 pb-4 justify-between w-full'>
                 <fieldset className='bg-indigo-300 w-full'>
                     <div className='w-full'>
@@ -84,13 +93,14 @@ export function AddRaidForm({ children, mainRoster, raidTemplates, templatePosit
                                 type='text'
                                 name='title'
                                 placeholder='Enter the title of the event'
+                                defaultValue={'Test Title'}
                                 required
                             />
                         </div>
                     </div>
                     <SelectInput
-                        name='raid'
-                        label='Raid'
+                        name='raid_template_id'
+                        label='Raid Template'
                         value={currentTemplate.id}
                         onChange={handleSelectRaid}
                     >
@@ -129,19 +139,26 @@ export function AddRaidForm({ children, mainRoster, raidTemplates, templatePosit
                             />
                         </div>
                     </div>
+                    <div className='flex items-center gap-4 w-full'>
+                        <label className="my-3 block font-semibold" htmlFor='is_public'>This event is public</label>
+                        <div className="relative">
+                            <input
+                                type='checkbox'
+                                name='is_public'
+                            />
+                        </div>
+                    </div>
                 </fieldset>
                 <div className='w-full'>
+                    <input type='hidden' name='roster_length' value={roster.length} />
                     <SortableRosterList mainRoster={mainRoster} roster={roster} setRoster={setRoster} />
                 </div>
             </div>
-            <div className='flex justify-between gap-2'>
-                <Button className='w-6/12'>
-                    <EyeSlashIcon className='w-6' />
-                    <p>Save as draft</p>
-                </Button>
+            <FormErrors result={state} />
+            <div className='flex justify-center gap-2'>
                 <Button className='w-6/12'>
                     <EyeIcon className='w-6' />
-                    <p>Publish</p>
+                    <p>Save</p>
                 </Button>
             </div>
         </form>
