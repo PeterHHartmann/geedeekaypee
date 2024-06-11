@@ -1,8 +1,4 @@
-import { Button } from '@/components/Button';
-import { RaidsNav } from '@/components/raids/RaidsNav';
 import { SHIMMER } from '@/lib/constants';
-import { PlusCircleIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
 import { Suspense, type ReactNode } from 'react';
 
 type Props = {

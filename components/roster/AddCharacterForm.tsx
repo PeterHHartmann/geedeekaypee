@@ -1,7 +1,7 @@
 'use client';
 
 import { insertMainRosterChar } from '@/lib/actions';
-import type { CharClass, CharRoleOptionsForClasses, CharRoleOption, CharSpec } from '@/lib/definitions';
+import type { CharClass, CharRoleOptionsForClasses, CharRoleOption, ClassTalentSpec } from '@/lib/definitions';
 import { Button } from '@/components/Button';
 import { FormErrors } from '@/components/form/form-error';
 import { Modal } from '@/components/Modal';
@@ -13,7 +13,7 @@ import { useFormState } from 'react-dom';
 
 type Props = {
     charClasses: CharClass[];
-    charSpecs: CharSpec[];
+    charSpecs: ClassTalentSpec[];
     charRoles: CharRoleOptionsForClasses;
 };
 
@@ -23,7 +23,7 @@ export function AddCharacterForm({ charClasses, charRoles, charSpecs }: Props) {
     const [state, formAction] = useFormState(insertMainRosterChar, { success: false });
 
     const [roleOptions, setRoleOptions] = useState<CharRoleOption[]>(charRoles[defaultClassId]);
-    const [specOptions, setSpecOptions] = useState<CharSpec[]>(charSpecs.filter((spec) => spec.class_id == charClasses[0].id));
+    const [specOptions, setSpecOptions] = useState<ClassTalentSpec[]>(charSpecs.filter((spec) => spec.class_id == charClasses[0].id));
 
     function handleClassSelectChanged(e: ChangeEvent<HTMLSelectElement>) {
         const class_id = e.target.value;

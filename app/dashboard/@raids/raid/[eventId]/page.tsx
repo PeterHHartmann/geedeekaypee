@@ -12,7 +12,7 @@ type Props = {
 export default async function RaidEventEditPage({ params }: Props) {
     const mainRoster = await fetchMainRoster();
     const raidEvent = await fetchRaidEvent(params.eventId);
-    const raidTemplate = await fetchRaidTemplateSingle(raidEvent.template_id);
+    const raidTemplate = await fetchRaidTemplateSingle(raidEvent.raid_template_id);
     const raidEventRoster = await fetchRaidEventRoster(raidEvent.id);
 
     return (

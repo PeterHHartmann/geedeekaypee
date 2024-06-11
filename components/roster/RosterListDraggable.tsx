@@ -14,11 +14,11 @@ export async function RosterListDraggable() {
 
     return (
         <>
-            {characterRoster.map((character, index) =>
+            {characterRoster.map((character) =>
                 <CharacterRowDraggable key={`roster-character-${character.id}`} character={character} id={`draggableRosterCharacter-${character.id}`}>
                     <SlidingToolbarLeft>
-                        <EditCharacterForm character={character} charClasses={allCharClasses} charSpecs={allCharSpecs} charRoles={allCharRoles} />
                         <DeleteCharacterForm character={character} />
+                        <EditCharacterForm character={character} charClasses={allCharClasses} charSpecs={allCharSpecs} charRoles={allCharRoles} />
                     </SlidingToolbarLeft>
                 </CharacterRowDraggable>
             )}

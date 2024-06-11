@@ -1,4 +1,4 @@
-import type { CharClass, Raid } from '@/lib/definitions';
+import type { CharClass, RaidVariant } from '@/lib/definitions';
 import IcecrownCitadelCover from '@/public/image/raids/icecrown-citadel/cover.jpg';
 import RubySanctumCover from '@/public/image/raids/ruby-sanctum/cover.jpg';
 import type { StaticImageData } from 'next/image';
@@ -16,7 +16,7 @@ export const CLASS_TEXT_COLOR: { [key in CharClass['name']]: string; } = {
     'Warrior': "text-warrior"
 };
 
-export const RAID_COVER_IMAGES: { [key in Raid['name']]: StaticImageData; } = {
+export const RAID_COVER_IMAGES: { [key in RaidVariant['name']]: StaticImageData; } = {
     'Icecrown Citadel': IcecrownCitadelCover,
     'Ruby Sanctum': RubySanctumCover
 };

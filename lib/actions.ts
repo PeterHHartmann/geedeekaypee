@@ -1,6 +1,6 @@
 'use server';
 import 'server-only';
-import type { CharClass, CharRoleOptionsForClasses, CharRole, CharSpec, MutationResult, RosterCharacter, Raid, RaidTemplate, RaidTemplatePosition, RaidTemplatePositions, RaidEvent, RaidEventRosterPosition } from '@/lib/definitions';
+import type { CharClass, CharRoleOptionsForClasses, CharRole, ClassTalentSpec, ServerMutationResult, RosterCharacter, RaidVariant, RaidTemplate, RaidTemplateRosterPosition, RaidTemplateRosterPositions, RaidEvent, RaidEventRosterPosition } from '@/lib/definitions';
 import { capitalize } from '@/lib/utils';
 import { auth, signIn } from '@/auth';
 import { sql } from '@vercel/postgres';
@@ -42,7 +42,7 @@ export async function fetchCharClasses() {
 
 export async function fetchCharSpecs() {
     try {
-        const data = await sql<CharSpec>
+        const data = await sql<ClassTalentSpec>
             `SELECT * 
             FROM class_talent_specs
             ;`;
@@ -109,25 +109,25 @@ export async function fetchMainRoster() {
 
     return await unstable_cache(
         async () => {
-            console.log('main_roster fetch not cached for user:', user);
+            console.log('main_roster_chars fetch not cached for user:', user);
 
             try {
                 const data = await sql<RosterCharacter>
                     `SELECT 
-                        main_roster.id, 
-                        main_roster.name,
-                        main_roster.created_at,
-                        main_roster.class_id,
+                        main_roster_chars.id, 
+                        main_roster_chars.name,
+                        main_roster_chars.created_at,
+                        main_roster_chars.class_id,
                         char_classes.name AS class_name,
-                        main_roster.spec_id,
+                        main_roster_chars.spec_id,
                         class_talent_specs.name as spec_name,
-                        main_roster.role_id,
+                        main_roster_chars.role_id,
                         char_roles.name AS role_name
-                    FROM main_roster
-                    INNER JOIN char_classes ON main_roster.class_id = char_classes.id
-                    INNER JOIN class_talent_specs ON main_roster.spec_id = class_talent_specs.id
-                    INNER JOIN char_roles ON main_roster.role_id = char_roles.id
-                    WHERE main_roster.user_email = ${user.email}
+                    FROM main_roster_chars
+                    INNER JOIN char_classes ON main_roster_chars.class_id = char_classes.id
+                    INNER JOIN class_talent_specs ON main_roster_chars.spec_id = class_talent_specs.id
+                    INNER JOIN char_roles ON main_roster_chars.role_id = char_roles.id
+                    WHERE main_roster_chars.user_email = ${user.email}
                     ORDER BY char_roles.created_at ASC, char_classes.created_at, class_talent_specs.created_at ASC
                     ;`;
                 return data.rows;
@@ -136,16 +136,16 @@ export async function fetchMainRoster() {
                 throw new Error('Failed to fetch main roster.');
             }
         },
-        [`mainroster[${user.email}]`],
+        [`mainrosters[${user.email}]`],
         {
-            tags: [`mainroster[${user.email}]`],
+            tags: [`mainrosters[${user.email}]`],
             revalidate: 3600
         }
     )();
 };
 
 export async function insertMainRosterChar(
-    _prevState: MutationResult,
+    _prevState: ServerMutationResult,
     formData: FormData
 ) {
     const session = await auth();
@@ -179,10 +179,10 @@ export async function insertMainRosterChar(
     }
     try {
         await sql<RosterCharacter>
-            `INSERT INTO main_roster (name, class_id, spec_id, role_id, user_email)
+            `INSERT INTO main_roster_chars (name, class_id, spec_id, role_id, user_email)
             VALUES (${parsed.data.name}, ${parsed.data.class_id}, ${parsed.data.spec_id},${parsed.data.role_id}, ${user.email})
             ;`;
-        revalidateTag(`mainroster[${user.email}]`);
+        revalidateTag(`mainrosters[${user.email}]`);
         return { success: true };
     } catch (error) {
         return { success: false, messages: ['Failed to insert new character to main roster'] };
@@ -190,7 +190,7 @@ export async function insertMainRosterChar(
 }
 
 export async function updateMainRosterChar(
-    _prevState: MutationResult,
+    _prevState: ServerMutationResult,
     formData: FormData
 ) {
     const session = await auth();
@@ -228,12 +228,12 @@ export async function updateMainRosterChar(
 
     try {
         await sql<RosterCharacter>
-            `UPDATE main_roster
+            `UPDATE main_roster_chars
             SET name = ${parsed.data.name}, class_id = ${parsed.data.class_id}, spec_id = ${parsed.data.spec_id}, role_id = ${parsed.data.role_id}
             WHERE id = ${parsed.data.character_id} 
             AND user_email = ${user.email}
             ;`;
-        revalidateTag(`mainroster[${user.email}]`);
+        revalidateTag(`mainrosters[${user.email}]`);
         return { success: true };
     } catch (error) {
         return { success: false, messages: ['Failed to update character'] };
@@ -241,7 +241,7 @@ export async function updateMainRosterChar(
 }
 
 export async function deleteMainRosterChar(
-    _prevState: MutationResult,
+    _prevState: ServerMutationResult,
     formData: FormData
 ) {
     const session = await auth();
@@ -260,11 +260,11 @@ export async function deleteMainRosterChar(
     if (parsed.success) {
         try {
             await sql<RosterCharacter>
-                `DELETE FROM main_roster
+                `DELETE FROM main_roster_chars
                 WHERE id = ${parsed.data.id} 
                 AND user_email = ${user.email}
                 ;`;
-            revalidateTag(`mainroster[${user.email}]`);
+            revalidateTag(`mainrosters[${user.email}]`);
             return { success: true };
         } catch (error) {
             console.log(error);
@@ -280,36 +280,36 @@ export async function fetchRaidTemplates() {
         const data = await sql<RaidTemplate>
             `SELECT
                 raid_templates.id,
-                raid_templates.raid_id,
+                raid_templates.raid_variant_id,
                 raid_templates.name,
                 raid_templates.size,
                 raid_templates.difficulty,
-                raids.name AS raid_name
+                raid_variants.name AS raid_variant_name
             FROM raid_templates
-            INNER JOIN raids ON raids.id = raid_templates.raid_id
+            INNER JOIN raid_variants ON raid_variants.id = raid_templates.raid_variant_id
             ORDER BY raid_templates.created_at ASC
             ;`;
         return data.rows;
     } catch (error) {
         console.log(error);
-        throw new Error('Failed to fetch raids.');
+        throw new Error('Failed to fetch raid_variants.');
     }
 }
 
 export async function fetchRaidTemplatePositions() {
     try {
-        const data = await sql<RaidTemplatePosition>
+        const data = await sql<RaidTemplateRosterPosition>
             `SELECT * 
-            FROM raid_template_positions
+            FROM raid_template_roster_positions
             ORDER BY priority ASC, position ASC
             ;`;
 
         const positions = data.rows;
-        const result = positions.reduce<RaidTemplatePositions>((acc, position) => {
-            if (!acc[position.template_id]) {
-                acc[position.template_id] = [position];
+        const result = positions.reduce<RaidTemplateRosterPositions>((acc, position) => {
+            if (!acc[position.raid_template_id]) {
+                acc[position.raid_template_id] = [position];
             } else {
-                acc[position.template_id].push(position);
+                acc[position.raid_template_id].push(position);
             }
             return acc;
         }, {});
@@ -334,14 +334,14 @@ export async function fetchRaidEvents() {
                 const data = await sql<RaidEvent>
                     `SELECT 
                         raid_events.id,
-                        raid_events.template_id,
+                        raid_events.raid_template_id,
                         raid_events.title,
                         raid_events.date,
                         raid_events.time,
                         raid_events.is_public,
-                        raid_templates.raid_id AS raid_id
+                        raid_templates.raid_variant_id AS raid_variant_id
                     FROM raid_events
-                    INNER JOIN raid_templates ON raid_events.template_id = raid_templates.id
+                    INNER JOIN raid_templates ON raid_events.raid_template_id = raid_templates.id
                     WHERE user_email = ${user.email}
                     ORDER BY raid_events.created_at DESC
                     ;`;
@@ -359,24 +359,24 @@ export async function fetchRaidEvents() {
     )();
 }
 
-export async function fetchRaidTemplateSingle(template_id: RaidTemplate['id']) {
+export async function fetchRaidTemplateSingle(raid_template_id: RaidTemplate['id']) {
     try {
         const data = await sql<RaidTemplate>
             `SELECT
                 raid_templates.id,
-                raid_templates.raid_id,
+                raid_templates.raid_variant_id,
                 raid_templates.name,
                 raid_templates.size,
                 raid_templates.difficulty,
-                raids.name AS raid_name
+                raid_variants.name AS raid_variant_name
             FROM raid_templates
-            INNER JOIN raids ON raids.id = raid_templates.raid_id
-            WHERE raid_templates.id = ${template_id}
+            INNER JOIN raid_variants ON raid_variants.id = raid_templates.raid_variant_id
+            WHERE raid_templates.id = ${raid_template_id}
             ;`;
         return data.rows[0];
     } catch (error) {
         console.log(error);
-        throw new Error('Failed to fetch raids.');
+        throw new Error('Failed to fetch raid_variants.');
     }
 }
 
@@ -385,14 +385,14 @@ export async function fetchRaidEvent(eventId: RaidEvent['id']) {
         const data = await sql<RaidEvent>
             `SELECT 
                 raid_events.id,
-                raid_events.template_id,
+                raid_events.raid_template_id,
                 raid_events.title,
                 raid_events.date,
                 raid_events.time,
                 raid_events.is_public,
-                raid_templates.raid_id AS raid_id
+                raid_templates.raid_variant_id AS raid_variant_id
             FROM raid_events
-            INNER JOIN raid_templates ON raid_events.template_id = raid_templates.id
+            INNER JOIN raid_templates ON raid_events.raid_template_id = raid_templates.id
             WHERE raid_events.id = ${eventId}
             ;`;
         return data.rows[0];
@@ -405,7 +405,7 @@ export async function fetchRaidEvent(eventId: RaidEvent['id']) {
 export async function fetchRaidEventRoster(eventId: RaidEvent['id']) {
     try {
         const data = await sql<RaidEventRosterPosition>
-            `SELECT * FROM raid_event_rosters
+            `SELECT * FROM raid_event_roster_chars
             WHERE raid_event_id = ${eventId}
             ;`;
         return data.rows;
@@ -416,9 +416,9 @@ export async function fetchRaidEventRoster(eventId: RaidEvent['id']) {
 }
 
 export async function insertRaidEvent(
-    prevState: MutationResult,
+    prevState: ServerMutationResult,
     formData: FormData
-): Promise<MutationResult> {
+): Promise<ServerMutationResult> {
     const session = await auth();
     const user = session!.user;
 
@@ -442,6 +442,9 @@ export async function insertRaidEvent(
         visibility: formData.get('visibility') ? true : false,
         roster_positions: roster_positions
     };
+
+    console.log(rawData);
+
     const rosterPositionsSchema = z.object({
         character_id: z.string().uuid(),
         position: z.number()
@@ -468,16 +471,16 @@ export async function insertRaidEvent(
     try {
         const data = validations.data;
         const result = await sql<RaidEvent>
-            `INSERT INTO raid_events (user_email, template_id, title, date, time, is_public)
+            `INSERT INTO raid_events (user_email, raid_template_id, title, date, time, is_public)
             VALUES (${user.email}, ${data.raid_template_id}, ${data.title}, ${data.date}, ${data.time}, ${data.visibility})
             RETURNING id
             ;`;
         const insertedRaidEvent = result.rows[0];
         const insertedEventRosterCharacters = await Promise.all(data.roster_positions.map(async (roster_position) => {
             await sql<RaidEventRosterPosition>
-                `INSERT INTO raid_event_rosters (raid_event_id, position, main_roster_id)
-            VALUES (${insertedRaidEvent.id}, ${roster_position.position}, ${roster_position.character_id})
-            ;`;
+                `INSERT INTO raid_event_roster_chars (raid_event_id, position, main_roster_id)
+                VALUES (${insertedRaidEvent.id}, ${roster_position.position}, ${roster_position.character_id})
+                ;`;
         }));
         revalidateTag(`raidevents[${user.email}]`);
         return { success: true };
@@ -488,7 +491,7 @@ export async function insertRaidEvent(
 }
 
 export async function deleteRaidEvent(
-    prevState: MutationResult,
+    prevState: ServerMutationResult,
     formData: FormData
 ) {
     const session = await auth();

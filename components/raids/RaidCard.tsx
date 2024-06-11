@@ -2,7 +2,7 @@ import { SlidingToolbarLeft } from '@/components/SlidingToolbarLeft';
 import { RaidEventDeleteForm } from '@/components/raids/form/RaidEventDeleteForm';
 import { fetchRaidTemplateSingle } from '@/lib/actions';
 import { RAID_COVER_IMAGES } from '@/lib/constants';
-import type { Raid, RaidEvent } from '@/lib/definitions';
+import type { RaidVariant, RaidEvent } from '@/lib/definitions';
 import { CalendarIcon, ClockIcon, EyeIcon, EyeSlashIcon, LinkIcon, MapPinIcon, TrashIcon, WrenchIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,7 +13,7 @@ type Props = {
 };
 
 export async function RaidCard({ raidEvent }: Props) {
-    const raidTemplate = await fetchRaidTemplateSingle(raidEvent.template_id);
+    const raidTemplate = await fetchRaidTemplateSingle(raidEvent.raid_template_id);
 
     function formatTimeStr(timeStr: string) {
         const parts = timeStr.split(':');
@@ -27,7 +27,7 @@ export async function RaidCard({ raidEvent }: Props) {
 
     return (
         <article className={`${RaidCardSkeleton} text-white`}>
-            <RaidCoverImage raidName={raidTemplate.raid_name} />
+            <RaidCoverImage raidName={raidTemplate.raid_variant_name} />
             <div className='w-full h-full rounded-xl shadow-inner shadow-slate-700/50 bg-slate-900/60'>
                 <div className='flex flex-wrap w-full rounded-t-xl'>
                     <div className='w-full px-4 pt-4 pb-2 border-b-1 border-slate-700'>
@@ -90,7 +90,7 @@ export async function RaidCard({ raidEvent }: Props) {
 export const RaidCardSkeleton = 'flex relative z-0 h-[300px] border-1 border-slate-600 bg-slate-700 rounded-xl overflow-clip shadow-md';
 
 type RaidCoverImageProps = {
-    raidName: Raid['name'];
+    raidName: RaidVariant['name'];
 };
 
 function RaidCoverImage({ raidName }: RaidCoverImageProps) {

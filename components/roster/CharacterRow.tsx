@@ -21,7 +21,7 @@ export function CharacterRow({ children, character, className }: Props) {
                 className
             )}
         >
-            <div className='flex items-center h-full gap-1 px-2'>
+            <div className='flex items-center h-full gap-1'>
                 <CharRoleIcon role_name={character.role_name} />
                 <CharTalentSpecIcon class_name={character.class_name} spec_name={character.spec_name} />
                 <p className={`${CLASS_TEXT_COLOR[character.class_name]}`}>{character.name}</p>
@@ -31,4 +31,4 @@ export function CharacterRow({ children, character, className }: Props) {
     );
 }
 
-export const RosterCharacterSkeleton = 'w-full h-[2.375rem] border-b-1 border-slate-500 dark:border-slate-700 hover:bg-slate-600 dark:hover:bg-slate-700';
+export const RosterCharacterSkeleton = 'w-full h-[2.375rem] border-b-1 border-slate-500 dark:border-slate-700 hover:bg-slate-600 dark:hover:bg-slate-700 pl-1 pr-2';

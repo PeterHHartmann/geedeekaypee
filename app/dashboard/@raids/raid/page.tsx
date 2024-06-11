@@ -1,9 +1,8 @@
 import { Button } from '@/components/Button';
 import { RaidsHeader } from '@/components/raids/RaidsHeader';
-import { RaidsNav } from '@/components/raids/RaidsNav';
 import { RaidEventAddForm } from '@/components/raids/form/RaidEventAddForm';
 import { fetchMainRoster, fetchRaidTemplates, fetchRaidTemplatePositions } from '@/lib/actions';
-import { ChevronLeftIcon, PlusCircleIcon } from '@heroicons/react/24/outline';
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
 export default async function NewRaidPage() {

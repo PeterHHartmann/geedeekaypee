@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/Button';
+import { SubmitButton } from '@/components/form/submit-button';
 import { SortableRosterList } from '@/components/raids/form/SortableRosterList';
 import type { RaidEvent, RaidEventRosterPosition, RaidTemplate, RosterCharacter } from '@/lib/definitions';
 import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, TagIcon, UserIcon } from '@heroicons/react/24/outline';
@@ -142,10 +143,10 @@ export function RaidEventEditForm({ children, raidEvent, mainRoster, raidTemplat
             </div>
             {/* <FormErrors result={state} /> */}
             <div className='flex justify-center gap-2'>
-                <Button className='w-6/12'>
+                <SubmitButton className='w-6/12'>
                     <EyeIcon className='w-6' />
                     <p>Save</p>
-                </Button>
+                </SubmitButton>
             </div>
         </form>
     );

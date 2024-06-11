@@ -1,4 +1,4 @@
-import type { CharClass, CharSpec } from '@/lib/definitions';
+import type { CharClass, ClassTalentSpec } from '@/lib/definitions';
 
 import DK_Blood_icon from '@/public/image/character/class/death-knight/talent-spec/blood.jpg';
 import DK_Unholy_icon from '@/public/image/character/class/death-knight/talent-spec/unholy.jpg';
@@ -100,7 +100,7 @@ const iconTable: { [key in CharClass['name']]: { [key: string]: StaticImageData;
 
 type Props = {
     class_name: CharClass['name'];
-    spec_name: CharSpec['name'];
+    spec_name: ClassTalentSpec['name'];
     size?: number;
 };
 

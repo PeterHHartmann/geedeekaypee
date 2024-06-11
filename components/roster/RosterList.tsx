@@ -17,8 +17,8 @@ export async function RosterList() {
             {charRoster.map((character) =>
                 <CharacterRow key={`roster-character-${character.id}`} character={character}>
                     <SlidingToolbarLeft>
-                        <EditCharacterForm character={character} charClasses={allCharClasses} charSpecs={allCharSpecs} charRoles={allRoleOptions} />
                         <DeleteCharacterForm character={character} />
+                        <EditCharacterForm character={character} charClasses={allCharClasses} charSpecs={allCharSpecs} charRoles={allRoleOptions} />
                     </SlidingToolbarLeft>
                 </CharacterRow>
             )}

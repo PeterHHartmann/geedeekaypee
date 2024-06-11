@@ -5,15 +5,15 @@ import { FormErrors } from '@/components/form/form-error';
 import { SelectInput } from '@/components/form/select-input';
 import { SubmitButton } from '@/components/form/submit-button';
 import { updateMainRosterChar } from '@/lib/actions';
-import type { CharClass, CharRoleOptionsForClasses, CharRoleOption, CharSpec, RosterCharacter } from '@/lib/definitions';
-import { PencilSquareIcon, PlusCircleIcon, WrenchIcon } from '@heroicons/react/24/outline';
+import type { CharClass, CharRoleOptionsForClasses, CharRoleOption, ClassTalentSpec, RosterCharacter } from '@/lib/definitions';
+import { PencilSquareIcon, PlusCircleIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState, type ChangeEvent } from 'react';
 import { useFormState } from 'react-dom';
 
 type Props = {
     character: RosterCharacter;
     charClasses: CharClass[];
-    charSpecs: CharSpec[];
+    charSpecs: ClassTalentSpec[];
     charRoles: CharRoleOptionsForClasses;
 };
 
@@ -22,7 +22,7 @@ export function EditCharacterForm({ character, charClasses, charRoles, charSpecs
     const [state, formAction] = useFormState(updateMainRosterChar, { success: false });
 
     const [roleOptions, setRoleOptions] = useState<CharRoleOption[]>(charRoles[character.class_id]);
-    const [specOptions, setSpecOptions] = useState<CharSpec[]>(charSpecs.filter((spec) => spec.class_id == character.class_id));
+    const [specOptions, setSpecOptions] = useState<ClassTalentSpec[]>(charSpecs.filter((spec) => spec.class_id == character.class_id));
 
     function handleClassSelectChanged(e: ChangeEvent<HTMLSelectElement>) {
         const class_id = e.target.value;
@@ -91,7 +91,7 @@ export function EditCharacterForm({ character, charClasses, charRoles, charSpecs
                 </form>
             </Modal>
             <ToolbarButton onClick={() => setIsOpen(!isOpen)}>
-                <WrenchIcon className='w-5 ' />
+                <PencilSquareIcon className='w-5 ' />
             </ToolbarButton>
         </>
     );
