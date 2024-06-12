@@ -16,7 +16,6 @@ type Props = {
 export function AssignmentListGroup({ groupIndex, assignmentGroup, roster, hasEdited, setHasEdited }: Props) {
 
     const groupName = useMemo(() => assignmentGroup[0][0].name, [assignmentGroup]);
-
     const [assignedList, setAssignedList] = useState<(RosterCharacter | null)[]>();
 
     useEffect(() => {

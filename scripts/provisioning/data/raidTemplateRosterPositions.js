@@ -66,7 +66,7 @@ const raidTemplateRosterPositions = {
                 {id: 'b81e2cdb-7956-407a-bff9-c6dd29bd3205', class_id: charClasses.warlock.id, role_id: charRoles.rdps.id, spec_id: classTalentSpecs.warlock.demonology.id},
             ],
             12: [
-                {id: '410894f1-217f-480d-b67d-4ebf7f86242d', class_id: charClasses.priest.id, role_id: charRoles.rdps.id, spec_id: classTalentSpecs.priest.shadow.id},
+                {id: '9ed38c14-44ee-404d-8c8c-99ab4fea112e', class_id: charClasses.priest.id, role_id: charRoles.rdps.id, spec_id: classTalentSpecs.priest.shadow.id},
                 {id: '66371a53-c31b-4393-bda5-2c68ae1aa3aa', class_id: charClasses.mage.id, role_id: charRoles.rdps.id, spec_id: classTalentSpecs.mage.fire.id},
             ],
             13: [
