@@ -27,14 +27,16 @@ export function ResizeWrapper({ children }: Props) {
 
     if (!isOpen) {
         return (
-            <ToggleButton onClick={() => setIsOpen(true)} />
+            <div className='sticky top-[64px]'>
+                <ToggleButton onClick={() => setIsOpen(true)} />
+            </div>
         );
     }
 
     return (
         <div
             className={clsx(
-                'basis-1/4 rounded-md justify-center gap-6 bg-slate-100 dark:bg-slate-800 border-1 border-slate-300 dark:border-slate-700 shadow-md shadow-slate-200 dark:shadow-slate-800 mr-3 md:mr-4',
+                'sticky top-[72px] basis-1/4 rounded-md h-fit justify-center gap-6 bg-slate-100 dark:bg-slate-800 border-1 border-slate-300 dark:border-slate-700 shadow-md shadow-slate-200 dark:shadow-slate-800 mr-3 md:mr-4',
             )}
         >
             <div className='flex flex-wrap justify-center items-center border-b-1 border-slate-300 dark:border-slate-700 p-3 mb-3 w-full'>

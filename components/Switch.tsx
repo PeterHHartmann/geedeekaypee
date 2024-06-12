@@ -4,8 +4,6 @@
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import React, { useEffect, useState, type ReactNode } from 'react';
 
-// UNFINISHED COMPONENT
-
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     children: ReactNode;
     isOn: boolean;

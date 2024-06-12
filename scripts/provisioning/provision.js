@@ -420,7 +420,7 @@ async function CREATE_TABLE_raid_event_roster_chars(client){
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
                 raid_event_id UUID REFERENCES raid_events (id) ON DELETE CASCADE,
                 position SMALLINT NOT NULL,
-                main_roster_id UUID REFERENCES main_roster_chars (id),
+                main_roster_id UUID REFERENCES main_roster_chars (id) ON DELETE CASCADE,
                 created_at TIMESTAMP DEFAULT current_timestamp
             )
         ;`;

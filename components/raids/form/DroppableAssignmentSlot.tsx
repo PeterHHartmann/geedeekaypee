@@ -3,18 +3,18 @@
 import { DraggableCharacterRow } from '@/components/raids/form/DraggableCharacterRow';
 import { CharacterRow } from '@/components/roster/CharacterRow';
 import type { RosterCharacter } from '@/lib/definitions';
-import { useDroppable } from "@dnd-kit/core";
+import { useDndMonitor, useDroppable } from "@dnd-kit/core";
 import clsx from 'clsx';
+import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 
 type Props = {
     id: string;
-    mainRoster: RosterCharacter[];
-    initial: RosterCharacter | null;
+    character: RosterCharacter | null;
     groupIndex: number;
     rowIndex: number;
 };
 
-export function DroppableAssignmentSlot({ id, initial, groupIndex, rowIndex }: Props) {
+export function DroppableAssignmentSlot({ id, character, groupIndex, rowIndex }: Props) {
 
     const { isOver, setNodeRef } = useDroppable({
         id: `${id}-droppable`,
@@ -34,16 +34,16 @@ export function DroppableAssignmentSlot({ id, initial, groupIndex, rowIndex }: P
                 }
             )}
         >
-            {initial
+            {character
                 ?
                 <>
                     <input
                         type='hidden'
-                        name={`event_assignment_${groupIndex}_${rowIndex}`}
-                        value={initial?.id || undefined}
+                        name={`raid_assignment_${groupIndex}_${rowIndex}`}
+                        value={character.id || undefined}
                     />
-                    <DraggableCharacterRow character={initial} id={`${id}-draggable`} index={rowIndex}>
-                        <CharacterRow character={initial} className='border-transparent' />
+                    <DraggableCharacterRow character={character} id={`${id}-draggable`} index={rowIndex}>
+                        <CharacterRow character={character} className='border-transparent' />
                     </DraggableCharacterRow>
                 </>
                 : null

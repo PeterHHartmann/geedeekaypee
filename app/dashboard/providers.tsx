@@ -28,7 +28,7 @@ export function Providers({ children }: { children: ReactNode; }) {
     return (
         <DndContext onDragStart={handleDragStart} id={dnd_id}>
             {children}
-            <DragOverlay className='rounded-md overflow-clip cursor-grabbing'>
+            <DragOverlay className='rounded-md overflow-clip cursor-grabbing opacity-50'>
                 {draggedCharacter
                     ? <CharacterRow character={draggedCharacter} />
                     : null

@@ -29,12 +29,12 @@ export function SortableRosterList({
     useDndMonitor({
         onDragEnd(event) {
             const { active, over } = event;
-            if (!over) {
+            if (!over || !over.id.toString().includes('roster-row')) {
                 return;
             }
             const newRoster = roster.slice(0);
             const isFromMainRoster = active.id.toString().includes('draggableRosterCharacter');
-            const isFromForm = active.id.toString().includes('roster-row-draggable');
+            const isFromOwnList = active.id.toString().includes('roster-row-draggable');
             const activeData = active.data.current;
             if (!activeData) {
                 return;
@@ -48,7 +48,7 @@ export function SortableRosterList({
             const overIndex: number = overData.index;
 
             //Dragged from the roster in the form
-            if (isFromForm) {
+            if (isFromOwnList) {
                 const activeIndex: number = activeData.index;
                 const oldChar = newRoster[overIndex];
                 const newChar = newRoster[activeIndex];
