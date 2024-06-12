@@ -19,9 +19,9 @@ export function AssignmentList({
 }: Props) {
 
     const { data: assignmentGroups, isLoading } = useQuery({
-        queryKey: [currentTemplate.id, roster, `raid_template_assignments`],
-        queryFn: async ({}) => {
-            const templateAssignments = await fetchAssignmentsForRaidTemplate(currentTemplate.id);
+        queryKey: [currentTemplate.id, `raid_template_assignments`],
+        queryFn: async ({ queryKey: [templateId] }) => {
+            const templateAssignments = await fetchAssignmentsForRaidTemplate(templateId);
             if (templateAssignments.length) {
                 const dividedIntoGroups = templateAssignments.reduce<RaidTemplateAssignment[][][]>((acc, assignment) => {
                     const groupIndex = assignment.assignment_group - 1;
@@ -43,7 +43,7 @@ export function AssignmentList({
 
     if (isLoading) {
         return (
-            <div className={`h-[780px] w-[780px] ${SHIMMER}`}></div>
+            <div className={`h-[780px] w-auto ${SHIMMER}`}></div>
         );
     }
 

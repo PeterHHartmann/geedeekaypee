@@ -192,7 +192,7 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
                     </div>
                 </fieldset>
                 <div className='flex gap-4 w-full pb-4'>
-                    <fieldset className='basis-1/4 rounded-md bg-slate-200/75 dark:bg-slate-700/50 overflow-clip shadow-md'>
+                    <fieldset className='w-1/4 rounded-md bg-slate-200/75 dark:bg-slate-700/50 overflow-clip shadow-md'>
                         <header className='flex gap-1 justify-center p-3 bg-slate-200 dark:bg-slate-600/50 shadow-md'>
                             <MegaphoneIcon className='w-5' />
                             <h2 className='text-lg text-center'>Assignments</h2>
