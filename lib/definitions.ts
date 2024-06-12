@@ -102,3 +102,15 @@ export type RaidEventRosterPosition = {
     position: number;
     main_roster_id: RosterCharacter['id'];
 };
+
+export type RaidTemplateAssignment = {
+    id: string;
+    raid_template_id: RaidTemplate['id'],
+    name: string;
+    assignment_group: number;
+    position: number;
+    priority: number;
+    class_id: CharClass['id'];
+    role_id: CharRole['id'];
+    spec_id: ClassTalentSpec['id'];
+};

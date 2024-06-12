@@ -1,6 +1,6 @@
 'use server';
 import 'server-only';
-import type { CharClass, CharRoleOptionsForClasses, CharRole, ClassTalentSpec, ServerMutationResult, RosterCharacter, RaidVariant, RaidTemplate, RaidTemplateRosterPosition, RaidTemplateRosterPositions, RaidEvent, RaidEventRosterPosition } from '@/lib/definitions';
+import type { CharClass, CharRoleOptionsForClasses, CharRole, ClassTalentSpec, ServerMutationResult, RosterCharacter, RaidVariant, RaidTemplate, RaidTemplateRosterPosition, RaidTemplateRosterPositions, RaidEvent, RaidEventRosterPosition, RaidTemplateAssignment } from '@/lib/definitions';
 import { capitalize } from '@/lib/utils';
 import { auth, signIn } from '@/auth';
 import { sql } from '@vercel/postgres';
@@ -296,30 +296,21 @@ export async function fetchRaidTemplates() {
     }
 }
 
-export async function fetchRaidTemplatePositions() {
-    try {
+export const fetchRosterPositionsForRaidTemplate = unstable_cache(
+    async (raid_template_id: RaidTemplate['id']) => {
         const data = await sql<RaidTemplateRosterPosition>
             `SELECT * 
             FROM raid_template_roster_positions
+            WHERE raid_template_id = ${raid_template_id}
             ORDER BY priority ASC, position ASC
             ;`;
-
-        const positions = data.rows;
-        const result = positions.reduce<RaidTemplateRosterPositions>((acc, position) => {
-            if (!acc[position.raid_template_id]) {
-                acc[position.raid_template_id] = [position];
-            } else {
-                acc[position.raid_template_id].push(position);
-            }
-            return acc;
-        }, {});
-        return result;
-
-    } catch (error) {
-        console.log(error);
-        throw new Error('Failed to fetch raid template positions.');
+        return data.rows;
+    },
+    ['raidtemplateRosterPositions'],
+    {
+        revalidate: 3600
     }
-}
+);
 
 export async function fetchRaidEvents() {
     const session = await auth();
@@ -416,7 +407,7 @@ export async function fetchRaidEventRoster(eventId: RaidEvent['id']) {
 }
 
 export async function insertRaidEvent(
-    prevState: ServerMutationResult,
+    _prevState: ServerMutationResult,
     formData: FormData
 ): Promise<ServerMutationResult> {
     const session = await auth();
@@ -491,7 +482,7 @@ export async function insertRaidEvent(
 }
 
 export async function deleteRaidEvent(
-    prevState: ServerMutationResult,
+    _prevState: ServerMutationResult,
     formData: FormData
 ) {
     const session = await auth();
@@ -525,5 +516,29 @@ export async function deleteRaidEvent(
         console.log(error);
         return { success: false, messages: ['Failed to delete raid event. Please try again later'] };
     }
+}
 
+export const fetchAssignmentsForRaidTemplate = unstable_cache(
+    async (raid_template_id: RaidTemplate['id']) => {
+        try {
+            const raw = await sql<RaidTemplateAssignment>
+                `SELECT * 
+                    FROM raid_template_assignments
+                    WHERE raid_template_id = ${raid_template_id}
+                    ORDER BY assignment_group ASC, priority ASC, position ASC
+                    ;`;
+            return raw.rows;
+        } catch (error) {
+            console.log(error);
+            throw new Error('Failed to fetch raid template assignments. Please try again later');
+        }
+    },
+    ['raidtemplateAssignments'],
+    {
+        revalidate: 3600
+    }
+);
+
+export async function fetchFake() {
+    return 'yo';
 }

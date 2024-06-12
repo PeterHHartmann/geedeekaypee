@@ -1,6 +1,6 @@
 'use client';
 
-import { DraggableCharacterSlot } from '@/components/raids/form/DraggableCharacterSlot';
+import { DraggableRosterSlot } from '@/components/raids/form/DraggableRosterSlot';
 import { CharacterRow } from '@/components/roster/CharacterRow';
 import type { RosterCharacter } from '@/lib/definitions';
 import { useDroppable } from "@dnd-kit/core";
@@ -14,7 +14,7 @@ type DroppableProp = {
     index: number;
 };
 
-export const DroppableCharacterSlot: FC<DroppableProp> = ({ id, initial, index }) => {
+export const DroppableRosterSlot: FC<DroppableProp> = ({ id, initial, index }) => {
 
     const { isOver, setNodeRef } = useDroppable({
         id: `${id}-droppable`,
@@ -42,9 +42,9 @@ export const DroppableCharacterSlot: FC<DroppableProp> = ({ id, initial, index }
                         name={`roster_position_${index}`}
                         value={initial?.id || undefined}
                     />
-                    <DraggableCharacterSlot character={initial} id={`${id}-draggable`} index={index}>
+                    <DraggableRosterSlot character={initial} id={`${id}-draggable`} index={index}>
                         <CharacterRow character={initial} className='border-transparent' />
-                    </DraggableCharacterSlot>
+                    </DraggableRosterSlot>
                 </>
                 : null
             }

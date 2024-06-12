@@ -6,6 +6,7 @@ const {charClassRoles} = require('./data/charClassRoles.js')
 const {raidVariants} = require('./data/raidVariants.js')
 const {raidTemplates} = require('./data/raidTemplates.js')
 const {raidTemplateRosterPositions} = require('./data/raidTemplateRosterPositions.js')
+const {raidTemplateAssignments} = require('./data/raidTemplateAssignments.js')
 
 async function CREATE_EXTENSION_uuid_ossp(client){
     try {
@@ -381,7 +382,7 @@ async function INSERT_raid_template_roster_positions(client) {
             raid_template_roster_positions: insertedRaidTemplateRosterPositions
         }
     } catch (error) {
-        console.error('Error seeding raid template roster positions:', error);
+        console.error('Error inserting raid template roster positions:', error);
         throw error;
     }
 }
@@ -441,7 +442,8 @@ async function CREATE_TABLE_raid_template_assignments(client){
             CREATE TABLE IF NOT EXISTS raid_template_assignments (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
                 raid_template_id UUID REFERENCES raid_templates (id) ON DELETE CASCADE,
-                name VARCHAR(255),
+                name VARCHAR(255) NOT NULL,
+                assignment_group SMALLINT NOT NULL,
                 position SMALLINT NOT NULL,
                 priority SMALLINT NOT NULL,
                 class_id UUID REFERENCES char_classes (id),
@@ -458,6 +460,47 @@ async function CREATE_TABLE_raid_template_assignments(client){
 
     } catch (error) {
                 console.error('Error creating "raid_template_assignments" table:', error);
+        throw error;
+    }
+}
+
+async function INSERT_raid_template_assignments(client) {
+    try {
+        const allRaidTemplateAssignments = Object.values(raidTemplateAssignments)
+            .flatMap((raidTemplate) => Object.entries(raidTemplate.assignments)
+                .flatMap(([assignmentName, positionsList], groupIndex) => positionsList
+                    .flatMap((positionList, positionListIndex) => positionList
+                        .map((priority, priorityIndex) => ({
+                            id: priority.id,
+                            raid_template_id: raidTemplate.raid_template_id, 
+                            name: assignmentName,
+                            group: groupIndex + 1,
+                            position: positionListIndex + 1,
+                            priority: priorityIndex + 1,
+                            class_id: priority.class_id,
+                            role_id: priority.role_id,
+                            spec_id: priority.spec_id
+                        }))
+                    )    
+                )
+            )
+
+        const insertedRaidTemplateAssignments = await Promise.all(
+            allRaidTemplateAssignments.map(async (assignment) => {
+                return client.sql`
+                    INSERT INTO raid_template_assignments (id, raid_template_id, name, assignment_group, position, priority, class_id, role_id, spec_id)
+                    VALUES (${assignment.id}, ${assignment.raid_template_id}, ${assignment.name},  ${assignment.group}, ${assignment.position}, ${assignment.priority}, ${assignment.class_id}, ${assignment.role_id}, ${assignment.spec_id})
+                    ON CONFLICT (id) DO NOTHING
+                    ;`;
+            }),
+        );
+
+        console.log(`Inserted ${insertedRaidTemplateAssignments.length} raid template assignments`);
+        return {
+            raid_template_assignments: insertedRaidTemplateAssignments
+        }
+    } catch (error) {
+        console.error('Error inserting raid template assignments:', error);
         throw error;
     }
 }
@@ -497,6 +540,7 @@ async function main() {
     await CREATE_TABLE_raid_event_roster_chars(client);
 
     await CREATE_TABLE_raid_template_assignments(client);
+    await INSERT_raid_template_assignments(client)
 
     await client.end();
 }

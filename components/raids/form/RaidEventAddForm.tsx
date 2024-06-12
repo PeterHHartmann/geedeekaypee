@@ -1,12 +1,13 @@
 'use client';
 
-import { Button } from '@/components/Button';
 import { FormErrors } from '@/components/form/form-error';
 import { SubmitButton } from '@/components/form/submit-button';
+import { Assignments } from '@/components/raids/form/Assignments';
 import { SortableRosterList } from '@/components/raids/form/SortableRosterList';
-import { insertRaidEvent } from '@/lib/actions';
-import type { RaidTemplate, RaidTemplateRosterPositions, RosterCharacter } from '@/lib/definitions';
+import { fetchRosterPositionsForRaidTemplate, insertRaidEvent } from '@/lib/actions';
+import type { RaidTemplate, RosterCharacter } from '@/lib/definitions';
 import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, TagIcon, UserIcon } from '@heroicons/react/24/outline';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
 import { useFormState } from 'react-dom';
@@ -15,10 +16,9 @@ type Props = {
     children?: ReactNode;
     mainRoster: RosterCharacter[];
     raidTemplates: RaidTemplate[];
-    templatePositions: RaidTemplateRosterPositions;
 };
 
-export function RaidEventAddForm({ children, mainRoster, raidTemplates, templatePositions }: Props) {
+export function RaidEventAddForm({ children, mainRoster, raidTemplates }: Props) {
 
     const [state, formAction] = useFormState(insertRaidEvent, { success: false });
     const router = useRouter();
@@ -29,6 +29,14 @@ export function RaidEventAddForm({ children, mainRoster, raidTemplates, template
     }, [currentTemplate]);
 
     const [roster, setRoster] = useState<(RosterCharacter | null)[]>(createEmptyRoster());
+
+    const { data: templatePositions } = useQuery({
+        queryKey: [`raid_template_roster_positions`, currentTemplate.id],
+        queryFn: async () => {
+            const result = await fetchRosterPositionsForRaidTemplate(currentTemplate.id);
+            return result;
+        },
+    });
 
     function getDefaultDate() {
         const currentTime = new Date();
@@ -46,12 +54,12 @@ export function RaidEventAddForm({ children, mainRoster, raidTemplates, template
     }
 
     useEffect(() => {
-        if (mainRoster.length) {
+        if (mainRoster.length && templatePositions) {
             const roster_copy = mainRoster.slice(0);
             const newRoster = createEmptyRoster();
 
             //fill newRoster with characters that matches the requirements for each numeric position in the roster
-            templatePositions[currentTemplate.id].forEach((prio) => {
+            templatePositions.forEach((prio) => {
                 const found = roster_copy.find((char) => (
                     prio.class_id == char.class_id
                     && prio.role_id == char.role_id
@@ -105,27 +113,7 @@ export function RaidEventAddForm({ children, mainRoster, raidTemplates, template
                             />
                         </div>
                     </div>
-                    <div className='w-full'>
-                        <label className="flex gap-1 mb-1 mt-2 font-semibold" htmlFor={'raid_template_id'}>
-                            <MapPinIcon className='w-5' />
-                            <p>Raid Template</p>
-                        </label>
-                        <select
-                            name={'raid_template_id'}
-                            className='w-full rounded-md border-1 border-slate-950 dark:border-slate-600 py-[9px] px-5 text-sm outline-2 placeholder:text-slate-500'
-                            value={currentTemplate.id}
-                            onChange={handleSelectRaid}
-                        >
-                            {raidTemplates.map((template) => (
-                                <option
-                                    key={`raid-option-${template.id}`}
-                                    value={template.id}
-                                >
-                                    {`${template.name}`}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+
                     <div className='w-full'>
                         <label className="flex gap-1 mb-1 mt-2 font-semibold" htmlFor='date'>
                             <CalendarIcon className='w-5' />
@@ -169,6 +157,27 @@ export function RaidEventAddForm({ children, mainRoster, raidTemplates, template
                             <option value={'public'}>Public</option>
                         </select>
                     </div>
+                    <div className='w-full'>
+                        <label className="flex gap-1 mb-1 mt-2 font-semibold" htmlFor={'raid_template_id'}>
+                            <MapPinIcon className='w-5' />
+                            <p>Raid Template</p>
+                        </label>
+                        <select
+                            name={'raid_template_id'}
+                            className='w-full rounded-md border-1 border-slate-950 dark:border-slate-600 py-[9px] px-5 text-sm outline-2 placeholder:text-slate-500'
+                            value={currentTemplate.id}
+                            onChange={handleSelectRaid}
+                        >
+                            {raidTemplates.map((template) => (
+                                <option
+                                    key={`raid-option-${template.id}`}
+                                    value={template.id}
+                                >
+                                    {`${template.name}`}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                 </fieldset>
                 <div className='w-full h-auto rounded-md dark:bg-slate-700 p-4'>
                     <header className='flex justify-center gap-1 mb-4'>
@@ -181,6 +190,7 @@ export function RaidEventAddForm({ children, mainRoster, raidTemplates, template
                         <SortableRosterList mainRoster={mainRoster} roster={roster} setRoster={setRoster} />
                     </div>
                 </div>
+                <Assignments mainRoster={mainRoster} roster={roster} currentTemplate={currentTemplate} />
             </div>
             <FormErrors result={state} />
             <div className='flex justify-center gap-2'>
