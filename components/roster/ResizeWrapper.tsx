@@ -1,15 +1,14 @@
 'use client';
 
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { useState, type ReactNode } from 'react';
 
 type Props = {
     children: ReactNode;
-    title: string;
 };
 
-export function ResizeWrapper({ children, title }: Props) {
+export function ResizeWrapper({ children }: Props) {
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     const ToggleButton = ({ ...rest }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
@@ -33,9 +32,10 @@ export function ResizeWrapper({ children, title }: Props) {
     }
 
     return (
-        <div className={clsx(
-            'basis-1/4 rounded-md justify-center gap-6 bg-slate-100 dark:bg-slate-800 border-1 border-slate-300 dark:border-slate-700 shadow-md shadow-slate-200 dark:shadow-slate-800 mr-3 md:mr-4',
-        )}
+        <div
+            className={clsx(
+                'basis-1/4 rounded-md justify-center gap-6 bg-slate-100 dark:bg-slate-800 border-1 border-slate-300 dark:border-slate-700 shadow-md shadow-slate-200 dark:shadow-slate-800 mr-3 md:mr-4',
+            )}
         >
             <div className='flex flex-wrap justify-center items-center border-b-1 border-slate-300 dark:border-slate-700 p-3 mb-3 w-full'>
                 <header className={clsx(

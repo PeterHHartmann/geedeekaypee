@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/Button';
 import { SubmitButton } from '@/components/form/submit-button';
 import { SortableRosterList } from '@/components/raids/form/SortableRosterList';
 import type { RaidEvent, RaidEventRosterPosition, RaidTemplate, RosterCharacter } from '@/lib/definitions';

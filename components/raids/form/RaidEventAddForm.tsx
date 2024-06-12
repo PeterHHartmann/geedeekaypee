@@ -6,7 +6,7 @@ import { AssignmentList } from '@/components/raids/form/AssignmentList';
 import { SortableRosterList } from '@/components/raids/form/SortableRosterList';
 import { fetchRosterPositionsForRaidTemplate, insertRaidEvent } from '@/lib/actions';
 import type { RaidTemplate, RaidTemplateRosterPosition, RosterCharacter } from '@/lib/definitions';
-import { CalendarIcon, CheckCircleIcon, ClockIcon, EyeIcon, MapPinIcon, MegaphoneIcon, TagIcon, UserIcon } from '@heroicons/react/24/outline';
+import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, MegaphoneIcon, TagIcon, UserIcon } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
