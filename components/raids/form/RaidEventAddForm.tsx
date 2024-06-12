@@ -2,11 +2,11 @@
 
 import { FormErrors } from '@/components/form/form-error';
 import { SubmitButton } from '@/components/form/submit-button';
-import { Assignments } from '@/components/raids/form/Assignments';
+import { AssignmentList } from '@/components/raids/form/AssignmentList';
 import { SortableRosterList } from '@/components/raids/form/SortableRosterList';
 import { fetchRosterPositionsForRaidTemplate, insertRaidEvent } from '@/lib/actions';
-import type { RaidTemplate, RosterCharacter } from '@/lib/definitions';
-import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, TagIcon, UserIcon } from '@heroicons/react/24/outline';
+import type { RaidTemplate, RaidTemplateRosterPosition, RosterCharacter } from '@/lib/definitions';
+import { CalendarIcon, CheckCircleIcon, ClockIcon, EyeIcon, MapPinIcon, MegaphoneIcon, TagIcon, UserIcon } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
@@ -16,9 +16,10 @@ type Props = {
     children?: ReactNode;
     mainRoster: RosterCharacter[];
     raidTemplates: RaidTemplate[];
+    defaultRaidTemplatePositions: RaidTemplateRosterPosition[];
 };
 
-export function RaidEventAddForm({ children, mainRoster, raidTemplates }: Props) {
+export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplatePositions }: Props) {
 
     const [state, formAction] = useFormState(insertRaidEvent, { success: false });
     const router = useRouter();
@@ -31,11 +32,12 @@ export function RaidEventAddForm({ children, mainRoster, raidTemplates }: Props)
     const [roster, setRoster] = useState<(RosterCharacter | null)[]>(createEmptyRoster());
 
     const { data: templatePositions } = useQuery({
-        queryKey: [`raid_template_roster_positions`, currentTemplate.id],
-        queryFn: async () => {
-            const result = await fetchRosterPositionsForRaidTemplate(currentTemplate.id);
+        queryKey: [currentTemplate.id, 'raid_template_positions'],
+        queryFn: async ({ queryKey: [templateId] }) => {
+            const result = await fetchRosterPositionsForRaidTemplate(templateId);
             return result;
         },
+        placeholderData: defaultRaidTemplatePositions
     });
 
     function getDefaultDate() {
@@ -45,7 +47,7 @@ export function RaidEventAddForm({ children, mainRoster, raidTemplates }: Props)
         return date;
     };
 
-    function handleSelectRaid(event: ChangeEvent<HTMLSelectElement>) {
+    function handleSelectedTemplate(event: ChangeEvent<HTMLSelectElement>) {
         const newTemplateId = event.target.value;
         const foundTemplate = raidTemplates.find((template) => template.id == newTemplateId);
         if (foundTemplate) {
@@ -75,15 +77,15 @@ export function RaidEventAddForm({ children, mainRoster, raidTemplates }: Props)
             });
 
             //fill newRoster with remaining characters if not full
-            const containsNull = newRoster.includes(null);
-            if (containsNull) {
-                newRoster.forEach((item, index) => {
-                    if (!item) {
-                        newRoster[index] = roster_copy.splice(0, 1)[0];
-                        return;
-                    }
-                });
-            }
+            // const containsNull = newRoster.includes(null);
+            // if (containsNull) {
+            //     newRoster.forEach((item, index) => {
+            //         if (!item) {
+            //             newRoster[index] = roster_copy.splice(0, 1)[0];
+            //             return;
+            //         }
+            //     });
+            // }
             return setRoster(newRoster);
         }
     }, [currentTemplate, templatePositions, mainRoster, createEmptyRoster]);
@@ -96,8 +98,8 @@ export function RaidEventAddForm({ children, mainRoster, raidTemplates }: Props)
 
     return (
         <form className='w-full' action={formAction}>
-            <div className='flex flex-wrap gap-4 pb-4 justify-between w-full'>
-                <fieldset className='w-full p-4 rounded-md dark:bg-slate-700'>
+            <div className='flex flex-wrap gap-3 pb-4 justify-between w-full'>
+                <fieldset className='w-full p-4 rounded-md bg-slate-200/75 dark:bg-slate-700/50 shadow-md'>
                     <div className='w-full'>
                         <label className="flex gap-1 mb-1 font-semibold" htmlFor='title'>
                             <TagIcon className='w-5' />
@@ -113,7 +115,6 @@ export function RaidEventAddForm({ children, mainRoster, raidTemplates }: Props)
                             />
                         </div>
                     </div>
-
                     <div className='w-full'>
                         <label className="flex gap-1 mb-1 mt-2 font-semibold" htmlFor='date'>
                             <CalendarIcon className='w-5' />
@@ -166,7 +167,7 @@ export function RaidEventAddForm({ children, mainRoster, raidTemplates }: Props)
                             name={'raid_template_id'}
                             className='w-full rounded-md border-1 border-slate-950 dark:border-slate-600 py-[9px] px-5 text-sm outline-2 placeholder:text-slate-500'
                             value={currentTemplate.id}
-                            onChange={handleSelectRaid}
+                            onChange={handleSelectedTemplate}
                         >
                             {raidTemplates.map((template) => (
                                 <option
@@ -179,18 +180,31 @@ export function RaidEventAddForm({ children, mainRoster, raidTemplates }: Props)
                         </select>
                     </div>
                 </fieldset>
-                <div className='w-full h-auto rounded-md dark:bg-slate-700 p-4'>
-                    <header className='flex justify-center gap-1 mb-4'>
+                <fieldset className='w-full h-auto rounded-md bg-slate-200/75 dark:bg-slate-700/50 overflow-clip shadow-md'>
+                    <header className='flex justify-center gap-1 p-3 shadow-md bg-slate-200/50 dark:bg-slate-600/50'>
                         <UserIcon className='w-5' />
-                        <h2 className='font-semibold text-lg text-center'>
+                        <h2 className='text-lg text-center'>
                             Raid Roster
                         </h2>
                     </header>
-                    <div>
+                    <div className='p-3'>
                         <SortableRosterList mainRoster={mainRoster} roster={roster} setRoster={setRoster} />
                     </div>
+                </fieldset>
+                <div className='flex gap-4 w-full pb-4'>
+                    <fieldset className='basis-1/4 rounded-md bg-slate-200/75 dark:bg-slate-700/50 overflow-clip shadow-md'>
+                        <header className='flex gap-1 justify-center p-3 bg-slate-200 dark:bg-slate-600/50 shadow-md'>
+                            <MegaphoneIcon className='w-5' />
+                            <h2 className='text-lg text-center'>Assignments</h2>
+                        </header>
+                        <div className='py-2 pl-2 pr-1 max-h-[448px] md:max-h-[748px] overflow-y-auto overflow-x-clip'>
+                            <AssignmentList mainRoster={mainRoster} roster={roster} currentTemplate={currentTemplate} />
+                        </div>
+                    </fieldset>
+                    <fieldset className='w-full h-[800px] bg-slate-700/50 rounded-md shadow-md'>
+
+                    </fieldset>
                 </div>
-                <Assignments mainRoster={mainRoster} roster={roster} currentTemplate={currentTemplate} />
             </div>
             <FormErrors result={state} />
             <div className='flex justify-center gap-2'>

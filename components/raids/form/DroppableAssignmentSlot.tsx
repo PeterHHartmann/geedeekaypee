@@ -10,15 +10,16 @@ type Props = {
     id: string;
     mainRoster: RosterCharacter[];
     initial: RosterCharacter | null;
-    index: number;
+    groupIndex: number;
+    rowIndex: number;
 };
 
-export function DroppableRosterSlot({ id, initial, index }: Props) {
+export function DroppableAssignmentSlot({ id, initial, groupIndex, rowIndex }: Props) {
 
     const { isOver, setNodeRef } = useDroppable({
         id: `${id}-droppable`,
         data: {
-            index: index
+            index: rowIndex
         }
     });
 
@@ -26,7 +27,7 @@ export function DroppableRosterSlot({ id, initial, index }: Props) {
         <div
             ref={setNodeRef}
             className={clsx(
-                'h-[40px] overflow-clip border-b-1 border-slate-600',
+                'h-[40px] overflow-clip border-b-1 border-slate-600 w-full',
                 {
                     'bg-transparent': isOver == false,
                     'bg-slate-600': isOver == true
@@ -38,10 +39,10 @@ export function DroppableRosterSlot({ id, initial, index }: Props) {
                 <>
                     <input
                         type='hidden'
-                        name={`roster_position_${index}`}
+                        name={`event_assignment_${groupIndex}_${rowIndex}`}
                         value={initial?.id || undefined}
                     />
-                    <DraggableCharacterRow character={initial} id={`${id}-draggable`} index={index}>
+                    <DraggableCharacterRow character={initial} id={`${id}-draggable`} index={rowIndex}>
                         <CharacterRow character={initial} className='border-transparent' />
                     </DraggableCharacterRow>
                 </>

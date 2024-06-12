@@ -10,6 +10,8 @@ export default async function RaidsLayout({ children }: Props) {
     return (
         <section
             className='
+                basis-11/12
+                mx-auto
                 rounded-md w-full 
                 bg-slate-100 
                 dark:bg-slate-800 

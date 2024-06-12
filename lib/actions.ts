@@ -296,6 +296,28 @@ export async function fetchRaidTemplates() {
     }
 }
 
+export async function fetchDefaultRaidTemplate() {
+    try {
+        const data = await sql<RaidTemplate>
+            `SELECT
+                raid_templates.id,
+                raid_templates.raid_variant_id,
+                raid_templates.name,
+                raid_templates.size,
+                raid_templates.difficulty,
+                raid_variants.name AS raid_variant_name
+            FROM raid_templates
+            INNER JOIN raid_variants ON raid_variants.id = raid_templates.raid_variant_id
+            ORDER BY raid_templates.created_at ASC
+            LIMIT 1
+            ;`;
+        return data.rows;
+    } catch (error) {
+        console.log(error);
+        throw new Error('Failed to fetch raid_variants.');
+    }
+}
+
 export const fetchRosterPositionsForRaidTemplate = unstable_cache(
     async (raid_template_id: RaidTemplate['id']) => {
         const data = await sql<RaidTemplateRosterPosition>

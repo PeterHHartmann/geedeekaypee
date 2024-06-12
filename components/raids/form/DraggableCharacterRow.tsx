@@ -9,7 +9,7 @@ type Props = {
     index: number;
 };
 
-export function DraggableRosterSlot({ children, character, id, index }: Props) {
+export function DraggableCharacterRow({ children, character, id, index }: Props) {
     const {
         setNodeRef,
         listeners,
