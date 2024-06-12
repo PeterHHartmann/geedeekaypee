@@ -456,8 +456,6 @@ export async function insertRaidEvent(
         roster_positions: roster_positions
     };
 
-    console.log(rawData);
-
     const rosterPositionsSchema = z.object({
         character_id: z.string().uuid(),
         position: z.number()

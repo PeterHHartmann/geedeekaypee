@@ -10,7 +10,6 @@ export default async function NewRaidPage() {
     const raidTemplates = await fetchRaidTemplates();
     const defaultRaidTemplate = await fetchDefaultRaidTemplate();
     const defaultRaidTemplatePositions = await fetchRosterPositionsForRaidTemplate(defaultRaidTemplate[0].id);
-    console.log(defaultRaidTemplate);
 
     return (
         <>
