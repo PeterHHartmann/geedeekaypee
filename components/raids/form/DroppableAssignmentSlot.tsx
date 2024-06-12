@@ -17,7 +17,7 @@ type Props = {
 export function DroppableAssignmentSlot({ id, character, groupIndex, rowIndex }: Props) {
 
     const { isOver, setNodeRef } = useDroppable({
-        id: `${id}-droppable`,
+        id: `${id}_droppable`,
         data: {
             index: rowIndex
         }
@@ -42,7 +42,7 @@ export function DroppableAssignmentSlot({ id, character, groupIndex, rowIndex }:
                         name={`raid_assignment_${groupIndex}_${rowIndex}`}
                         value={character.id || undefined}
                     />
-                    <DraggableCharacterRow character={character} id={`${id}-draggable`} index={rowIndex}>
+                    <DraggableCharacterRow character={character} id={`${id}_draggable`} index={rowIndex}>
                         <CharacterRow character={character} className='border-transparent' />
                     </DraggableCharacterRow>
                 </>

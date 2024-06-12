@@ -50,6 +50,34 @@ export function AssignmentListGroup({ groupIndex, assignmentGroup, roster, hasEd
         }
     }, [hasEdited, roster, assignmentGroup]);
 
+    useEffect(() => {
+        if (hasEdited && assignedList) {
+            let rosterCharsChanged: true | false = false;
+            const newAssigned = assignedList.map((assignedChar) => {
+                if (assignedChar == null) {
+                    return assignedChar;
+                }
+                const found = roster.findIndex((rosterChar) => {
+                    if (rosterChar == null) {
+                        return false;
+                    }
+                    if (rosterChar.id == assignedChar.id) {
+                        return true;
+                    }
+                    return false;
+                });
+                if (found < 0) {
+                    rosterCharsChanged = true;
+                    return null;
+                }
+                return assignedChar;
+            });
+            if (rosterCharsChanged) {
+                setAssignedList(newAssigned);
+            }
+        }
+    }, [hasEdited, assignedList, roster]);
+
     useDndMonitor({
         onDragEnd(event) {
             const { active, over } = event;
@@ -72,6 +100,9 @@ export function AssignmentListGroup({ groupIndex, assignmentGroup, roster, hasEd
 
             //Dragged from the roster in the form
             if (isFromOwnGroup) {
+                if (over.id.toString().split('_')[0] == active.id.toString().split('_')[0]) {
+                    return;
+                }
                 const activeIndex: number = activeData.index;
                 const oldChar = newAssigned[overIndex];
                 const newChar = newAssigned[activeIndex];
@@ -81,7 +112,7 @@ export function AssignmentListGroup({ groupIndex, assignmentGroup, roster, hasEd
                 return;
             }
 
-            const isFromRaidRoster = active.id.toString().includes('roster-row-draggable');
+            const isFromRaidRoster = active.id.toString().includes('roster-row_draggable');
 
             //Dragged from main roster on the left side
             if (isFromRaidRoster) {

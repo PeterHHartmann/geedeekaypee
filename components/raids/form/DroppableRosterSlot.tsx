@@ -16,7 +16,7 @@ type Props = {
 export function DroppableRosterSlot({ id, initial, index }: Props) {
 
     const { isOver, setNodeRef } = useDroppable({
-        id: `${id}-droppable`,
+        id: `${id}_droppable`,
         data: {
             index: index
         }
@@ -41,7 +41,7 @@ export function DroppableRosterSlot({ id, initial, index }: Props) {
                         name={`roster_position_${index}`}
                         value={initial?.id || undefined}
                     />
-                    <DraggableCharacterRow character={initial} id={`${id}-draggable`} index={index}>
+                    <DraggableCharacterRow character={initial} id={`${id}_draggable`} index={index}>
                         <CharacterRow character={initial} className='border-transparent' />
                     </DraggableCharacterRow>
                 </>

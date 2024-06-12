@@ -32,9 +32,12 @@ export function SortableRosterList({
             if (!over || !over.id.toString().includes('roster-row')) {
                 return;
             }
+            // if (over.id.toString().split('_')[0] == active.id.toString().split('_')[0]) {
+            //     return;
+            // }
             const newRoster = roster.slice(0);
             const isFromMainRoster = active.id.toString().includes('draggableRosterCharacter');
-            const isFromOwnList = active.id.toString().includes('roster-row-draggable');
+            const isFromOwnList = active.id.toString().includes('roster-row_draggable');
             const activeData = active.data.current;
             if (!activeData) {
                 return;
@@ -46,10 +49,13 @@ export function SortableRosterList({
                 return;
             }
             const overIndex: number = overData.index;
+            const activeIndex: number = activeData.index;
 
             //Dragged from the roster in the form
             if (isFromOwnList) {
-                const activeIndex: number = activeData.index;
+                if (overIndex == activeIndex) {
+                    return;
+                }
                 const oldChar = newRoster[overIndex];
                 const newChar = newRoster[activeIndex];
                 newRoster[overIndex] = newChar;
