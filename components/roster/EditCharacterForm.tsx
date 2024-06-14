@@ -86,7 +86,7 @@ export function EditCharacterForm({ character, charClasses, charRoles, charSpecs
                     <FormErrors result={state} />
                     <SubmitButton>
                         <PlusCircleIcon className="h-5 w-5" />
-                        <p>Add</p>
+                        <p>Save</p>
                     </SubmitButton>
                 </form>
             </Modal>
