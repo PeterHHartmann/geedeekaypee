@@ -2,6 +2,7 @@
 
 import { CharRoleIcon } from '@/components/icon/CharRoleIcon';
 import { CharTalentSpecIcon } from '@/components/icon/CharTalentSpecIcon';
+import { CharacterRowStyle } from '@/components/roster/CharacterRow';
 import { CLASS_TEXT_COLOR } from '@/lib/constants';
 import type { RosterCharacter } from '@/lib/definitions';
 import { useDraggable } from '@dnd-kit/core';
@@ -27,15 +28,12 @@ export function CharacterRowDraggable({ children, character, id }: Props) {
     });
 
     return (
-        <li className={`
-        flex flex-nowrap items-center gap-1 
-        ${RosterCharacterSkeleton}
-        `}>
+        <li className={CharacterRowStyle}>
             <div
                 ref={setNodeRef}
                 {...attributes}
                 {...listeners}
-                className='flex items-center h-full gap-1 px-2'
+                className='flex items-center h-full gap-1'
             >
                 <CharRoleIcon role_name={character.role_name} />
                 <CharTalentSpecIcon class_name={character.class_name} spec_name={character.spec_name} />
@@ -45,5 +43,3 @@ export function CharacterRowDraggable({ children, character, id }: Props) {
         </li>
     );
 }
-
-const RosterCharacterSkeleton = 'w-full h-[2.375rem] border-b-1 border-slate-500 dark:border-slate-700 hover:bg-slate-600 dark:hover:bg-slate-700';
