@@ -3,9 +3,8 @@
 import { DraggableCharacterRow } from '@/components/raids/form/DraggableCharacterRow';
 import { CharacterRow } from '@/components/roster/CharacterRow';
 import type { RosterCharacter } from '@/lib/definitions';
-import { useDndMonitor, useDroppable } from "@dnd-kit/core";
+import { useDroppable } from "@dnd-kit/core";
 import clsx from 'clsx';
-import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 
 type Props = {
     id: string;
