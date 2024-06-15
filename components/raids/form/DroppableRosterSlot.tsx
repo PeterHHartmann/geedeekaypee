@@ -38,8 +38,8 @@ export function DroppableRosterSlot({ id, initial, index }: Props) {
                 <>
                     <input
                         type='hidden'
-                        name={`roster_position_${index}`}
-                        value={initial?.id || undefined}
+                        name={`raidroster_${index}`}
+                        value={initial.id || undefined}
                     />
                     <DraggableCharacterRow character={initial} id={`${id}_draggable`} index={index}>
                         <CharacterRow character={initial} className='border-transparent' />

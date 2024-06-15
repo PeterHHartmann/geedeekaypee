@@ -114,3 +114,11 @@ export type RaidTemplateAssignment = {
     role_id: CharRole['id'];
     spec_id: ClassTalentSpec['id'];
 };
+
+export type RaidEventAssignment = {
+    id: string;
+    raid_event_id: RaidEvent['id'];
+    position: number;
+    group: number;
+    main_roster_id: RosterCharacter['id'];
+};

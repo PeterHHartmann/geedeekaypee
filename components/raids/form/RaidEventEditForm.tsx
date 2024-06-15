@@ -1,10 +1,14 @@
 'use client';
 
+import { FormErrors } from '@/components/form/form-error';
 import { SubmitButton } from '@/components/form/submit-button';
 import { SortableRosterList } from '@/components/raids/form/SortableRosterList';
+import { updateRaidEvent } from '@/lib/actions';
 import type { RaidEvent, RaidEventRosterPosition, RaidTemplate, RosterCharacter } from '@/lib/definitions';
 import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, TagIcon, UserIcon } from '@heroicons/react/24/outline';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useFormState } from 'react-dom';
 
 type Props = {
     children?: ReactNode;
@@ -16,7 +20,8 @@ type Props = {
 
 export function RaidEventEditForm({ children, raidEvent, mainRoster, raidTemplate, eventRoster }: Props) {
 
-    // const [state, formAction] = useFormState(updateRaidEvent, { success: false });
+    const [state, formAction] = useFormState(updateRaidEvent, { success: false });
+    const router = useRouter();
 
     const createEmptyRoster = useCallback((): (RosterCharacter | null)[] => {
         return Array.from(Array(raidTemplate.size), () => null);
@@ -33,8 +38,6 @@ export function RaidEventEditForm({ children, raidEvent, mainRoster, raidTemplat
 
     useEffect(() => {
         if (eventRoster.length) {
-            console.log('we got here');
-
             const newRoster = createEmptyRoster();
             eventRoster.forEach((rosterPos) => {
                 const found = mainRoster.find((character) => character.id == rosterPos.main_roster_id);
@@ -46,8 +49,15 @@ export function RaidEventEditForm({ children, raidEvent, mainRoster, raidTemplat
         }
     }, [eventRoster, createEmptyRoster, mainRoster]);
 
+    useEffect(() => {
+        if (state?.success) {
+            router.push('/dashboard');
+        }
+    }, [state, router]);
+
     return (
-        <form className='w-full'>
+        <form className='w-full' action={formAction}>
+            <input type='hidden' name='raid_event_id' value={raidEvent.id} />
             <div className='flex flex-wrap gap-4 pb-4 justify-between w-full'>
                 <fieldset className='w-full p-4 rounded-md dark:bg-slate-700'>
                     <div className='w-full'>
@@ -65,23 +75,6 @@ export function RaidEventEditForm({ children, raidEvent, mainRoster, raidTemplat
                                 required
                             />
                         </div>
-                    </div>
-                    <div className='w-full'>
-                        <label className="flex gap-1 mb-1 mt-2 font-semibold" htmlFor={'raid_template_id'}>
-                            <MapPinIcon className='w-5' />
-                            <p>Raid Template</p>
-                        </label>
-                        <select
-                            name={'raid_template_id'}
-                            className='w-full rounded-md border-1 border-slate-950 dark:border-slate-600 py-[9px] px-5 text-sm outline-2 placeholder:text-slate-500'
-                            defaultValue={raidTemplate.id}
-                        >
-                            <option
-                                defaultValue={raidTemplate.id}
-                            >
-                                {raidTemplate.name}
-                            </option>
-                        </select>
                     </div>
                     <div className='w-full'>
                         <label className="flex gap-1 mb-1 mt-2 font-semibold" htmlFor='date'>
@@ -127,6 +120,23 @@ export function RaidEventEditForm({ children, raidEvent, mainRoster, raidTemplat
                             <option value={'public'}>Public</option>
                         </select>
                     </div>
+                    <div className='w-full'>
+                        <label className="flex gap-1 mb-1 mt-2 font-semibold" htmlFor={'raid_template_id'}>
+                            <MapPinIcon className='w-5' />
+                            <p>Raid Template</p>
+                        </label>
+                        <select
+                            name={'raid_template_id'}
+                            className='w-full rounded-md border-1 border-slate-950 dark:border-slate-600 py-[9px] px-5 text-sm outline-2 placeholder:text-slate-500'
+                            defaultValue={raidTemplate.id}
+                        >
+                            <option
+                                value={raidTemplate.id}
+                            >
+                                {raidTemplate.name}
+                            </option>
+                        </select>
+                    </div>
                 </fieldset>
                 <div className='w-full h-auto rounded-md dark:bg-slate-700 p-4'>
                     <header className='flex justify-center gap-1 mb-4'>
@@ -140,7 +150,7 @@ export function RaidEventEditForm({ children, raidEvent, mainRoster, raidTemplat
                     </div>
                 </div>
             </div>
-            {/* <FormErrors result={state} /> */}
+            <FormErrors result={state} />
             <div className='flex justify-center gap-2'>
                 <SubmitButton className='w-6/12'>
                     <EyeIcon className='w-6' />

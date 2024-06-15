@@ -1,6 +1,6 @@
 'use server';
 import 'server-only';
-import type { CharClass, CharRoleOptionsForClasses, CharRole, ClassTalentSpec, ServerMutationResult, RosterCharacter, RaidVariant, RaidTemplate, RaidTemplateRosterPosition, RaidTemplateRosterPositions, RaidEvent, RaidEventRosterPosition, RaidTemplateAssignment } from '@/lib/definitions';
+import type { CharClass, CharRoleOptionsForClasses, CharRole, ClassTalentSpec, ServerMutationResult, RosterCharacter, RaidVariant, RaidTemplate, RaidTemplateRosterPosition, RaidTemplateRosterPositions, RaidEvent, RaidEventRosterPosition, RaidTemplateAssignment, RaidEventAssignment } from '@/lib/definitions';
 import { capitalize } from '@/lib/utils';
 import { auth, signIn } from '@/auth';
 import { sql } from '@vercel/postgres';
@@ -236,6 +236,8 @@ export async function updateMainRosterChar(
         revalidateTag(`mainrosters[${user.email}]`);
         return { success: true };
     } catch (error) {
+        console.log(error);
+
         return { success: false, messages: ['Failed to update character'] };
     }
 }
@@ -439,11 +441,18 @@ export async function insertRaidEvent(
         throw new Error('Failed to update character: No User found');
     }
 
-    let roster_positions: { character_id: FormDataEntryValue, position: number; }[] = [];
+    let raid_roster: { character_id: FormDataEntryValue, position: number; }[] = [];
+    let raid_assignements: { character_id: FormDataEntryValue, position: number, group: number; }[] = [];
     formData.forEach((value, key) => {
-        if (key.includes('roster_position') && value) {
-            const index = parseInt(key.split('_')[2]);
-            roster_positions.push({ character_id: value, position: index });
+        if (key.includes('raidroster') && value) {
+            const position = parseInt(key.split('_')[1], 10);
+            raid_roster.push({ character_id: value, position: position });
+        }
+        if (key.includes('raidassignment') && value) {
+            const split = key.split('_');
+            const group = parseInt(split[1], 10);
+            const position = parseInt(split[2], 10);
+            raid_assignements.push({ character_id: value, position: position, group: group });
         }
     });
 
@@ -453,12 +462,19 @@ export async function insertRaidEvent(
         date: formData.get('date'),
         time: formData.get('time'),
         visibility: formData.get('visibility') ? true : false,
-        roster_positions: roster_positions
+        raid_roster: raid_roster,
+        raid_assignements: raid_assignements
     };
 
     const rosterPositionsSchema = z.object({
         character_id: z.string().uuid(),
         position: z.number()
+    });
+
+    const raidAssignmentSchema = z.object({
+        character_id: z.string().uuid(),
+        position: z.number(),
+        group: z.number()
     });
 
     const fullSchema = z.object({
@@ -470,7 +486,8 @@ export async function insertRaidEvent(
         date: z.string().date(),
         time: z.string().time(),
         visibility: z.boolean(),
-        roster_positions: z.array(rosterPositionsSchema)
+        raid_roster: z.array(rosterPositionsSchema),
+        raid_assignements: z.array(raidAssignmentSchema)
     });
 
     const validations = fullSchema.safeParse(rawData);
@@ -487,17 +504,128 @@ export async function insertRaidEvent(
             RETURNING id
             ;`;
         const insertedRaidEvent = result.rows[0];
-        const insertedEventRosterCharacters = await Promise.all(data.roster_positions.map(async (roster_position) => {
-            await sql<RaidEventRosterPosition>
-                `INSERT INTO raid_event_roster_chars (raid_event_id, position, main_roster_id)
-                VALUES (${insertedRaidEvent.id}, ${roster_position.position}, ${roster_position.character_id})
+
+        const insertedRaidRosterChars = await Promise.all(
+            data.raid_roster.map(async (raid_roster_char) => {
+                const created = await sql<{ id: string, main_roster_id: string; }>
+                    `INSERT INTO raid_event_roster_chars (raid_event_id, position, main_roster_id)
+                    VALUES (${insertedRaidEvent.id}, ${raid_roster_char.position}, ${raid_roster_char.character_id})
+                    RETURNING id, main_roster_id
                 ;`;
-        }));
+                return created.rows[0];
+            })
+        );
+
+        const insertedAssignments = await Promise.all(
+            data.raid_assignements.map(async (assigned_char) => {
+                const raid_roster_index = insertedRaidRosterChars.findIndex((raid_roster_char) => assigned_char.character_id == raid_roster_char.main_roster_id);
+                if (raid_roster_index) {
+                    await sql<RaidEventAssignment>
+                        `INSERT INTO raid_event_assignments (raid_event_id, assignment_group, position, raid_roster_id)
+                        VALUES (${insertedRaidEvent.id}, ${assigned_char.group}, ${assigned_char.position}, ${insertedRaidRosterChars[raid_roster_index].id})
+                        ;`;
+                } else {
+                    return;
+                }
+            })
+        );
+
         revalidateTag(`raidevents[${user.email}]`);
         return { success: true };
     } catch (error) {
         console.log(error);
         return { success: false, messages: ['Failed to save raid event. Please try again later'] };
+    }
+}
+
+export async function updateRaidEvent(
+    _prevState: ServerMutationResult,
+    formData: FormData
+) {
+    const session = await auth();
+    const user = session!.user;
+
+    if (!user) {
+        throw new Error('Failed to update character: No User found');
+    }
+
+    let raid_roster: { character_id: FormDataEntryValue, position: number; }[] = [];
+    let raid_assignements: { character_id: FormDataEntryValue, position: number, group: number; }[] = [];
+    formData.forEach((value, key) => {
+        if (key.includes('raidroster') && value) {
+            const position = parseInt(key.split('_')[1], 10);
+            raid_roster.push({ character_id: value, position: position });
+        }
+        if (key.includes('raidassignment') && value) {
+            const split = key.split('_');
+            const group = parseInt(split[1], 10);
+            const position = parseInt(split[2], 10);
+            raid_assignements.push({ character_id: value, position: position, group: group });
+        }
+    });
+
+    const rawData = {
+        raid_event_id: formData.get('raid_event_id'),
+        raid_template_id: formData.get('raid_template_id'),
+        title: formData.get('title'),
+        date: formData.get('date'),
+        time: formData.get('time'),
+        visibility: formData.get('visibility') ? true : false,
+        raid_roster: raid_roster,
+        raid_assignements: raid_assignements
+    };
+
+    const rosterPositionsSchema = z.object({
+        character_id: z.string().uuid(),
+        position: z.number()
+    });
+
+    const raidAssignmentSchema = z.object({
+        character_id: z.string().uuid(),
+        position: z.number(),
+        group: z.number()
+    });
+
+    const fullSchema = z.object({
+        raid_event_id: z.string().uuid(),
+        raid_template_id: z.string().uuid(),
+        title: z.string()
+            .min(2, 'Title must contain at least 2 characters')
+            .max(24, 'Title must contain at most 24 characters')
+            .transform(capitalize),
+        date: z.string().date(),
+        time: z.string().time(),
+        visibility: z.boolean(),
+        raid_roster: z.array(rosterPositionsSchema),
+        raid_assignements: z.array(raidAssignmentSchema)
+    });
+
+    const validations = fullSchema.safeParse(rawData);
+
+    if (!validations.success) {
+        const errorMessages = validations.error.issues.map((issue) => issue.message);
+        return { success: false, messages: errorMessages };
+    }
+
+    const data = validations.data;
+    try {
+        await sql<RaidEvent>
+            `UPDATE raid_events 
+        SET 
+            user_email = ${user.email}, 
+            raid_template_id = ${data.raid_template_id}, 
+            title = ${data.title}, 
+            date = ${data.date}, 
+            time = ${data.time}, 
+            is_public = ${data.visibility}
+        WHERE id = ${data.raid_event_id}
+        AND user_email = ${user.email}
+        ;`;
+        revalidateTag(`raidevents[${user.email}]`);
+        return { success: true };
+    } catch (error) {
+        console.log(error);
+        return { success: false, messages: ['Failed to update raid event'] };
     }
 }
 

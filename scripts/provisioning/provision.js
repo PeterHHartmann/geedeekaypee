@@ -505,6 +505,29 @@ async function INSERT_raid_template_assignments(client) {
     }
 }
 
+async function CREATE_TABLE_raid_event_assignements(client) {
+    try {
+        const createTable = await client.sql`
+            CREATE TABLE IF NOT EXISTS raid_event_assignments (
+                id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+                raid_event_id UUID REFERENCES raid_events (id) ON DELETE CASCADE,
+                position SMALLINT NOT NULL,
+                assignment_group SMALLINT NOT NULL,
+                raid_roster_id UUID REFERENCES raid_event_roster_chars (id) ON DELETE CASCADE,
+                created_at TIMESTAMP DEFAULT current_timestamp
+            )
+        ;`;
+        console.log(`Created "raid_event_assignments" table`)
+
+        return {
+            createTable
+        }
+    } catch (error) {
+        console.error('Error creating "raid_event_assignments" table:', error);
+        throw error;
+    }
+}
+
 async function main() {
     const client = await db.connect();
 
@@ -540,7 +563,9 @@ async function main() {
     await CREATE_TABLE_raid_event_roster_chars(client);
 
     await CREATE_TABLE_raid_template_assignments(client);
-    await INSERT_raid_template_assignments(client)
+    await INSERT_raid_template_assignments(client);
+
+    await CREATE_TABLE_raid_event_assignements(client);
 
     await client.end();
 }
