@@ -19,7 +19,7 @@ export function Modal({ children, isOpen, setIsOpen, className, headerText, subH
     }
 
     return (
-        <div className='flex fixed justify-center z-40 w-full h-full backdrop-blur-sm inset-0' onClick={() => setIsOpen(false)}>
+        <div className='flex fixed justify-center z-50 w-full h-full backdrop-blur-sm inset-0' onClick={() => setIsOpen(false)}>
             <div className={clsx(
                 'bg-slate-50 dark:bg-slate-800 border-1 border-slate-900 dark:border-slate-700 mx-1 md:mx-auto mt-20 sm:mt-40 md:mt-60 mb-auto rounded-xl px-2 md:px-8 pt-2 md:pt-4 pb-8 shadow-lg text-slate-950 dark:text-white',
                 className)}

@@ -10,6 +10,7 @@ export default async function RaidsLayout({ children }: Props) {
     return (
         <section
             className='
+                z-0
                 basis-11/12
                 mx-auto
                 rounded-md w-full 
