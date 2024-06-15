@@ -430,6 +430,29 @@ export async function fetchRaidEventRoster(eventId: RaidEvent['id']) {
     }
 }
 
+export async function fetchRaidEventAssignments(eventId: RaidEvent['id']) {
+    try {
+        const data = await sql<RaidEventAssignment>
+            `SELECT 
+                raid_event_assignments.id,
+                raid_event_assignments.raid_event_id,
+                raid_event_assignments.assignment_group,
+                raid_event_assignments.position,
+                raid_event_assignments.raid_roster_id,
+                raid_event_roster_chars.main_roster_id AS raid_roster_id
+            FROM raid_event_assignments
+            INNER JOIN raid_event_roster_chars ON raid_event_assignments.raid_roster_id = raid_event_roster_chars.id
+            WHERE raid_event_assignments.raid_event_id = ${eventId}
+            ;`;
+        console.log(data.rows);
+
+        return data.rows;
+    } catch (error) {
+        console.log(error);
+        throw new Error('Failed to fetch raid event roster.');
+    }
+}
+
 export async function insertRaidEvent(
     _prevState: ServerMutationResult,
     formData: FormData
@@ -465,6 +488,8 @@ export async function insertRaidEvent(
         raid_roster: raid_roster,
         raid_assignements: raid_assignements
     };
+
+    console.log(rawData.time);
 
     const rosterPositionsSchema = z.object({
         character_id: z.string().uuid(),
@@ -505,7 +530,7 @@ export async function insertRaidEvent(
             ;`;
         const insertedRaidEvent = result.rows[0];
 
-        const insertedRaidRosterChars = await Promise.all(
+        const insertedRaidRosterRows = await Promise.all(
             data.raid_roster.map(async (raid_roster_char) => {
                 const created = await sql<{ id: string, main_roster_id: string; }>
                     `INSERT INTO raid_event_roster_chars (raid_event_id, position, main_roster_id)
@@ -516,17 +541,17 @@ export async function insertRaidEvent(
             })
         );
 
-        const insertedAssignments = await Promise.all(
-            data.raid_assignements.map(async (assigned_char) => {
-                const raid_roster_index = insertedRaidRosterChars.findIndex((raid_roster_char) => assigned_char.character_id == raid_roster_char.main_roster_id);
-                if (raid_roster_index) {
-                    await sql<RaidEventAssignment>
-                        `INSERT INTO raid_event_assignments (raid_event_id, assignment_group, position, raid_roster_id)
-                        VALUES (${insertedRaidEvent.id}, ${assigned_char.group}, ${assigned_char.position}, ${insertedRaidRosterChars[raid_roster_index].id})
-                        ;`;
-                } else {
-                    return;
-                }
+        const new_raid_assignments = data.raid_assignements.map((current) => {
+            const raid_roster_row = insertedRaidRosterRows.find((raid_roster_char) => current.character_id == raid_roster_char.main_roster_id);
+            return { ...current, raid_roster_id: raid_roster_row?.id || null };
+        });
+
+        const insertedAssignmentRows = await Promise.all(
+            new_raid_assignments.map(async (assigned_char) => {
+                await sql<RaidEventAssignment>
+                    `INSERT INTO raid_event_assignments (raid_event_id, assignment_group, position, raid_roster_id)
+                    VALUES (${insertedRaidEvent.id}, ${assigned_char.group}, ${assigned_char.position}, ${assigned_char.raid_roster_id})
+                    ;`;
             })
         );
 

@@ -198,7 +198,7 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
                             <h2 className='text-lg text-center'>Assignments</h2>
                         </header>
                         <div className='py-2 pl-2 pr-1 max-h-[448px] md:max-h-[748px] overflow-y-auto overflow-x-clip'>
-                            <AssignmentList mainRoster={mainRoster} roster={roster} currentTemplate={currentTemplate} />
+                            <AssignmentList roster={roster} currentTemplate={currentTemplate} />
                         </div>
                     </fieldset>
                     <fieldset className='w-full h-[800px] bg-slate-700/50 rounded-md shadow-md'>

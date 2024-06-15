@@ -2,10 +2,11 @@
 
 import { FormErrors } from '@/components/form/form-error';
 import { SubmitButton } from '@/components/form/submit-button';
+import { AssignmentList } from '@/components/raids/form/AssignmentList';
 import { SortableRosterList } from '@/components/raids/form/SortableRosterList';
 import { updateRaidEvent } from '@/lib/actions';
-import type { RaidEvent, RaidEventRosterPosition, RaidTemplate, RosterCharacter } from '@/lib/definitions';
-import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, TagIcon, UserIcon } from '@heroicons/react/24/outline';
+import type { RaidEvent, RaidEventAssignment, RaidEventRosterPosition, RaidTemplate, RosterCharacter } from '@/lib/definitions';
+import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, MegaphoneIcon, TagIcon, UserIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { useFormState } from 'react-dom';
@@ -16,9 +17,10 @@ type Props = {
     mainRoster: RosterCharacter[];
     raidTemplate: RaidTemplate;
     eventRoster: RaidEventRosterPosition[];
+    eventAssignments: RaidEventAssignment[];
 };
 
-export function RaidEventEditForm({ children, raidEvent, mainRoster, raidTemplate, eventRoster }: Props) {
+export function RaidEventEditForm({ children, raidEvent, mainRoster, raidTemplate, eventRoster, eventAssignments }: Props) {
 
     const [state, formAction] = useFormState(updateRaidEvent, { success: false });
     const router = useRouter();
@@ -138,16 +140,30 @@ export function RaidEventEditForm({ children, raidEvent, mainRoster, raidTemplat
                         </select>
                     </div>
                 </fieldset>
-                <div className='w-full h-auto rounded-md dark:bg-slate-700 p-4'>
-                    <header className='flex justify-center gap-1 mb-4'>
+                <fieldset className='w-full h-auto rounded-md bg-slate-200/75 dark:bg-slate-700/50 overflow-clip shadow-md'>
+                    <header className='flex justify-center gap-1 p-3 shadow-md bg-slate-200/50 dark:bg-slate-600/50'>
                         <UserIcon className='w-5' />
-                        <h2 className='font-semibold text-lg text-center'>
+                        <h2 className='text-lg text-center'>
                             Raid Roster
                         </h2>
                     </header>
-                    <div>
+                    <div className='p-3'>
                         <SortableRosterList mainRoster={mainRoster} roster={roster} setRoster={setRoster} />
                     </div>
+                </fieldset>
+                <div className='flex gap-4 w-full pb-4'>
+                    <fieldset className='w-1/4 rounded-md bg-slate-200/75 dark:bg-slate-700/50 overflow-clip shadow-md'>
+                        <header className='flex gap-1 justify-center p-3 bg-slate-200 dark:bg-slate-600/50 shadow-md'>
+                            <MegaphoneIcon className='w-5' />
+                            <h2 className='text-lg text-center'>Assignments</h2>
+                        </header>
+                        <div className='py-2 pl-2 pr-1 max-h-[448px] md:max-h-[748px] overflow-y-auto overflow-x-clip'>
+                            <AssignmentList roster={roster} currentTemplate={raidTemplate} savedAssignment={eventAssignments} />
+                        </div>
+                    </fieldset>
+                    <fieldset className='w-full h-[800px] bg-slate-700/50 rounded-md shadow-md'>
+
+                    </fieldset>
                 </div>
             </div>
             <FormErrors result={state} />

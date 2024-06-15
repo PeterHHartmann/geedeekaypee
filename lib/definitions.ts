@@ -119,6 +119,6 @@ export type RaidEventAssignment = {
     id: string;
     raid_event_id: RaidEvent['id'];
     position: number;
-    group: number;
-    main_roster_id: RosterCharacter['id'];
+    assignment_group: number;
+    raid_roster_id: RaidEventRosterPosition['id'];
 };

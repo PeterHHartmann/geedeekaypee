@@ -1,7 +1,7 @@
 'use client';
 
 import { DroppableAssignmentSlot } from '@/components/raids/form/DroppableAssignmentSlot';
-import type { RaidTemplateAssignment, RosterCharacter } from '@/lib/definitions';
+import type { RaidEventAssignment, RaidTemplateAssignment, RosterCharacter } from '@/lib/definitions';
 import { useDndMonitor } from '@dnd-kit/core';
 import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 
@@ -11,12 +11,28 @@ type Props = {
     roster: (RosterCharacter | null)[];
     hasEdited: boolean;
     setHasEdited: Dispatch<SetStateAction<boolean>>;
+    savedAssignments?: RaidEventAssignment[];
 };
 
-export function AssignmentListGroup({ groupIndex, assignmentGroup, roster, hasEdited, setHasEdited }: Props) {
+export function AssignmentListGroup({ groupIndex, assignmentGroup, roster, hasEdited, setHasEdited, savedAssignments }: Props) {
 
     const groupName = useMemo(() => assignmentGroup[0][0].name, [assignmentGroup]);
     const [assignedList, setAssignedList] = useState<(RosterCharacter | null)[]>();
+
+    useEffect(() => {
+        if (savedAssignments && savedAssignments.length) {
+            const result: (RosterCharacter | null)[] = Array.from(Array(assignmentGroup.length), () => null);
+            savedAssignments.map((assignment) => {
+                if (assignment.assignment_group == groupIndex) {
+                    const foundRaidRosterChar = roster.find((char) => char && char.id == assignment.raid_roster_id);
+                    if (foundRaidRosterChar) {
+                        result[assignment.position] = foundRaidRosterChar;
+                    }
+                }
+            });
+            setAssignedList(result);
+        }
+    }, [savedAssignments, roster, groupIndex, assignmentGroup.length]);
 
     useEffect(() => {
         if (!hasEdited) {
