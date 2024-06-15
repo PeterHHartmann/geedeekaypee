@@ -636,16 +636,46 @@ export async function updateRaidEvent(
     try {
         await sql<RaidEvent>
             `UPDATE raid_events 
-        SET 
-            user_email = ${user.email}, 
-            raid_template_id = ${data.raid_template_id}, 
-            title = ${data.title}, 
-            date = ${data.date}, 
-            time = ${data.time}, 
-            is_public = ${data.visibility}
-        WHERE id = ${data.raid_event_id}
-        AND user_email = ${user.email}
+            SET 
+                user_email = ${user.email}, 
+                raid_template_id = ${data.raid_template_id}, 
+                title = ${data.title}, 
+                date = ${data.date}, 
+                time = ${data.time}, 
+                is_public = ${data.visibility}
+            WHERE id = ${data.raid_event_id}
+            AND user_email = ${user.email}
+            ;`;
+
+        await sql`DELETE FROM raid_event_roster_chars
+        WHERE raid_event_id = ${data.raid_event_id}
         ;`;
+
+        const insertedRaidRosterRows = await Promise.all(
+            data.raid_roster.map(async (raid_roster_char) => {
+                const created = await sql<{ id: string, main_roster_id: string; }>
+                    `INSERT INTO raid_event_roster_chars (raid_event_id, position, main_roster_id)
+                    VALUES (${data.raid_event_id}, ${raid_roster_char.position}, ${raid_roster_char.character_id})
+                    RETURNING id, main_roster_id
+                ;`;
+                return created.rows[0];
+            })
+        );
+
+        const new_raid_assignments = data.raid_assignements.map((current) => {
+            const raid_roster_row = insertedRaidRosterRows.find((raid_roster_char) => current.character_id == raid_roster_char.main_roster_id);
+            return { ...current, raid_roster_id: raid_roster_row?.id || null };
+        });
+
+        const insertedAssignmentRows = await Promise.all(
+            new_raid_assignments.map(async (assigned_char) => {
+                await sql<RaidEventAssignment>
+                    `INSERT INTO raid_event_assignments (raid_event_id, assignment_group, position, raid_roster_id)
+                    VALUES (${data.raid_event_id}, ${assigned_char.group}, ${assigned_char.position}, ${assigned_char.raid_roster_id})
+                    ;`;
+            })
+        );
+
         revalidateTag(`raidevents[${user.email}]`);
         return { success: true };
     } catch (error) {
