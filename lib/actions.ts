@@ -611,6 +611,8 @@ export async function updateRaidEvent(
         group: z.number()
     });
 
+    // TODO invalid time
+
     const fullSchema = z.object({
         raid_event_id: z.string().uuid(),
         raid_template_id: z.string().uuid(),

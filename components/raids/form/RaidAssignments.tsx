@@ -19,8 +19,6 @@ export function RaidAssignments({
     savedAssignment
 }: Props) {
 
-    const [hasEdited, setHasEdited] = useState(savedAssignment ? true : false);
-
     const { data: assignmentGroups, isLoading } = useQuery({
         queryKey: [currentTemplate.id, `raid_template_assignments`],
         queryFn: async ({ queryKey: [templateId] }) => {
@@ -57,7 +55,7 @@ export function RaidAssignments({
     return (
         <div className='grid grid-flow-row gap-3'>
             {assignmentGroups.map((assignmentGroup, groupIndex) => (
-                <RaidAssignmentGroup key={`assignment-group-${groupIndex}`} groupIndex={groupIndex} assignmentGroup={assignmentGroup} roster={roster} hasEdited={hasEdited} setHasEdited={setHasEdited} savedAssignments={savedAssignment} />
+                <RaidAssignmentGroup key={`assignment-group-${groupIndex}`} groupIndex={groupIndex} assignmentGroup={assignmentGroup} roster={roster} savedAssignments={savedAssignment} />
             ))}
         </div>
     );

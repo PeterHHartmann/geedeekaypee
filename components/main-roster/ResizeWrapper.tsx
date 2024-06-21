@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronLeftIcon, MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { useState, type ReactNode } from 'react';
 
@@ -15,7 +15,7 @@ export function ResizeWrapper({ children }: Props) {
         <button
             {...rest}
             className=
-            'flex rounded-full w-7 h-7 aspect-square justify-center items-center bg-indigo-600 text-white hover:bg-white hover:text-indigo-600 border-1 hover:border-slate-950 dark:border-slate-700'
+            'flex rounded-full w-7 h-7 aspect-square justify-center items-center bg-indigo-600 text-slate-50 border-1 border-indigo-600 hover:bg-indigo-500 hover:border-indigo-500'
         >
             {isOpen
                 ? <MinusIcon className='w-5' />

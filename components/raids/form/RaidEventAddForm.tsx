@@ -180,24 +180,22 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
                         </select>
                     </div>
                 </fieldset>
-                <fieldset className='w-full h-auto rounded-md bg-slate-200/75 dark:bg-slate-700/50 overflow-clip shadow-md'>
-                    <header className='flex justify-center gap-1 p-3 shadow-md bg-slate-200/50 dark:bg-slate-700/50'>
+                <fieldset className='w-full h-auto rounded-md bg-slate-200/75 dark:bg-slate-700/75 overflow-clip shadow-md'>
+                    <header className='flex justify-center gap-1 p-3 shadow-md bg-slate-200/50 dark:bg-slate-800/75'>
                         <UserIcon className='w-5' />
                         <h2 className='text-lg text-center'>
                             Raid Roster
                         </h2>
                     </header>
-                    <div>
-                        <RaidRoster mainRoster={mainRoster} roster={roster} setRoster={setRoster} />
-                    </div>
+                    <RaidRoster mainRoster={mainRoster} roster={roster} setRoster={setRoster} />
                 </fieldset>
                 <div className='flex gap-3 w-full pb-4'>
-                    <fieldset className='w-1/4 rounded-md bg-slate-200/75 dark:bg-slate-700/50 overflow-clip shadow-md'>
-                        <header className='flex gap-1 justify-center p-3 bg-slate-200 dark:bg-slate-700/50 shadow-md'>
+                    <fieldset className='w-1/4 rounded-md bg-slate-200/75 dark:bg-slate-700/75 overflow-clip shadow-md'>
+                        <header className='flex gap-1 justify-center p-3 bg-slate-200 dark:bg-slate-800/50 shadow-md'>
                             <MegaphoneIcon className='w-5' />
                             <h2 className='text-lg text-center'>Assignments</h2>
                         </header>
-                        <div className='py-2 pl-2 pr-1 max-h-[448px] md:max-h-[748px] overflow-y-auto overflow-x-clip'>
+                        <div className='py-2 max-h-[448px] md:max-h-[748px] overflow-y-auto overflow-x-clip'>
                             <RaidAssignments roster={roster} currentTemplate={currentTemplate} />
                         </div>
                     </fieldset>

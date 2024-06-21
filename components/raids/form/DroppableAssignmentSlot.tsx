@@ -26,7 +26,7 @@ export function DroppableAssignmentSlot({ id, character, groupIndex, rowIndex }:
         <div
             ref={setNodeRef}
             className={clsx(
-                'h-[40px] overflow-clip border-b-1 border-slate-600 w-full',
+                'flex w-full h-[40px] overflow-clip justify-center items-center',
                 {
                     'bg-transparent': isOver == false,
                     'bg-slate-600': isOver == true
