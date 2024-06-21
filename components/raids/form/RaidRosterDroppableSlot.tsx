@@ -1,6 +1,6 @@
 'use client';
 
-import { DraggableCharacterRow } from '@/components/raids/form/DraggableCharacterRow';
+import { CharacterRowDraggable } from '@/components/raids/form/CharacterRowDraggable';
 import type { RosterCharacter } from '@/lib/definitions';
 import { useDroppable } from "@dnd-kit/core";
 import clsx from 'clsx';
@@ -15,7 +15,7 @@ type Props = {
     removeHandler: (index: number) => void;
 };
 
-export function DroppableRosterSlot({
+export function RaidRosterDroppableSlot({
     id,
     initial,
     index,
@@ -48,9 +48,9 @@ export function DroppableRosterSlot({
                         name={`raidroster_${index}`}
                         value={initial.id || undefined}
                     />
-                    <DraggableCharacterRow character={initial} id={`${id}_draggable`} index={index}>
+                    <CharacterRowDraggable character={initial} id={`${id}_draggable`} index={index}>
                         <CharacterInfo character={initial} />
-                    </DraggableCharacterRow>
+                    </CharacterRowDraggable>
                     <button className='flex p-2 justify-center items-center' onClick={() => removeHandler(index)}>
                         <XMarkIcon className='w-5' />
                     </button>

@@ -3,7 +3,7 @@
 import { FormErrors } from '@/components/form/form-error';
 import { SubmitButton } from '@/components/form/submit-button';
 import { AssignmentList } from '@/components/raids/form/AssignmentList';
-import { SortableRosterList } from '@/components/raids/form/SortableRosterList';
+import { RaidRoster } from '@/components/raids/form/RaidRoster';
 import { fetchRosterPositionsForRaidTemplate, insertRaidEvent } from '@/lib/actions';
 import type { RaidTemplate, RaidTemplateRosterPosition, RosterCharacter } from '@/lib/definitions';
 import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, MegaphoneIcon, TagIcon, UserIcon } from '@heroicons/react/24/outline';
@@ -188,7 +188,7 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
                         </h2>
                     </header>
                     <div className='p-3'>
-                        <SortableRosterList mainRoster={mainRoster} roster={roster} setRoster={setRoster} />
+                        <RaidRoster mainRoster={mainRoster} roster={roster} setRoster={setRoster} />
                     </div>
                 </fieldset>
                 <div className='flex gap-4 w-full pb-4'>

@@ -1,6 +1,6 @@
 'use client';
 
-import { DroppableRosterSlot } from '@/components/raids/form/DroppableRosterSlot';
+import { RaidRosterDroppableSlot } from '@/components/raids/form/RaidRosterDroppableSlot';
 import type { RosterCharacter } from '@/lib/definitions';
 import { useDndMonitor } from '@dnd-kit/core';
 import React, { useCallback, type Dispatch, type SetStateAction } from 'react';
@@ -11,7 +11,7 @@ type Props = {
     setRoster: Dispatch<SetStateAction<(RosterCharacter | null)[]>>;
 };
 
-export function SortableRosterList({
+export function RaidRoster({
     roster,
     mainRoster,
     setRoster
@@ -100,7 +100,7 @@ export function SortableRosterList({
                         </div>
                         <div className='w-full bg-slate-700'>
                             {column.map((row, row_index) => (
-                                <DroppableRosterSlot key={`${col_index}-${row_index}-raidroster-row`} id={`${col_index}-${row_index}-raidroster-row`} mainRoster={mainRoster} initial={row} index={(col_index * 5) + row_index} removeHandler={handleRemoveCharacter} />
+                                <RaidRosterDroppableSlot key={`${col_index}-${row_index}-raidroster-row`} id={`${col_index}-${row_index}-raidroster-row`} mainRoster={mainRoster} initial={row} index={(col_index * 5) + row_index} removeHandler={handleRemoveCharacter} />
                             ))}
                         </div>
                     </div>

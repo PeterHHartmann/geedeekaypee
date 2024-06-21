@@ -1,3 +1,5 @@
+'use client';
+
 import type { RosterCharacter } from '@/lib/definitions';
 import { useDraggable } from '@dnd-kit/core';
 import type { ReactNode } from 'react';
@@ -9,7 +11,7 @@ type Props = {
     index: number;
 };
 
-export function DraggableCharacterRow({ children, character, id, index }: Props) {
+export function CharacterRowDraggable({ children, character, id, index }: Props) {
     const {
         setNodeRef,
         listeners,

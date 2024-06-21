@@ -1,6 +1,6 @@
 'use client';
 
-import { DraggableCharacterRow } from '@/components/raids/form/DraggableCharacterRow';
+import { CharacterRowDraggable } from '@/components/raids/form/CharacterRowDraggable';
 import type { RosterCharacter } from '@/lib/definitions';
 import { useDroppable } from "@dnd-kit/core";
 import clsx from 'clsx';
@@ -41,9 +41,9 @@ export function DroppableAssignmentSlot({ id, character, groupIndex, rowIndex }:
                         name={`raidassignment_${groupIndex}_${rowIndex}`}
                         value={character.id || undefined}
                     />
-                    <DraggableCharacterRow character={character} id={`${id}_draggable`} index={rowIndex}>
+                    <CharacterRowDraggable character={character} id={`${id}_draggable`} index={rowIndex}>
                         <CharacterInfo character={character} />
-                    </DraggableCharacterRow>
+                    </CharacterRowDraggable>
                 </>
                 : null
             }
