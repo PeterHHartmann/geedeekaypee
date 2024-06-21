@@ -2,7 +2,7 @@
 
 import { FormErrors } from '@/components/form/form-error';
 import { SubmitButton } from '@/components/form/submit-button';
-import { AssignmentList } from '@/components/raids/form/AssignmentList';
+import { RaidAssignments } from '@/components/raids/form/RaidAssignments';
 import { RaidRoster } from '@/components/raids/form/RaidRoster';
 import { updateRaidEvent } from '@/lib/actions';
 import type { RaidEvent, RaidEventAssignment, RaidEventRosterPosition, RaidTemplate, RosterCharacter } from '@/lib/definitions';
@@ -158,7 +158,7 @@ export function RaidEventEditForm({ children, raidEvent, mainRoster, raidTemplat
                             <h2 className='text-lg text-center'>Assignments</h2>
                         </header>
                         <div className='py-2 pl-2 pr-1 max-h-[448px] md:max-h-[748px] overflow-y-auto overflow-x-clip'>
-                            <AssignmentList roster={roster} currentTemplate={raidTemplate} savedAssignment={eventAssignments} />
+                            <RaidAssignments roster={roster} currentTemplate={raidTemplate} savedAssignment={eventAssignments} />
                         </div>
                     </fieldset>
                     <fieldset className='w-full h-[800px] bg-slate-700/50 rounded-md shadow-md'>

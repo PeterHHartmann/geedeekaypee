@@ -33,10 +33,10 @@ export function RaidRosterDroppableSlot({
         <div
             ref={setNodeRef}
             className={clsx(
-                'h-[40px] overflow-clip border-b-1 border-slate-600',
+                'h-[40px] overflow-clip',
                 {
                     'bg-transparent': isOver == false,
-                    'bg-slate-600': isOver == true
+                    'bg-slate-700': isOver == true
                 }
             )}
         >
@@ -51,7 +51,7 @@ export function RaidRosterDroppableSlot({
                     <CharacterRowDraggable character={initial} id={`${id}_draggable`} index={index}>
                         <CharacterInfo character={initial} />
                     </CharacterRowDraggable>
-                    <button className='flex p-2 justify-center items-center' onClick={() => removeHandler(index)}>
+                    <button className='flex p-2 justify-center items-center text-slate-400' onClick={() => removeHandler(index)}>
                         <XMarkIcon className='w-5' />
                     </button>
                 </div>

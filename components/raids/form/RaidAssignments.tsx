@@ -1,6 +1,6 @@
 'use client';
 
-import { AssignmentListGroup } from '@/components/raids/form/AssignmentListGroup';
+import { RaidAssignmentGroup } from '@/components/raids/form/RaidAssignmentGroup';
 import { fetchAssignmentsForRaidTemplate } from '@/lib/actions';
 import { SHIMMER } from '@/lib/constants';
 import type { RaidEventAssignment, RaidTemplate, RaidTemplateAssignment, RosterCharacter } from '@/lib/definitions';
@@ -13,7 +13,7 @@ type Props = {
     savedAssignment?: RaidEventAssignment[];
 };
 
-export function AssignmentList({
+export function RaidAssignments({
     roster,
     currentTemplate,
     savedAssignment
@@ -57,7 +57,7 @@ export function AssignmentList({
     return (
         <div className='grid grid-flow-row gap-3'>
             {assignmentGroups.map((assignmentGroup, groupIndex) => (
-                <AssignmentListGroup key={`assignment-group-${groupIndex}`} groupIndex={groupIndex} assignmentGroup={assignmentGroup} roster={roster} hasEdited={hasEdited} setHasEdited={setHasEdited} savedAssignments={savedAssignment} />
+                <RaidAssignmentGroup key={`assignment-group-${groupIndex}`} groupIndex={groupIndex} assignmentGroup={assignmentGroup} roster={roster} hasEdited={hasEdited} setHasEdited={setHasEdited} savedAssignments={savedAssignment} />
             ))}
         </div>
     );

@@ -2,7 +2,7 @@
 
 import { FormErrors } from '@/components/form/form-error';
 import { SubmitButton } from '@/components/form/submit-button';
-import { AssignmentList } from '@/components/raids/form/AssignmentList';
+import { RaidAssignments } from '@/components/raids/form/RaidAssignments';
 import { RaidRoster } from '@/components/raids/form/RaidRoster';
 import { fetchRosterPositionsForRaidTemplate, insertRaidEvent } from '@/lib/actions';
 import type { RaidTemplate, RaidTemplateRosterPosition, RosterCharacter } from '@/lib/definitions';
@@ -181,24 +181,24 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
                     </div>
                 </fieldset>
                 <fieldset className='w-full h-auto rounded-md bg-slate-200/75 dark:bg-slate-700/50 overflow-clip shadow-md'>
-                    <header className='flex justify-center gap-1 p-3 shadow-md bg-slate-200/50 dark:bg-slate-600/50'>
+                    <header className='flex justify-center gap-1 p-3 shadow-md bg-slate-200/50 dark:bg-slate-700/50'>
                         <UserIcon className='w-5' />
                         <h2 className='text-lg text-center'>
                             Raid Roster
                         </h2>
                     </header>
-                    <div className='p-3'>
+                    <div>
                         <RaidRoster mainRoster={mainRoster} roster={roster} setRoster={setRoster} />
                     </div>
                 </fieldset>
-                <div className='flex gap-4 w-full pb-4'>
+                <div className='flex gap-3 w-full pb-4'>
                     <fieldset className='w-1/4 rounded-md bg-slate-200/75 dark:bg-slate-700/50 overflow-clip shadow-md'>
-                        <header className='flex gap-1 justify-center p-3 bg-slate-200 dark:bg-slate-600/50 shadow-md'>
+                        <header className='flex gap-1 justify-center p-3 bg-slate-200 dark:bg-slate-700/50 shadow-md'>
                             <MegaphoneIcon className='w-5' />
                             <h2 className='text-lg text-center'>Assignments</h2>
                         </header>
                         <div className='py-2 pl-2 pr-1 max-h-[448px] md:max-h-[748px] overflow-y-auto overflow-x-clip'>
-                            <AssignmentList roster={roster} currentTemplate={currentTemplate} />
+                            <RaidAssignments roster={roster} currentTemplate={currentTemplate} />
                         </div>
                     </fieldset>
                     <fieldset className='w-full h-[800px] bg-slate-700/50 rounded-md shadow-md'>

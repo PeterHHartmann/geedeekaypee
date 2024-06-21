@@ -14,7 +14,7 @@ type Props = {
     savedAssignments?: RaidEventAssignment[];
 };
 
-export function AssignmentListGroup({ groupIndex, assignmentGroup, roster, hasEdited, setHasEdited, savedAssignments }: Props) {
+export function RaidAssignmentGroup({ groupIndex, assignmentGroup, roster, hasEdited, setHasEdited, savedAssignments }: Props) {
 
     const groupName = useMemo(() => assignmentGroup[0][0].name, [assignmentGroup]);
     const [assignedList, setAssignedList] = useState<(RosterCharacter | null)[]>();
