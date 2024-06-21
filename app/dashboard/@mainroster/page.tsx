@@ -1,10 +1,10 @@
-import { AddCharacterForm } from '@/components/roster/AddCharacterForm';
-import { RosterList } from '@/components/roster/RosterList';
+import { AddCharacterForm } from '@/components/main-roster/AddCharacterForm';
+import { RosterList } from '@/components/main-roster/RosterList';
 import { fetchCharClasses, fetchCharSpecs, fetchCharRolesPerClass } from '@/lib/actions';
 import { SHIMMER } from '@/lib/constants';
 import { Suspense } from 'react';
 
-export default async function RosterPage() {
+export default async function MainRosterPage() {
     const allCharClasses = await fetchCharClasses();
     const allCharSpecs = await fetchCharSpecs();
     const allCharRoles = await fetchCharRolesPerClass();

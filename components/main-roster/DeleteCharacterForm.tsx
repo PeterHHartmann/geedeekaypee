@@ -27,7 +27,7 @@ export function DeleteCharacterForm({ character }: Props) {
         <>
             <Modal
                 headerText='Delete Character'
-                subHeaderText='Are you sure you want to delete this character from your roster?'
+                subHeaderText='Deleting this character will remove it from the Main Roster and remove it from the Raid Roster of all raids where the character is included. Are you sure you want to delete this character?'
                 isOpen={isOpen} setIsOpen={setIsOpen}
                 className='md:w-fit lg:w-3/12'>
                 <form action={formAction}>

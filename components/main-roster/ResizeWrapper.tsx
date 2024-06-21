@@ -40,14 +40,14 @@ export function ResizeWrapper({ children }: Props) {
         >
             <div className='flex flex-wrap justify-center items-center border-b-1 border-slate-300 dark:border-slate-700 p-3 mb-3 w-full'>
                 <header className={clsx(
-                    'w-6/12',
+                    'w-8/12',
                     {
                         'ml-auto': children !== undefined
                     }
                 )}>
-                    <h2 className='text-2xl text-center'>Roster</h2>
+                    <h2 className='text-2xl text-center'>Main Roster</h2>
                 </header>
-                <div className='flex w-3/12 my-2 sm:my-0 justify-end'>
+                <div className='flex w-2/12 my-2 sm:my-0 justify-end'>
                     <ToggleButton onClick={() => setIsOpen(false)} />
                 </div>
             </div>

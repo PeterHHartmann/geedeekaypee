@@ -1,6 +1,6 @@
 'use client';
 
-import { CharacterRow } from '@/components/roster/CharacterRow';
+import { CharacterInfo } from '@/components/main-roster/CharacterInfo';
 import type { RosterCharacter } from '@/lib/definitions';
 import { DndContext, DragOverlay, type DragStartEvent } from '@dnd-kit/core';
 import { useId, useState, type ReactNode } from 'react';
@@ -28,9 +28,9 @@ export function Providers({ children }: { children: ReactNode; }) {
     return (
         <DndContext onDragStart={handleDragStart} id={dnd_id}>
             {children}
-            <DragOverlay className='rounded-md overflow-clip cursor-grabbing opacity-50'>
+            <DragOverlay className='flex px-2 rounded-md overflow-clip cursor-grabbing opacity-75 bg-slate-800'>
                 {draggedCharacter
-                    ? <CharacterRow character={draggedCharacter} />
+                    ? <CharacterInfo character={draggedCharacter} />
                     : null
                 }
             </DragOverlay>

@@ -1,4 +1,4 @@
-import { ResizeWrapper } from '@/components/roster/ResizeWrapper';
+import { ResizeWrapper } from '@/components/main-roster/ResizeWrapper';
 import type { ReactNode } from 'react';
 
 type Props = {
@@ -6,7 +6,7 @@ type Props = {
     add_character: ReactNode;
 };
 
-export default async function RosterLayout({ children }: Props) {
+export default async function MainRosterLayout({ children }: Props) {
     return (
         <ResizeWrapper>
             <div className='px-3 pb-3'>

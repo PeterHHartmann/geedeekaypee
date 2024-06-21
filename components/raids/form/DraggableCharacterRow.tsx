@@ -24,6 +24,7 @@ export function DraggableCharacterRow({ children, character, id, index }: Props)
 
     return (
         <div
+            className='flex w-full h-full'
             ref={setNodeRef}
             {...attributes}
             {...listeners}
