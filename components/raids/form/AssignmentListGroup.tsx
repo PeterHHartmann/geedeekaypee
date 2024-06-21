@@ -67,36 +67,59 @@ export function AssignmentListGroup({ groupIndex, assignmentGroup, roster, hasEd
 
     useEffect(() => {
         if (hasEdited && assignedList) {
-            let rosterCharsChanged: true | false = false;
             const newAssigned = assignedList.map((assignedChar) => {
-                if (assignedChar == null) {
-                    return assignedChar;
-                }
-                const found = roster.findIndex((rosterChar) => {
-                    if (rosterChar == null) {
-                        return false;
+                if (assignedChar != null) {
+                    const charExistsInRaidRoster = roster.includes(assignedChar);
+                    if (!charExistsInRaidRoster) {
+                        return null;
                     }
-                    if (rosterChar.id == assignedChar.id) {
-                        return true;
-                    }
-                    return false;
-                });
-                if (found < 0) {
-                    rosterCharsChanged = true;
-                    return null;
                 }
                 return assignedChar;
             });
-            if (rosterCharsChanged) {
+            if (newAssigned.toString() !== assignedList.toString()) {
                 setAssignedList(newAssigned);
             }
         }
     }, [hasEdited, assignedList, roster]);
 
+    useEffect(() => {
+        if (hasEdited && assignedList && assignedList.includes(null)) {
+            const roster_copy = roster.slice(0);
+            const newAssigned = assignedList.map((assignedChar, index) => {
+                if (assignedChar == null) {
+                    const newCharIndex = roster_copy.findIndex((rosterChar) => {
+                        if (rosterChar == null) {
+                            return false;
+                        }
+                        if (assignedList.includes(rosterChar)) {
+                            return false;
+                        }
+                        const meetsReqs = assignmentGroup[index].find((requirements) => {
+                            const class_matches = !requirements.class_id || (rosterChar.class_id == requirements.class_id);
+                            const role_matches = !requirements.role_id || (rosterChar.role_id == requirements.role_id);
+                            const spec_matches = !requirements.spec_id || (rosterChar.spec_id == requirements.spec_id);
+                            return class_matches && role_matches && spec_matches;
+                        });
+                        return meetsReqs ? true : false;
+                    });
+                    if (newCharIndex >= 0) {
+                        const newChar = roster_copy.splice(newCharIndex, 1);
+                        return newChar[0];
+                    }
+                    return null;
+                }
+                return assignedChar;
+            });
+            if (newAssigned.toString() !== assignedList.toString()) {
+                setAssignedList(newAssigned);
+            }
+        }
+    }, [assignedList, assignmentGroup, hasEdited, roster]);
+
     useDndMonitor({
         onDragEnd(event) {
             const { active, over } = event;
-            if (!over || !over.id.toString().includes(`assignment-group${groupIndex}`)) {
+            if (!over || !over.id.toString().includes(`assignment-group${groupIndex}-row`)) {
                 return;
             }
             if (!assignedList) {
@@ -111,7 +134,7 @@ export function AssignmentListGroup({ groupIndex, assignmentGroup, roster, hasEd
             }
 
             const overIndex: number = overData.index;
-            const isFromOwnGroup = active.id.toString().includes(`assignment-group${groupIndex}`);
+            const isFromOwnGroup = active.id.toString().includes(`assignment-group${groupIndex}-row`);
 
             //Dragged from the roster in the form
             if (isFromOwnGroup) {
@@ -124,6 +147,7 @@ export function AssignmentListGroup({ groupIndex, assignmentGroup, roster, hasEd
                 newAssigned[overIndex] = newChar;
                 newAssigned[activeIndex] = oldChar;
                 setAssignedList(newAssigned);
+                setHasEdited(true);
                 return;
             }
 
