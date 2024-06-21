@@ -76,16 +76,6 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
                 }
             });
 
-            //fill newRoster with remaining characters if not full
-            // const containsNull = newRoster.includes(null);
-            // if (containsNull) {
-            //     newRoster.forEach((item, index) => {
-            //         if (!item) {
-            //             newRoster[index] = roster_copy.splice(0, 1)[0];
-            //             return;
-            //         }
-            //     });
-            // }
             return setRoster(newRoster);
         }
     }, [currentTemplate, templatePositions, mainRoster, createEmptyRoster]);

@@ -118,10 +118,6 @@ export function RaidAssignmentGroup({ groupIndex, assignmentGroup, roster, saved
         }
     }, [assignedList, assignmentGroup, hasEdited, roster, groupName]);
 
-    // if (groupName == 'Tank') {
-    //     console.log(assignedList);
-    // }
-
     useDndMonitor({
         onDragEnd(event) {
             const { active, over } = event;
