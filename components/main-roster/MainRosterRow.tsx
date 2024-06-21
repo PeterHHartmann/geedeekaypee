@@ -22,7 +22,7 @@ export function MainRosterRow({
         listeners,
         attributes
     } = useDraggable({
-        id: `draggableRosterCharacter-${character.id}`,
+        id: `mainroster-character-${character.id}`,
         data: {
             character: character
         }

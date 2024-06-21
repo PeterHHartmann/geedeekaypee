@@ -26,18 +26,21 @@ export function SortableRosterList({
         return result;
     }, [roster]);
 
+    function handleRemoveCharacter(index: number) {
+        const roster_copy = roster.slice(0);
+        roster_copy[index] = null;
+        setRoster(roster_copy);
+    }
+
     useDndMonitor({
         onDragEnd(event) {
             const { active, over } = event;
-            if (!over || !over.id.toString().includes('roster-row')) {
+            if (!over || !over.id.toString().includes('raidroster-row')) {
                 return;
             }
-            // if (over.id.toString().split('_')[0] == active.id.toString().split('_')[0]) {
-            //     return;
-            // }
             const newRoster = roster.slice(0);
-            const isFromMainRoster = active.id.toString().includes('draggableRosterCharacter');
-            const isFromOwnList = active.id.toString().includes('roster-row_draggable');
+            const isFromMainRoster = active.id.toString().includes('mainroster-character');
+            const isFromOwnList = active.id.toString().includes('raidroster-row_draggable');
             const activeData = active.data.current;
             if (!activeData) {
                 return;
@@ -97,7 +100,7 @@ export function SortableRosterList({
                         </div>
                         <div className='w-full bg-slate-700'>
                             {column.map((row, row_index) => (
-                                <DroppableRosterSlot key={`${col_index}-${row_index}-roster-row`} id={`${col_index}-${row_index}-roster-row`} mainRoster={mainRoster} initial={row} index={(col_index * 5) + row_index} />
+                                <DroppableRosterSlot key={`${col_index}-${row_index}-raidroster-row`} id={`${col_index}-${row_index}-raidroster-row`} mainRoster={mainRoster} initial={row} index={(col_index * 5) + row_index} removeHandler={handleRemoveCharacter} />
                             ))}
                         </div>
                     </div>
