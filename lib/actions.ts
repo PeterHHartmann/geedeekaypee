@@ -483,13 +483,11 @@ export async function insertRaidEvent(
         raid_template_id: formData.get('raid_template_id'),
         title: formData.get('title'),
         date: formData.get('date'),
-        time: formData.get('time'),
+        time: formData.get('time') + ':00',
         visibility: formData.get('visibility') ? true : false,
         raid_roster: raid_roster,
         raid_assignements: raid_assignements
     };
-
-    console.log(rawData.time);
 
     const rosterPositionsSchema = z.object({
         character_id: z.string().uuid(),
@@ -594,7 +592,7 @@ export async function updateRaidEvent(
         raid_template_id: formData.get('raid_template_id'),
         title: formData.get('title'),
         date: formData.get('date'),
-        time: formData.get('time'),
+        time: formData.get('time') + ':00',
         visibility: formData.get('visibility') ? true : false,
         raid_roster: raid_roster,
         raid_assignements: raid_assignements
@@ -610,8 +608,6 @@ export async function updateRaidEvent(
         position: z.number(),
         group: z.number()
     });
-
-    // TODO invalid time
 
     const fullSchema = z.object({
         raid_event_id: z.string().uuid(),

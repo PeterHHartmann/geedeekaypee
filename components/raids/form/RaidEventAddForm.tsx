@@ -130,7 +130,7 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
                                 className="w-full rounded-md border-1 border-slate-950 py-[9px] pl-5 text-sm outline-2 placeholder:text-slate-500"
                                 type='time'
                                 name='time'
-                                defaultValue={'19:00:00'}
+                                defaultValue={'19:00'}
                                 required
                             />
                         </div>
