@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { CharacterInfo } from '@/components/main-roster/CharacterInfo';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { CLASS_BG_COLOR } from '@/lib/constants';
+import { ButtonRemoveCharacter } from '@/components/raids/form/ButtonRemoveCharacter';
 
 type Props = {
     id: string;
@@ -52,9 +53,7 @@ export function RaidRosterDroppableSlot({
                     <CharacterRowDraggable character={character} id={`${id}_draggable`} index={index}>
                         <CharacterInfo character={character} />
                     </CharacterRowDraggable>
-                    <button className='flex p-2 justify-center items-center text-slate-950' onClick={() => removeHandler(index)}>
-                        <XMarkIcon className='w-5' />
-                    </button>
+                    <ButtonRemoveCharacter onClickHandler={() => removeHandler(index)} />
                 </div>
                 : null
             }
