@@ -3,13 +3,14 @@
 import { insertMainRosterChar } from '@/lib/actions';
 import type { CharClass, CharRoleOptionsForClasses, CharRoleOption, ClassTalentSpec } from '@/lib/definitions';
 import { Button } from '@/components/Button';
-import { FormErrors } from '@/components/form/form-error';
+import { FormErrors } from '@/components/form/FormErrors';
 import { Modal } from '@/components/Modal';
-import { SelectInput } from '@/components/form/select-input';
+import { SelectField } from '@/components/form/SelectField';
 import { SubmitButton } from '@/components/form/submit-button';
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState, type ChangeEvent } from 'react';
 import { useFormState } from 'react-dom';
+import { InputField } from '@/components/form/InputField';
 
 type Props = {
     charClasses: CharClass[];
@@ -49,39 +50,41 @@ export function AddCharacterForm({ charClasses, charRoles, charSpecs }: Props) {
             </Button>
             <Modal headerText='Add character' subHeaderText='Add a character to the Main Roster' isOpen={isOpen} setIsOpen={setIsOpen} >
                 <form action={formAction} className='flex flex-wrap gap-3 mx-auto sm:w-[600px]'>
-                    <div className='w-full'>
-                        <label className="mb-3 mt-5 block font-semibold" htmlFor='name'>Character Name</label>
-                        <div className="relative">
-                            <input
-                                className="w-full rounded-md border-1 border-slate-500 py-[9px] pl-5 text-sm outline-2 placeholder:text-slate-500"
-                                type='text'
-                                name='name'
-                                placeholder='Enter the name of the character'
-                                required
-                            />
-                        </div>
-                    </div>
-                    <div className='w-full'>
-                        <SelectInput name='class_id' label='Class' required onChange={handleClassSelectChanged}>
-                            {charClasses.map((character_class, index) => (
-                                <option key={`class-selection-option-${character_class.name}`} value={character_class.id} defaultValue={defaultClassId}>{character_class.name}</option>
-                            ))}
-                        </SelectInput>
-                    </div>
-                    <div className='w-full'>
-                        <SelectInput name='spec_id' label='Talent Specialization' required>
-                            {specOptions.map((specOption, index) => (
-                                <option key={`spec-selection-option-${specOption.id}`} value={specOption.id}>{`${specOption.name}`}</option>
-                            ))}
-                        </SelectInput>
-                    </div>
-                    <div className='w-full'>
-                        <SelectInput name='role_id' label='Role' required>
-                            {roleOptions.map((role, index) => (
-                                <option key={`role-selection-option-${role.role_id}`} value={role.role_id}>{`${role.role_name}`}</option>
-                            ))}
-                        </SelectInput>
-                    </div>
+                    <InputField
+                        id='name'
+                        type='text'
+                        placeholder='Enter the name of the character'
+                        required
+                        label='Name'
+                    />
+                    <SelectField
+                        name='class_id'
+                        label='Class'
+                        required
+                        onChange={handleClassSelectChanged}
+                    >
+                        {charClasses.map((character_class, index) => (
+                            <option key={`class-selection-option-${character_class.name}`} value={character_class.id} defaultValue={defaultClassId}>{character_class.name}</option>
+                        ))}
+                    </SelectField>
+                    <SelectField
+                        name='spec_id'
+                        label='Talent Specialization'
+                        required
+                    >
+                        {specOptions.map((specOption, index) => (
+                            <option key={`spec-selection-option-${specOption.id}`} value={specOption.id}>{`${specOption.name}`}</option>
+                        ))}
+                    </SelectField>
+                    <SelectField
+                        name='role_id'
+                        label='Role'
+                        required
+                    >
+                        {roleOptions.map((role, index) => (
+                            <option key={`role-selection-option-${role.role_id}`} value={role.role_id}>{`${role.role_name}`}</option>
+                        ))}
+                    </SelectField>
                     <FormErrors result={state} />
                     <SubmitButton>
                         <PlusCircleIcon className="h-5 w-5" />

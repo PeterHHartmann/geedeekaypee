@@ -1,23 +1,22 @@
-import { type PropsWithChildren } from 'react';
+import { type PropsWithChildren, type ReactNode } from 'react';
 
 type Props = PropsWithChildren & React.SelectHTMLAttributes<HTMLSelectElement> & {
-    label: string;
-    name: string;
+    label: ReactNode;
 };
 
-export function SelectInput({ children, name, label, ...rest }: Props) {
+export function SelectField({ children, label, ...rest }: Props) {
     return (
-        <>
-            <label className="mb-3 mt-5 block font-semibold" htmlFor={name}>
+        <div className='w-full'>
+            <label className="flex gap-1 mb-1 font-semibold" htmlFor={rest.id}>
                 {label}
             </label>
             <select
                 {...rest}
-                name={name}
+                name={rest.id}
                 className='w-full rounded-md border-1 border-slate-950 dark:border-slate-600 py-[9px] px-5 text-sm outline-2 placeholder:text-slate-500'
             >
                 {children}
             </select>
-        </>
+        </div>
     );
 }

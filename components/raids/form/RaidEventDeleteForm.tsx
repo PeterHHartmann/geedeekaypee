@@ -1,7 +1,7 @@
 'use client';
 
 import { CloseButton } from '@/components/Modal';
-import { FormErrors } from '@/components/form/form-error';
+import { FormErrors } from '@/components/form/FormErrors';
 import { SubmitButton } from '@/components/form/submit-button';
 import { deleteRaidEvent } from '@/lib/actions';
 import type { RaidEvent } from '@/lib/definitions';

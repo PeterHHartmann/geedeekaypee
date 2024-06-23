@@ -3,6 +3,7 @@
 import { RaidRosterDroppableSlot } from '@/components/raids/form/RaidRosterDroppableSlot';
 import type { RosterCharacter } from '@/lib/definitions';
 import { useDndMonitor } from '@dnd-kit/core';
+import { UserIcon } from '@heroicons/react/24/outline';
 import React, { useCallback, type Dispatch, type SetStateAction } from 'react';
 
 type Props = {
@@ -88,22 +89,30 @@ export function RaidRoster({
     });
 
     return (
-        <div className='grid grid-flow-column grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 pt-2 rounded-md overflow-clip sm:divide-x divide-solid divide-slate-700 dark:divide-slate-600 shadow-md shadow-slate-800 '>
-            {divideRosterColumns().map((column, col_index) => (
-                <div key={`roster-col${col_index}`} className='flex sm:flex-col outline outline-1 outline-slate-600 sm:outline-none'>
-                    <div className='w-[15%] sm:w-full bg-slate-200 dark:bg-slate-800/75 p-1 border-b-1 border-slate-500 dark:border-slate-600'>
-                        <h3 className='text-center flex justify-center items-center'>
-                            <span className='hidden sm:block'>{`Group ${col_index + 1}`}</span>
-                            <span className='block sm:hidden'>{`G${col_index + 1}`}</span>
-                        </h3>
+        <fieldset className='w-full h-auto rounded-md bg-slate-200/75 dark:bg-slate-700/75 overflow-clip shadow-md'>
+            <header className='flex justify-center gap-1 p-3 shadow-md bg-slate-200/50 dark:bg-slate-800/75'>
+                <UserIcon className='w-5' />
+                <h2 className='text-lg text-center'>
+                    Raid Roster
+                </h2>
+            </header>
+            <div className='grid grid-flow-column grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 pt-2 rounded-md overflow-clip sm:divide-x divide-solid divide-slate-700 dark:divide-slate-600 shadow-md shadow-slate-800 '>
+                {divideRosterColumns().map((column, col_index) => (
+                    <div key={`roster-col${col_index}`} className='flex sm:flex-col outline outline-1 outline-slate-600 sm:outline-none'>
+                        <div className='w-[15%] sm:w-full bg-slate-200 dark:bg-slate-800/75 p-1 border-b-1 border-slate-500 dark:border-slate-600'>
+                            <h3 className='text-center flex justify-center items-center'>
+                                <span className='hidden sm:block'>{`Group ${col_index + 1}`}</span>
+                                <span className='block sm:hidden'>{`G${col_index + 1}`}</span>
+                            </h3>
+                        </div>
+                        <div className='w-full bg-slate-200 divide-y divide-solid divide-slate-700 dark:bg-slate-800/50 dark:divide-slate-600'>
+                            {column.map((row, row_index) => (
+                                <RaidRosterDroppableSlot key={`${col_index}-${row_index}-raidroster-row`} id={`${col_index}-${row_index}-raidroster-row`} mainRoster={mainRoster} character={row} index={(col_index * 5) + row_index} removeHandler={handleRemoveCharacter} />
+                            ))}
+                        </div>
                     </div>
-                    <div className='w-full bg-slate-200 divide-y divide-solid divide-slate-700 dark:bg-slate-800/50 dark:divide-slate-600'>
-                        {column.map((row, row_index) => (
-                            <RaidRosterDroppableSlot key={`${col_index}-${row_index}-raidroster-row`} id={`${col_index}-${row_index}-raidroster-row`} mainRoster={mainRoster} character={row} index={(col_index * 5) + row_index} removeHandler={handleRemoveCharacter} />
-                        ))}
-                    </div>
-                </div>
-            ))}
-        </div>
+                ))}
+            </div>
+        </fieldset>
     );
 }

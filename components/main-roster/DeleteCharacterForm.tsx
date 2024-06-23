@@ -1,7 +1,7 @@
 'use client';
 import { deleteMainRosterChar } from '@/lib/actions';
 import type { RosterCharacter } from '@/lib/definitions';
-import { FormErrors } from '@/components/form/form-error';
+import { FormErrors } from '@/components/form/FormErrors';
 import { Modal } from '@/components/Modal';
 import { SubmitButton } from '@/components/form/submit-button';
 import { TrashIcon } from '@heroicons/react/24/outline';
