@@ -6,6 +6,7 @@ import { EditCharacterForm } from '@/components/main-roster/EditCharacterForm';
 import { fetchCharClasses, fetchMainRoster, fetchCharRolesPerClass, fetchCharSpecs } from '@/lib/actions';
 import { CharacterInfo } from '@/components/main-roster/CharacterInfo';
 import { MainRosterRow } from '@/components/main-roster/MainRosterRow';
+import { CLASS_BG_COLOR } from '@/lib/constants';
 
 type Props = {
     draggable?: boolean;
@@ -22,7 +23,7 @@ export async function MainRosterList({ draggable }: Props) {
             {charRoster.map((character) => (
                 <li
                     key={`mainroster-row-${character.id}`}
-                    className='flex flex-nowrap items-center gap-1 w-full h-[2.375rem] pr-2 bg-slate-700 dark:bg-slate-800'
+                    className={`flex flex-nowrap items-center gap-1 w-full h-[2.375rem] pr-2 ${CLASS_BG_COLOR[character.class_name]}`}
                 >
                     <MainRosterRow character={character} draggable={draggable}>
                         <CharacterInfo character={character} />

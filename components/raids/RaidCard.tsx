@@ -40,7 +40,7 @@ export async function RaidCard({ raidEvent }: Props) {
                                     </Link>
                                     : null
                                 }
-                                <SlidingToolbarLeft>
+                                <SlidingToolbarLeft className='text-slate-50'>
                                     <RaidEventDeleteForm raidEvent={raidEvent}>
                                         <div className='rounded-full hover:bg-white hover:text-slate-950 p-1'>
                                             <TrashIcon className='w-5' />

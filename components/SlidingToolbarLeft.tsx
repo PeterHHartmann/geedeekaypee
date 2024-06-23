@@ -5,18 +5,20 @@ import { useState, type ReactNode } from 'react';
 
 type Props = {
     children: ReactNode;
+    className?: string;
 };
 
-export function SlidingToolbarLeft({ children }: Props) {
+export function SlidingToolbarLeft({ children, className }: Props) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     return (
         <div className={clsx(
-            'flex h-auto justify-center items-center gap-[.25rem] rounded-full ml-auto border-1 text-white',
+            className,
             {
-                'border-transparent': isOpen == false,
-                'border-slate-50': isOpen == true
-            }
+                'text-slate-950 border-transparent': isOpen == false && !className,
+                'bg-indigo-600 border-indigo-600 text-slate-50': isOpen == true
+            },
+            'flex h-auto justify-center items-center gap-[.25rem] rounded-full ml-auto border-1 border-transparent',
         )}
         >
             <ToolbarButton
@@ -25,7 +27,7 @@ export function SlidingToolbarLeft({ children }: Props) {
                     'transition-transform border-1',
                     {
                         'rotate-180': isOpen == true,
-                        'hover:border-slate-50': isOpen == false
+                        'hover:border-indigo-600': isOpen == false
                     }
                 )}
             >
@@ -49,7 +51,7 @@ export function ToolbarButton({ children, className, ...rest }: ToolbarButtonPro
         <button
             {...rest}
             className={clsx(
-                'flex h-full aspect-square justify-center items-center p-1 rounded-full object-fill border-1 border-transparent hover:bg-slate-50 hover:border-slate-50 hover:text-slate-950',
+                'flex h-full aspect-square justify-center items-center p-1 rounded-full object-fill border-1 border-transparent hover:bg-indigo-600 hover:border-indigo-600 hover:text-slate-50',
                 className
             )}
         >

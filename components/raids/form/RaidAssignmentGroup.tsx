@@ -169,16 +169,16 @@ export function RaidAssignmentGroup({ groupIndex, assignmentGroup, roster, saved
 
     return (
         <div
-            className='grid grid-flow-row bg-slate-700 dark:bg-slate-800/50 divide-y-1 divide-slate-600 dark:divide-slate-700 rounded-md dark:shadow-md dark:shadow-slate-800 overflow-clip'
+            className='grid grid-flow-row bg-slate-200 dark:bg-slate-800/50 divide-y-1 divide-slate-600 dark:divide-slate-700 rounded-md shadow-md shadow-slate-400 dark:shadow-slate-800 overflow-clip'
         >
-            <header className='bg-slate-800/50 py-1'>
-                <h3 className='text-lg text-semibold text-center text-white'>
+            <header className='bg-slate-300/50 dark:bg-slate-800/50 py-1'>
+                <h3 className='text-lg text-semibold text-center'>
                     {groupName}
                 </h3>
             </header>
             {assignedList && assignedList.map((assigned, rowIndex) => (
                 <div key={`assignment-group-${groupIndex}-row-${rowIndex}`} className='flex divide-x-1 divide-slate-600 dark:divide-slate-700'>
-                    <div className='flex min-w-10 max-w-10 justify-center items-center p-2 text-white dark:bg-slate-800/25'>
+                    <div className='flex min-w-10 max-w-10 justify-center items-center p-2 dark:bg-slate-800/25'>
                         <p>
                             {`${rowIndex + 1}`}
                         </p>

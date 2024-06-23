@@ -6,18 +6,19 @@ import { useDroppable } from "@dnd-kit/core";
 import clsx from 'clsx';
 import { CharacterInfo } from '@/components/main-roster/CharacterInfo';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { CLASS_BG_COLOR } from '@/lib/constants';
 
 type Props = {
     id: string;
     mainRoster: RosterCharacter[];
-    initial: RosterCharacter | null;
+    character: RosterCharacter | null;
     index: number;
     removeHandler: (index: number) => void;
 };
 
 export function RaidRosterDroppableSlot({
     id,
-    initial,
+    character,
     index,
     removeHandler
 }: Props) {
@@ -40,18 +41,18 @@ export function RaidRosterDroppableSlot({
                 }
             )}
         >
-            {initial
+            {character
                 ?
-                <div className='flex justify-center items-center w-full h-full'>
+                <div className={`flex justify-center items-center w-full h-full ${CLASS_BG_COLOR[character.class_name]}`}>
                     <input
                         type='hidden'
                         name={`raidroster_${index}`}
-                        value={initial.id || undefined}
+                        value={character.id || undefined}
                     />
-                    <CharacterRowDraggable character={initial} id={`${id}_draggable`} index={index}>
-                        <CharacterInfo character={initial} />
+                    <CharacterRowDraggable character={character} id={`${id}_draggable`} index={index}>
+                        <CharacterInfo character={character} />
                     </CharacterRowDraggable>
-                    <button className='flex p-2 justify-center items-center text-slate-400' onClick={() => removeHandler(index)}>
+                    <button className='flex p-2 justify-center items-center text-slate-950' onClick={() => removeHandler(index)}>
                         <XMarkIcon className='w-5' />
                     </button>
                 </div>

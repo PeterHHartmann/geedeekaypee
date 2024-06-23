@@ -16,6 +16,19 @@ export const CLASS_TEXT_COLOR: { [key in CharClass['name']]: string; } = {
     'Warrior': "text-warrior"
 };
 
+export const CLASS_BG_COLOR: { [key in CharClass['name']]: string; } = {
+    'Death Knight': "bg-deathknight",
+    'Druid': "bg-druid",
+    'Hunter': "bg-hunter",
+    'Mage': "bg-mage",
+    'Paladin': "bg-paladin",
+    'Priest': "bg-priest",
+    'Rogue': "bg-rogue",
+    'Shaman': "bg-shaman",
+    'Warlock': "bg-warlock",
+    'Warrior': "bg-warrior"
+};
+
 export const RAID_COVER_IMAGES: { [key in RaidVariant['name']]: StaticImageData; } = {
     'Icecrown Citadel': IcecrownCitadelCover,
     'Ruby Sanctum': RubySanctumCover
