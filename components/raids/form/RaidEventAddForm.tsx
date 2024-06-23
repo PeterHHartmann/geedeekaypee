@@ -6,8 +6,8 @@ import { SelectField } from '@/components/form/SelectField';
 import { SubmitButton } from '@/components/form/submit-button';
 import { RaidAssignments } from '@/components/raids/form/RaidAssignments';
 import { RaidRoster } from '@/components/raids/form/RaidRoster';
-import { fetchRosterPositionsForRaidTemplate, insertRaidEvent } from '@/lib/actions';
-import type { RaidTemplate, RaidTemplateRosterPosition, RosterCharacter } from '@/lib/definitions';
+import { fetchAssignmentsForRaidTemplate, fetchRosterPositionsForRaidTemplate, insertRaidEvent } from '@/lib/actions';
+import type { RaidTemplate, RaidTemplateAssignment, RaidTemplateRosterPosition, RosterCharacter } from '@/lib/definitions';
 import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, TagIcon } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -31,7 +31,7 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
         return Array.from(Array(currentTemplate.size), () => null);
     }, [currentTemplate]);
 
-    const [roster, setRoster] = useState<(RosterCharacter | null)[]>(createEmptyRoster());
+    const [raidRoster, setRaidRoster] = useState<(RosterCharacter | null)[]>(createEmptyRoster());
 
     const { data: templatePositions } = useQuery({
         queryKey: [currentTemplate.id, 'raid_template_positions'],
@@ -58,7 +58,7 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
     }
 
     useEffect(() => {
-        if (mainRoster.length && templatePositions) {
+        if (mainRoster && mainRoster.length && templatePositions) {
             const roster_copy = mainRoster.slice(0);
             const newRoster = createEmptyRoster();
 
@@ -78,7 +78,7 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
                 }
             });
 
-            return setRoster(newRoster);
+            return setRaidRoster(newRoster);
         }
     }, [currentTemplate, templatePositions, mainRoster, createEmptyRoster]);
 
@@ -160,8 +160,8 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
                         }
                     />
                 </fieldset>
-                <RaidRoster mainRoster={mainRoster} roster={roster} setRoster={setRoster} />
-                <RaidAssignments roster={roster} currentTemplate={currentTemplate} />
+                <RaidRoster mainRoster={mainRoster} roster={raidRoster} setRoster={setRaidRoster} />
+                <RaidAssignments raidRoster={raidRoster} currentTemplate={currentTemplate} />
             </div>
             <FormErrors result={state} />
             <div className='flex justify-center gap-2'>

@@ -444,8 +444,6 @@ export async function fetchRaidEventAssignments(eventId: RaidEvent['id']) {
             INNER JOIN raid_event_roster_chars ON raid_event_assignments.raid_roster_id = raid_event_roster_chars.id
             WHERE raid_event_assignments.raid_event_id = ${eventId}
             ;`;
-        console.log(data.rows);
-
         return data.rows;
     } catch (error) {
         console.log(error);

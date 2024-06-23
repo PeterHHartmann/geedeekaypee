@@ -135,7 +135,7 @@ export function RaidEventEditForm({ children, raidEvent, mainRoster, raidTemplat
                     />
                 </fieldset>
                 <RaidRoster mainRoster={mainRoster} roster={roster} setRoster={setRoster} />
-                <RaidAssignments roster={roster} currentTemplate={raidTemplate} savedAssignment={eventAssignments} />
+                <RaidAssignments raidRoster={roster} currentTemplate={raidTemplate} savedAssignments={eventAssignments} />
             </div>
             <FormErrors result={state} />
             <div className='flex justify-center gap-2'>
