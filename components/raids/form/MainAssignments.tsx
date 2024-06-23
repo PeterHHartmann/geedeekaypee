@@ -50,16 +50,6 @@ export function MainAssignments({
                 const positions = group.map(() => null);
                 return positions;
             });
-            if (savedAssignments) {
-                savedAssignments.forEach((assignment) => {
-                    const foundRaidRosterChar = raidRoster.find((char) => char && char.id == assignment.raid_roster_id);
-                    if (foundRaidRosterChar) {
-                        assignedChars[assignment.assignment_group][assignment.position] = foundRaidRosterChar;
-                    }
-                });
-            }
-            console.log(assignedChars);
-
             setAllAssignedChars(assignedChars);
         }
     }, [assignmentRequirementGroups, allAssignedChars, setAllAssignedChars, savedAssignments, raidRoster]);

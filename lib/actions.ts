@@ -737,7 +737,3 @@ export const fetchAssignmentsForRaidTemplate = unstable_cache(
         revalidate: 3600
     }
 );
-
-export async function fetchFake() {
-    return 'yo';
-}
