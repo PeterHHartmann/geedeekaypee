@@ -18,8 +18,8 @@ export function ResizeWrapper({ children }: Props) {
             'flex rounded-full w-7 h-7 aspect-square justify-center items-center bg-indigo-600 text-slate-50 border-1 border-indigo-600 hover:bg-indigo-500 hover:border-indigo-500'
         >
             {isOpen
-                ? <MinusIcon className='w-5' />
-                : <PlusIcon className='w-5' />
+                ? <MinusIcon className='w-4' />
+                : <PlusIcon className='w-4' />
             }
         </button>
     );
