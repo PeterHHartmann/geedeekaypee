@@ -1,9 +1,9 @@
 'use client';
 
-import { DroppableNew } from '@/components/raids/form/DroppableNew';
+import { DroppableAssignmentSlot } from '@/components/raids/form/DroppableAssignmentSlot';
 import type { RaidEventAssignment, RaidTemplateAssignment, RosterCharacter } from '@/lib/definitions';
 import { useDndMonitor } from '@dnd-kit/core';
-import { useMemo, type Dispatch, type SetStateAction } from 'react';
+import { type Dispatch, type SetStateAction } from 'react';
 
 type Props = {
     groupIndex: number,
@@ -79,7 +79,7 @@ export function RaidAssignmentGroup({ groupIndex, assignmentGroup, raidRoster, s
                         </p>
                     </div>
                     <div className='flex flex-grow w-full'>
-                        <DroppableNew
+                        <DroppableAssignmentSlot
                             id={`assignment-group${groupIndex}-row${rowIndex}`}
                             groupIndex={groupIndex}
                             rowIndex={rowIndex}
@@ -90,34 +90,9 @@ export function RaidAssignmentGroup({ groupIndex, assignmentGroup, raidRoster, s
                             raidRoster={raidRoster}
                             savedAssignments={savedAssignments}
                         />
-                        {/* <DroppableAssignmentSlot id={`assignment-group${index}-row${rowIndex}`} character={assigned} groupIndex={index} rowIndex={rowIndex} /> */}
                     </div>
                 </div>
             ))}
         </div>
     );
-
-    // return (
-    //     <div
-    //         className='grid grid-flow-row bg-slate-200 dark:bg-slate-800/50 divide-y-1 divide-slate-600 dark:divide-slate-700 rounded-md shadow-md shadow-slate-400 dark:shadow-slate-800 overflow-clip'
-    //     >
-    //         <header className='bg-slate-300/50 dark:bg-slate-800/50 py-1'>
-    //             <h3 className='text-lg text-semibold text-center'>
-    //                 {groupName}
-    //             </h3>
-    //         </header>
-    //         {assignedList && assignedList.map((assigned, rowIndex) => (
-    //             <div key={`assignment-group-${groupIndex}-row-${rowIndex}`} className='flex divide-x-1 divide-slate-600 dark:divide-slate-700'>
-    //                 <div className='flex min-w-10 max-w-10 justify-center items-center p-2 dark:bg-slate-800/25'>
-    //                     <p>
-    //                         {`${rowIndex + 1}`}
-    //                     </p>
-    //                 </div>
-    //                 <div className='flex flex-grow w-full'>
-    //                     <DroppableAssignmentSlot id={`assignment-group${groupIndex}-row${rowIndex}`} character={assigned} groupIndex={groupIndex} rowIndex={rowIndex} />
-    //                 </div>
-    //             </div>
-    //         ))}
-    //     </div>
-    // );
 }
