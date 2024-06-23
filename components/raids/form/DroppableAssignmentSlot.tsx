@@ -5,7 +5,6 @@ import { useDroppable } from '@dnd-kit/core';
 import clsx from 'clsx';
 import { useEffect, type Dispatch, type SetStateAction } from 'react';
 
-
 type Props = {
     id: string,
     groupIndex: number,
