@@ -34,8 +34,7 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
         queryFn: async ({ queryKey: [templateId] }) => {
             const result = await fetchRosterPositionsForRaidTemplate(templateId);
             return result;
-        },
-        placeholderData: defaultRaidTemplatePositions
+        }
     });
 
     function getDefaultDate() {
@@ -49,9 +48,13 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
         const newTemplateId = event.target.value;
         const foundTemplate = raidTemplates.find((template) => template.id == newTemplateId);
         if (foundTemplate) {
+            const newRoster: (RosterCharacter | null)[] = Array.from(Array(currentTemplate.size), () => null);
+            setRaidRoster(newRoster);
             setCurrentTemplate(foundTemplate);
+            setHasAutomatedRaidRoster(false);
         }
     }
+
 
     useEffect(() => {
         if (!hasAutomatedRaidRoster) {

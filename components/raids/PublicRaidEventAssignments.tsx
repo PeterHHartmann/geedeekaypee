@@ -44,16 +44,16 @@ export async function PublicRaidEventAssignments({
     }, {});
 
     return (
-        <section className='w-4/12 rounded-md bg-slate-200/50 dark:bg-slate-700/75 overflow-clip shadow-md'>
-            <header className='flex gap-1 justify-center p-3 bg-slate-200/75 dark:bg-slate-700/75 shadow-md'>
+        <section className='w-full rounded-md bg-slate-200/50 dark:bg-slate-800/75 overflow-clip shadow-md'>
+            <header className='flex gap-1 justify-center p-3 bg-slate-200/75 dark:bg-slate-700/50 shadow-md'>
                 <MegaphoneIcon className='w-5' />
                 <h2 className='text-lg text-center'>Assignments</h2>
             </header>
-            <div className='grid grid-flow-row gap-2 py-2 max-h-[800px] overflow-y-auto rounded-md overflow-clip divide-slate-600 shadow-md'>
+            <div className='flex flex-col flex-wrap max-h-[600px] gap-2 p-2 overflow-y-auto rounded-md overflow-clip divide-slate-600 shadow-md'>
                 {Object.entries(raidAssignements).map(([groupName, groupCharacters]) => (
                     <ul
                         key={`raidAssignmentGroup-${groupName}`}
-                        className='grid grid-flow-row overflow-y-auto h-min list-none bg-slate-200 dark:bg-slate-800/50 divide-y-1 divide-slate-600 dark:divide-slate-700 rounded-md shadow-md shadow-slate-400 dark:shadow-slate-800 overflow-clip'
+                        className='grid grid-flow-row overflow-y-auto h-min list-none bg-slate-200 dark:bg-slate-700/50 divide-y-1 divide-slate-600 dark:divide-slate-700 rounded-md shadow-md shadow-slate-400 dark:shadow-slate-800 overflow-clip'
                     >
                         <header className='bg-slate-300/50 dark:bg-slate-800/50 py-1'>
                             <h3 className='text-lg text-semibold text-center'>

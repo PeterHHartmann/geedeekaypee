@@ -60,9 +60,6 @@ export default async function RaidEventPublicPage({ params }: Props) {
                     raidTemplate={raidTemplate}
                     raidRoster={raidRoster}
                 />
-                <div className='w-full h-auto'>
-                    <h1>Bosses</h1>
-                </div>
             </div>
         </div>
     );

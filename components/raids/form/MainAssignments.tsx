@@ -19,7 +19,7 @@ export function MainAssignments({
 }: Props) {
 
     return (
-        <div className='grid grid-flow-row gap-3'>
+        <div className='flex flex-col flex-wrap max-h-[700px] gap-3 px-2 overflow-x-auto'>
             {allAssignedChars.map((assignedCharGroup, groupIndex) => (
                 <RaidAssignmentGroup
                     key={`assignment-group-${groupIndex}`}

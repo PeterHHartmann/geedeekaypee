@@ -41,6 +41,8 @@ export function RaidAssignments({
                     return acc;
                 }, []);
                 return dividedIntoGroups;
+            } else {
+                return null;
             }
         },
     });
@@ -57,7 +59,7 @@ export function RaidAssignments({
 
     return (
         <div className='flex gap-3 w-full pb-4'>
-            <fieldset className='w-1/4 rounded-md bg-slate-200/75 dark:bg-slate-700/75 overflow-clip shadow-md'>
+            <fieldset className='w-full rounded-md bg-slate-200/75 dark:bg-slate-700/75 overflow-clip shadow-md'>
                 <header className='flex gap-1 justify-center p-3 bg-slate-200 dark:bg-slate-800/50 shadow-md'>
                     <MegaphoneIcon className='w-5' />
                     <h2 className='text-lg text-center'>Assignments</h2>
@@ -70,9 +72,6 @@ export function RaidAssignments({
                         : <div className={`h-[780px] w-auto ${SHIMMER}`}></div>
                     }
                 </div>
-            </fieldset>
-            <fieldset className='w-full h-[800px] bg-slate-700/50 rounded-md shadow-md'>
-
             </fieldset>
         </div>
     );

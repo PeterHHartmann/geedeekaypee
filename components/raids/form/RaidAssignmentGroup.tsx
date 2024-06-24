@@ -129,7 +129,7 @@ export function RaidAssignmentGroup({ groupIndex, assignmentGroup, raidRoster, s
 
     return (
         <div
-            className='grid grid-flow-row bg-slate-200 dark:bg-slate-800/50 divide-y-1 divide-slate-600 dark:divide-slate-700 rounded-md shadow-md shadow-slate-400 dark:shadow-slate-800 overflow-clip'
+            className='grid grid-flow-row h-fit bg-slate-200 dark:bg-slate-800/50 divide-y-1 divide-slate-600 dark:divide-slate-700 rounded-md shadow-md shadow-slate-400 dark:shadow-slate-800 overflow-clip'
         >
             <header className='bg-slate-300/50 dark:bg-slate-800/50 py-1'>
                 <h3 className='text-lg text-semibold text-center'>
