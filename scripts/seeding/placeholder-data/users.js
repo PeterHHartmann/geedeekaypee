@@ -10,7 +10,13 @@ const users = {
         name: 'Benis',
         email: 'benis@gmail.com',
         password: '1Big!ideas+',
-  },
+    },
+    'example@gmail.com': {
+        id: '03565044-2aad-49da-b36a-420da9da8405',
+        name: 'Example User',
+        email: 'example@gmail.com',
+        password: 'example1234',
+    }
 };
 
 module.exports = {
