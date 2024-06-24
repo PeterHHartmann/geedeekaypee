@@ -10,7 +10,7 @@ import { fetchRosterPositionsForRaidTemplate, insertRaidEvent } from '@/lib/acti
 import type { RaidTemplate, RaidTemplateRosterPosition, RosterCharacter } from '@/lib/definitions';
 import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, TagIcon } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
-import { useDeferredValue, useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
+import { useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
 import { useFormState } from 'react-dom';
 
 type Props = {

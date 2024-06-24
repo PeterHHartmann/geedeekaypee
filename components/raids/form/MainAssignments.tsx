@@ -1,9 +1,6 @@
 import { RaidAssignmentGroup } from '@/components/raids/form/RaidAssignmentGroup';
-import { fetchAssignmentsForRaidTemplate } from '@/lib/actions';
-import { SHIMMER } from '@/lib/constants';
-import type { RaidEventAssignment, RaidTemplate, RaidTemplateAssignment, RosterCharacter } from '@/lib/definitions';
-import { useQuery } from '@tanstack/react-query';
-import { useEffect, useMemo, type Dispatch, type SetStateAction } from 'react';
+import type { RaidEventAssignment, RaidTemplateAssignment, RosterCharacter } from '@/lib/definitions';
+import { type Dispatch, type SetStateAction } from 'react';
 
 type Props = {
     raidRoster: (RosterCharacter | null)[];
