@@ -6,11 +6,10 @@ import { SelectField } from '@/components/form/SelectField';
 import { SubmitButton } from '@/components/form/submit-button';
 import { RaidAssignments } from '@/components/raids/form/RaidAssignments';
 import { RaidRoster } from '@/components/raids/form/RaidRoster';
-import { fetchAssignmentsForRaidTemplate, fetchRosterPositionsForRaidTemplate, insertRaidEvent } from '@/lib/actions';
-import type { RaidTemplate, RaidTemplateAssignment, RaidTemplateRosterPosition, RosterCharacter } from '@/lib/definitions';
+import { fetchRosterPositionsForRaidTemplate, insertRaidEvent } from '@/lib/actions';
+import type { RaidTemplate, RaidTemplateRosterPosition, RosterCharacter } from '@/lib/definitions';
 import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, TagIcon } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
 import { useFormState } from 'react-dom';
 
@@ -24,7 +23,6 @@ type Props = {
 export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplatePositions }: Props) {
 
     const [state, formAction] = useFormState(insertRaidEvent, { success: false });
-    const router = useRouter();
 
     const [currentTemplate, setCurrentTemplate] = useState<RaidTemplate>(raidTemplates[0]);
     const createEmptyRoster = useCallback((): (RosterCharacter | null)[] => {
@@ -81,12 +79,6 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
             return setRaidRoster(newRoster);
         }
     }, [currentTemplate, templatePositions, mainRoster, createEmptyRoster]);
-
-    useEffect(() => {
-        if (state?.success) {
-            router.push('/dashboard');
-        }
-    }, [state, router]);
 
     return (
         <form className='w-full' action={formAction}>

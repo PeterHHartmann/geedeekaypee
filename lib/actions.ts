@@ -20,6 +20,7 @@ import { sql } from '@vercel/postgres';
 import { AuthError, type User } from 'next-auth';
 import { revalidateTag, unstable_cache } from 'next/cache';
 import { z } from 'zod';
+import { redirect } from 'next/navigation';
 
 export async function authenticate(
     _prevState: string | undefined,
@@ -466,7 +467,10 @@ export async function fetchRaidEventAssignments(eventId: RaidEvent['id']) {
 export async function insertRaidEvent(
     _prevState: ServerMutationResult,
     formData: FormData
-): Promise<ServerMutationResult> {
+): Promise<{
+    success: boolean;
+    messages?: string[];
+} | undefined> {
     const session = await auth();
     const user = session!.user;
 
@@ -563,18 +567,24 @@ export async function insertRaidEvent(
             })
         );
 
-        revalidateTag(`raidevents[${user.email}]`);
-        return { success: true };
     } catch (error) {
         console.log(error);
         return { success: false, messages: ['Failed to save raid event. Please try again later'] };
     }
+    revalidateTag(`raidevents[${user.email}]`);
+    redirect('/dashboard');
 }
 
 export async function updateRaidEvent(
-    _prevState: ServerMutationResult,
+    _prevState: {
+        success: boolean;
+        messages?: string[];
+    } | undefined,
     formData: FormData
-) {
+): Promise<{
+    success: boolean;
+    messages?: string[];
+} | undefined> {
     const session = await auth();
     const user = session!.user;
 
@@ -683,13 +693,12 @@ export async function updateRaidEvent(
                     ;`;
             })
         );
-
-        revalidateTag(`raidevents[${user.email}]`);
-        return { success: true };
     } catch (error) {
         console.log(error);
         return { success: false, messages: ['Failed to update raid event'] };
     }
+    revalidateTag(`raidevents[${user.email}]`);
+    redirect('/dashboard');
 }
 
 export async function deleteRaidEvent(

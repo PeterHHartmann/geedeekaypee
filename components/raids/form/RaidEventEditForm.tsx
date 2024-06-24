@@ -9,12 +9,10 @@ import { RaidRoster } from '@/components/raids/form/RaidRoster';
 import { updateRaidEvent } from '@/lib/actions';
 import type { RaidEvent, RaidEventAssignment, RaidEventRosterPosition, RaidTemplate, RosterCharacter } from '@/lib/definitions';
 import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, TagIcon } from '@heroicons/react/24/outline';
-import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useFormState } from 'react-dom';
 
 type Props = {
-    children?: ReactNode;
     raidEvent: RaidEvent;
     mainRoster: RosterCharacter[];
     raidTemplate: RaidTemplate;
@@ -22,10 +20,9 @@ type Props = {
     eventAssignments: RaidEventAssignment[];
 };
 
-export function RaidEventEditForm({ children, raidEvent, mainRoster, raidTemplate, eventRoster, eventAssignments }: Props) {
+export function RaidEventEditForm({ raidEvent, mainRoster, raidTemplate, eventRoster, eventAssignments }: Props) {
 
     const [state, formAction] = useFormState(updateRaidEvent, { success: false });
-    const router = useRouter();
 
     const initialDate = useMemo(() => {
         const formatted = new Date(raidEvent.date).toISOString().substring(0, 10);
@@ -55,12 +52,6 @@ export function RaidEventEditForm({ children, raidEvent, mainRoster, raidTemplat
             setRoster(newRoster);
         }
     }, [eventRoster, createEmptyRoster, mainRoster]);
-
-    useEffect(() => {
-        if (state?.success) {
-            router.push('/dashboard');
-        }
-    }, [state, router]);
 
     return (
         <form className='w-full' action={formAction}>
