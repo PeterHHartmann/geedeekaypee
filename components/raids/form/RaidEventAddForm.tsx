@@ -10,7 +10,7 @@ import { fetchRosterPositionsForRaidTemplate, insertRaidEvent } from '@/lib/acti
 import type { RaidTemplate, RaidTemplateRosterPosition, RosterCharacter } from '@/lib/definitions';
 import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, TagIcon } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
-import { useCallback, useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
+import { useDeferredValue, useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
 import { useFormState } from 'react-dom';
 
 type Props = {
@@ -25,11 +25,9 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
     const [state, formAction] = useFormState(insertRaidEvent, { success: false });
 
     const [currentTemplate, setCurrentTemplate] = useState<RaidTemplate>(raidTemplates[0]);
-    const createEmptyRoster = useCallback((): (RosterCharacter | null)[] => {
-        return Array.from(Array(currentTemplate.size), () => null);
-    }, [currentTemplate]);
 
-    const [raidRoster, setRaidRoster] = useState<(RosterCharacter | null)[]>(createEmptyRoster());
+    const [raidRoster, setRaidRoster] = useState<(RosterCharacter | null)[]>(Array.from(Array(currentTemplate.size), () => null));
+    const [hasAutomatedRaidRoster, setHasAutomatedRaidRoster] = useState<boolean>(false);
 
     const { data: templatePositions } = useQuery({
         queryKey: [currentTemplate.id, 'raid_template_positions'],
@@ -56,29 +54,31 @@ export function RaidEventAddForm({ mainRoster, raidTemplates, defaultRaidTemplat
     }
 
     useEffect(() => {
-        if (mainRoster && mainRoster.length && templatePositions) {
-            const roster_copy = mainRoster.slice(0);
-            const newRoster = createEmptyRoster();
+        if (!hasAutomatedRaidRoster) {
+            if (mainRoster && mainRoster.length && templatePositions) {
+                const roster_copy = mainRoster.slice(0);
+                const newRoster: (RosterCharacter | null)[] = Array.from(Array(currentTemplate.size), () => null);
 
-            //fill newRoster with characters that matches the requirements for each numeric position in the roster
-            templatePositions.forEach((prio) => {
-                const found = roster_copy.find((char) => (
-                    prio.class_id == char.class_id
-                    && prio.role_id == char.role_id
-                    && prio.spec_id == char.spec_id
-                ));
-                if (!newRoster[prio.position - 1]) {
-                    if (found) {
-                        const index = roster_copy.indexOf(found);
-                        roster_copy.splice(index, 1);
-                        newRoster[prio.position - 1] = found;
+                //fill newRoster with characters that matches the requirements for each numeric position in the roster
+                templatePositions.forEach((prio) => {
+                    const found = roster_copy.find((char) => (
+                        prio.class_id == char.class_id
+                        && prio.role_id == char.role_id
+                        && prio.spec_id == char.spec_id
+                    ));
+                    if (!newRoster[prio.position - 1]) {
+                        if (found) {
+                            const index = roster_copy.indexOf(found);
+                            roster_copy.splice(index, 1);
+                            newRoster[prio.position - 1] = found;
+                        }
                     }
-                }
-            });
-
-            return setRaidRoster(newRoster);
+                });
+                setRaidRoster(newRoster);
+                setHasAutomatedRaidRoster(true);
+            }
         }
-    }, [currentTemplate, templatePositions, mainRoster, createEmptyRoster]);
+    }, [currentTemplate, templatePositions, mainRoster, hasAutomatedRaidRoster]);
 
     return (
         <form className='w-full' action={formAction}>
