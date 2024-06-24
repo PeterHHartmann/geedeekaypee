@@ -25,8 +25,11 @@ export function RaidEventEditForm({ raidEvent, mainRoster, raidTemplate, eventRo
     const [state, formAction] = useFormState(updateRaidEvent, { success: false });
 
     const initialDate = useMemo(() => {
-        const formatted = new Date(raidEvent.date).toISOString().substring(0, 10);
-        return formatted;
+        const fullDate = new Date(raidEvent.date);
+        const year = fullDate.getFullYear();
+        const month = (fullDate.getMonth() + 1).toString().padStart(2, '0');
+        const day = fullDate.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }, [raidEvent]);
 
     const initialTime = useMemo(() => {
