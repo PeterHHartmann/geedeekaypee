@@ -73,10 +73,6 @@ export function DroppableAssignmentSlot({
     useEffect(() => {
         if (savedAssignments) {
             const foundAssignedForThisSlot = savedAssignments.find((assignment) => assignment.assignment_group == groupIndex && assignment.position == rowIndex);
-            if (groupIndex == 1) {
-                console.log(foundAssignedForThisSlot);
-            }
-
             if (foundAssignedForThisSlot) {
                 const foundRosterChar = raidRoster.find((rosterChar) => rosterChar && rosterChar.id == foundAssignedForThisSlot.raid_roster_id);
                 if (foundRosterChar) {

@@ -89,6 +89,7 @@ export type RaidTemplateRosterPositions = {
 
 export type RaidEvent = {
     id: string;
+    user_email: User['email'];
     raid_template_id: RaidTemplate['id'],
     title: string;
     date: string;

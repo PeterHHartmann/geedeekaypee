@@ -1,13 +1,9 @@
 'use client';
 
 import { MainAssignments } from '@/components/raids/form/MainAssignments';
-import { RaidAssignmentGroup } from '@/components/raids/form/RaidAssignmentGroup';
-import { fetchAssignmentsForRaidTemplate } from '@/lib/actions';
-import { SHIMMER } from '@/lib/constants';
-import type { RaidEventAssignment, RaidTemplate, RaidTemplateAssignment, RosterCharacter } from '@/lib/definitions';
+import type { RaidEventAssignment, RaidTemplate, RosterCharacter } from '@/lib/definitions';
 import { MegaphoneIcon } from '@heroicons/react/24/outline';
-import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 type Props = {
     raidRoster: (RosterCharacter | null)[];

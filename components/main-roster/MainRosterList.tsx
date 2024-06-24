@@ -3,17 +3,24 @@
 import { SlidingToolbarLeft } from '@/components/SlidingToolbarLeft';
 import { DeleteCharacterForm } from '@/components/main-roster/DeleteCharacterForm';
 import { EditCharacterForm } from '@/components/main-roster/EditCharacterForm';
-import { fetchCharClasses, fetchMainRoster, fetchCharRolesPerClass, fetchCharSpecs } from '@/lib/actions';
+import {
+    fetchCharClasses,
+    fetchMainRoster,
+    fetchCharRolesPerClass,
+    fetchCharSpecs
+} from '@/lib/actions';
 import { CharacterInfo } from '@/components/main-roster/CharacterInfo';
 import { MainRosterRow } from '@/components/main-roster/MainRosterRow';
 import { CLASS_BG_COLOR } from '@/lib/constants';
+import { auth } from '@/auth';
 
 type Props = {
     draggable?: boolean;
 };
 
 export async function MainRosterList({ draggable }: Props) {
-    const charRoster = await fetchMainRoster();
+    const session = await auth();
+    const charRoster = await fetchMainRoster(session?.user?.email);
     const allCharClasses = await fetchCharClasses();
     const allCharSpecs = await fetchCharSpecs();
     const allRoleOptions = await fetchCharRolesPerClass();

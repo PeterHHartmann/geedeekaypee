@@ -1,10 +1,23 @@
 'use server';
 import 'server-only';
-import type { CharClass, CharRoleOptionsForClasses, CharRole, ClassTalentSpec, ServerMutationResult, RosterCharacter, RaidVariant, RaidTemplate, RaidTemplateRosterPosition, RaidTemplateRosterPositions, RaidEvent, RaidEventRosterPosition, RaidTemplateAssignment, RaidEventAssignment } from '@/lib/definitions';
+import type {
+    CharClass,
+    CharRoleOptionsForClasses,
+    CharRole,
+    ClassTalentSpec,
+    ServerMutationResult,
+    RosterCharacter,
+    RaidTemplate,
+    RaidTemplateRosterPosition,
+    RaidEvent,
+    RaidEventRosterPosition,
+    RaidTemplateAssignment,
+    RaidEventAssignment
+} from '@/lib/definitions';
 import { capitalize } from '@/lib/utils';
 import { auth, signIn } from '@/auth';
 import { sql } from '@vercel/postgres';
-import { AuthError } from 'next-auth';
+import { AuthError, type User } from 'next-auth';
 import { revalidateTag, unstable_cache } from 'next/cache';
 import { z } from 'zod';
 
@@ -101,15 +114,13 @@ export async function fetchCharRolesPerClass(): Promise<CharRoleOptionsForClasse
     }
 }
 
-export async function fetchMainRoster() {
-    const session = await auth();
-    const user = session!.user;
+export async function fetchMainRoster(userEmail: User['email']) {
 
-    if (!user) throw new Error('Cannot fetch main roster: User is not logged in');
+    if (!userEmail) throw new Error('Cannot fetch main roster: User is not logged in');
 
     return await unstable_cache(
         async () => {
-            console.log('main_roster_chars fetch not cached for user:', user);
+            console.log('main_roster_chars fetch not cached for user:', userEmail);
 
             try {
                 const data = await sql<RosterCharacter>
@@ -127,7 +138,7 @@ export async function fetchMainRoster() {
                     INNER JOIN char_classes ON main_roster_chars.class_id = char_classes.id
                     INNER JOIN class_talent_specs ON main_roster_chars.spec_id = class_talent_specs.id
                     INNER JOIN char_roles ON main_roster_chars.role_id = char_roles.id
-                    WHERE main_roster_chars.user_email = ${user.email}
+                    WHERE main_roster_chars.user_email = ${userEmail}
                     ORDER BY char_roles.created_at ASC, char_classes.created_at, class_talent_specs.created_at ASC
                     ;`;
                 return data.rows;
@@ -136,9 +147,9 @@ export async function fetchMainRoster() {
                 throw new Error('Failed to fetch main roster.');
             }
         },
-        [`mainrosters[${user.email}]`],
+        [`mainrosters[${userEmail}]`],
         {
-            tags: [`mainrosters[${user.email}]`],
+            tags: [`mainrosters[${userEmail}]`],
             revalidate: 3600
         }
     )();
@@ -400,6 +411,7 @@ export async function fetchRaidEvent(eventId: RaidEvent['id']) {
         const data = await sql<RaidEvent>
             `SELECT 
                 raid_events.id,
+                raid_events.user_email,
                 raid_events.raid_template_id,
                 raid_events.title,
                 raid_events.date,

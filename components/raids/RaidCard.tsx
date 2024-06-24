@@ -1,10 +1,10 @@
 import { SlidingToolbarLeft } from '@/components/SlidingToolbarLeft';
+import { RaidCoverImage } from '@/components/raids/RaidCoverImage';
 import { RaidEventDeleteForm } from '@/components/raids/form/RaidEventDeleteForm';
 import { fetchRaidTemplateSingle } from '@/lib/actions';
-import { RAID_COVER_IMAGES } from '@/lib/constants';
-import type { RaidVariant, RaidEvent } from '@/lib/definitions';
+import type { RaidEvent } from '@/lib/definitions';
+import { formatDateForDisplay, formatTimeForDisplay } from '@/lib/utils';
 import { CalendarIcon, ClockIcon, EyeIcon, EyeSlashIcon, LinkIcon, MapPinIcon, TrashIcon, WrenchIcon } from '@heroicons/react/24/outline';
-import Image from 'next/image';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
@@ -14,16 +14,6 @@ type Props = {
 
 export async function RaidCard({ raidEvent }: Props) {
     const raidTemplate = await fetchRaidTemplateSingle(raidEvent.raid_template_id);
-
-    function formatTimeStr(timeStr: string) {
-        const parts = timeStr.split(':');
-        const newTimeString = parts[0] + ':' + parts[1];
-        return newTimeString;
-    }
-
-    function formatDate(date: string) {
-        return new Date(date).toDateString();
-    }
 
     return (
         <article className={`${RaidCardSkeleton} text-white`}>
@@ -35,7 +25,7 @@ export async function RaidCard({ raidEvent }: Props) {
                             <p className='flex font-semibold'>{raidEvent.title}</p>
                             <div className='flex gap-2 items-center'>
                                 {raidEvent.is_public
-                                    ? <Link href={`/dashboard`} className='flex gap-2 hover:underline'>
+                                    ? <Link href={`/raid/${raidEvent.id}`} className='flex gap-2 hover:underline'>
                                         <LinkIcon className='w-4' />
                                     </Link>
                                     : null
@@ -61,11 +51,11 @@ export async function RaidCard({ raidEvent }: Props) {
                         </CardRow>
                         <CardRow>
                             <CalendarIcon className='w-4' />
-                            <p>{formatDate(raidEvent.date)}</p>
+                            <p>{formatDateForDisplay(raidEvent.date)}</p>
                         </CardRow>
                         <CardRow>
                             <ClockIcon className='w-4' />
-                            <p>{formatTimeStr(raidEvent.time)}</p>
+                            <p>{formatTimeForDisplay(raidEvent.time)}</p>
                             <span className='text-sm'> Server Time</span>
                         </CardRow>
                         <CardRow>
@@ -88,21 +78,6 @@ export async function RaidCard({ raidEvent }: Props) {
 }
 
 export const RaidCardSkeleton = 'flex relative z-0 h-[300px] border-1 border-slate-600 bg-slate-700 rounded-xl overflow-clip shadow-md';
-
-type RaidCoverImageProps = {
-    raidName: RaidVariant['name'];
-};
-
-function RaidCoverImage({ raidName }: RaidCoverImageProps) {
-    return (
-        <Image
-            src={RAID_COVER_IMAGES[raidName]}
-            fill
-            alt='Raid cover'
-            className='absolute w-full h-full object-cover object-center -z-10 rounded-xl mix-blend-hard-light'
-        ></Image>
-    );
-};
 
 function CardRow({ children }: { children: ReactNode; }) {
     return (
