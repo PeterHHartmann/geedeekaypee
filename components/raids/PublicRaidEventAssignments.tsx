@@ -80,9 +80,7 @@ export async function PublicRaidEventAssignments({
                             </li>
                         ))}
                     </ul>
-                ))
-
-                }
+                ))}
             </div>
         </section>
     );
