@@ -58,7 +58,7 @@ export function AddCharacterForm({ charClasses, charRoles, charSpecs }: Props) {
                         label='Name'
                     />
                     <SelectField
-                        name='class_id'
+                        id='class_id'
                         label='Class'
                         required
                         onChange={handleClassSelectChanged}
@@ -68,7 +68,7 @@ export function AddCharacterForm({ charClasses, charRoles, charSpecs }: Props) {
                         ))}
                     </SelectField>
                     <SelectField
-                        name='spec_id'
+                        id='spec_id'
                         label='Talent Specialization'
                         required
                     >
@@ -77,7 +77,7 @@ export function AddCharacterForm({ charClasses, charRoles, charSpecs }: Props) {
                         ))}
                     </SelectField>
                     <SelectField
-                        name='role_id'
+                        id='role_id'
                         label='Role'
                         required
                     >

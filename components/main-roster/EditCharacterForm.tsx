@@ -60,7 +60,7 @@ export function EditCharacterForm({ character, charClasses, charRoles, charSpecs
                         label='Name'
                     />
                     <SelectField
-                        name='class_id'
+                        id='class_id'
                         label='Class'
                         defaultValue={character.class_id}
                         onChange={handleClassSelectChanged}
@@ -71,7 +71,7 @@ export function EditCharacterForm({ character, charClasses, charRoles, charSpecs
                         ))}
                     </SelectField>
                     <SelectField
-                        name='spec_id'
+                        id='spec_id'
                         label='Talent Specialization'
                         defaultValue={character.spec_id}
                         required
@@ -81,7 +81,7 @@ export function EditCharacterForm({ character, charClasses, charRoles, charSpecs
                         ))}
                     </SelectField>
                     <SelectField
-                        name='role_id'
+                        id='role_id'
                         label='Role'
                         defaultValue={character.role_id}
                         required
