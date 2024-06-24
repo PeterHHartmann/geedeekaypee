@@ -1,16 +1,17 @@
-'use server';
-
 import NextAuth from 'next-auth';
 import { authConfig } from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import { sql } from '@vercel/postgres';
-import type { User } from '@/app/lib/definitions';
+import type { User } from '@/lib/definitions';
 import bcrypt from 'bcrypt';
 
 async function getUser(email: string): Promise<User | undefined> {
     try {
-        const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
+        const user = await sql<User>
+            `SELECT id, name, email, password 
+            FROM users 
+            WHERE email=${email}`;
         return user.rows[0];
     } catch (error) {
         console.error('Failed to fetch user:', error);
@@ -18,10 +19,15 @@ async function getUser(email: string): Promise<User | undefined> {
     }
 }
 
-export const { auth, signIn, signOut } = NextAuth({
+export const { auth, signIn, signOut, handlers } = NextAuth({
     ...authConfig,
     providers: [
         Credentials({
+            name: 'Credentials',
+            credentials: {
+                email: { label: "Username", type: "text", placeholder: "Enter your email address" },
+                password: { label: "Password", type: "password" }
+            },
             async authorize(credentials) {
                 const parsedCredentials = z
                     .object({ email: z.string().email(), password: z.string().min(6) })

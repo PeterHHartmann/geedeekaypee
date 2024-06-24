@@ -1,13 +1,12 @@
-import Image from "next/image";
-import Logo from '@/app/ui/logo';
+import type { Metadata } from 'next';
 
-export default function Home() {
+export const metadata: Metadata = {
+    title: 'Dashboard',
+    description: 'User dashboard for managing roster and upcoming raids',
+};
+
+export default async function DashboardPage() {
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
-            <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
-                <Logo />
-            </div>
-            <h1 className='text-slate-50'>Dashboard</h1>
-        </main>
+        <></>
     );
 }
